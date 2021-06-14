@@ -31,6 +31,7 @@ export default  {
 </script>
 <style scoped>
 .box {
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
