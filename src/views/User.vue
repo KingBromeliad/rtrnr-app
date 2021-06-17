@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 3</ion-title>
+        <ion-title>User</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
@@ -14,8 +14,9 @@
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 
+
 export default  {
-  name: 'Tab3',
+  name: 'User',
   components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
 }
 </script>
