@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { IonPage, IonHeader,IonButton, IonToolbar, IonTitle } from '@ionic/vue';
-  import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 export default  {
   name: 'Login',

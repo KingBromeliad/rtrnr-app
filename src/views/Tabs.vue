@@ -2,19 +2,19 @@
   <ion-page>
     <ion-tabs>
       <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="home" href="/tabs/home">
+        <ion-tab-button tab="History" href="/tabs/history">
           <ion-icon :icon="triangle" />
-          <ion-label>Home</ion-label>
+          <ion-label>History</ion-label>
         </ion-tab-button>
           
-        <ion-tab-button tab="User" href="/tabs/user">
+        <ion-tab-button tab="Home" href="/tabs/home">
           <ion-icon :icon="ellipse" />
-          <ion-label>Tab 2</ion-label>
+          <ion-label>Home</ion-label>
         </ion-tab-button>
         
-        <ion-tab-button tab="history" href="/tabs/history">
+        <ion-tab-button tab="User" href="/tabs/user">
           <ion-icon :icon="square" />
-          <ion-label>Tab 3</ion-label>
+          <ion-label>User</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
