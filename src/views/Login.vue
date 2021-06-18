@@ -16,12 +16,38 @@
 <script lang="ts">
 import { IonPage, IonHeader,IonButton, IonToolbar, IonTitle } from '@ionic/vue';
 import { useRouter } from 'vue-router';
+import { reactive, toRefs} from 'vue';
+import { auth, db } from '../main'
+
+enum AuthMode {
+  SignIn,
+  SignUp
+}
 
 export default  {
   name: 'Login',
   components: { IonHeader,IonButton, IonToolbar, IonTitle, IonPage },
     setup() {
-              const router = useRouter();
+      const router = useRouter();
+      const state = reactive({
+        name : '',
+        email : '',
+        password : '',
+        mode : AuthMode.SignIn,
+        errorMsg : ''
+      });
+
+    const signInWithEmailAndPassword = async (email : String, password : String) => {
+      try { 
+        if(!email || !password) {
+        state.errorMsg = "Email and Password required";
+        return;
+      }
+
+      await auth.signInWithEmailAndPassword(email, password);
+      router.push("tabs/home");
+      } catch (error) {}
+    }
     return {
    router 
     }
