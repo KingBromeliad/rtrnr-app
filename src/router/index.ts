@@ -45,10 +45,6 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'history',
         component: () => import('@/views/History.vue')
-      },
-      {
-        path: 'workout',
-        component: () => import('@/views/Workout.vue')
       }
     ]
   }

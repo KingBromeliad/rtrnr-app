@@ -1,23 +1,32 @@
 <template>
   <ion-page>
-    <div v-if="selectWorkout">
-    <div class="title">
-      <h1>Welcome back!</h1>
-      <h2>Select your daily workout</h2>
-    </div>
-    <ion-content style="height: 100vh">
-      <ion-card v-for="workout in workouts" :key="workout.name" @click="goToWorkout(workout)">
-        <ion-card-header>
-          <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
-          <ion-card-title>{{ workout.name }}</ion-card-title>
-        </ion-card-header>
-      </ion-card>
-    </ion-content>
+    <div v-if="selectWorkout" style="height: 100vh">
+      <div class="title">
+        <h1>Welcome back!</h1>
+        <h2>Select your daily workout</h2>
+      </div>
+      <ion-content>
+        <ion-card
+          v-for="workout in workouts"
+          :key="workout.name"
+          @click="goToWorkout(workout)"
+        >
+          <ion-card-header>
+            <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
+            <ion-card-title>{{ workout.name }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-content>
     </div>
     <div v-else>
-<h1>Hello workout</h1>
-<h2>Current workout: {{currentWorkout.name}}</h2>
-<ion-button @click="selectWorkout = true">Go Back</ion-button>
+      <h1>Hello workout</h1>
+      <h2>Current workout: {{ currentWorkout.name }}</h2>
+      <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button @click="selectWorkout = true">
+          <ion-icon :icon="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <ion-button @click="presentAlertConfirm()">Go Back</ion-button>
     </div>
   </ion-page>
 </template>
@@ -30,8 +39,12 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonButton
+  IonButton,
+  IonFab,
+  IonFabButton,
+  alertController
 } from "@ionic/vue";
+import { add }from 'ionicons/icons';
 import { defineComponent, onMounted, ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { auth, db } from "../main";
@@ -45,7 +58,9 @@ export default defineComponent({
     IonCardHeader,
     IonCardSubtitle,
     IonCardTitle,
-    IonButton
+    IonButton,
+    IonFab,
+    IonFabButton,
   },
   setup() {
     const router = useRouter();
@@ -60,7 +75,9 @@ export default defineComponent({
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            workouts.value.push(doc.data());});});
+            workouts.value.push(doc.data());
+          });
+        });
     }
 
     onMounted(() => {
@@ -69,19 +86,46 @@ export default defineComponent({
     });
 
     return {
+      add,
       router,
       getWorkouts,
       workouts,
       selectWorkout,
-      currentWorkout
+      currentWorkout,
     };
   },
   methods: {
     goToWorkout(selection: object) {
-      //this.router.push("/tabs/workout");
       this.selectWorkout = false;
       this.currentWorkout = selection;
     },
+        async presentAlertConfirm() {
+      const alert = await alertController
+        .create({
+          cssClass: 'my-custom-class',
+          header: 'Before exit',
+          message: 'Save current session?',
+          buttons: [
+            {
+              text: 'Discard',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: blah => {
+                console.log('Confirm Cancel:', blah);
+                this.selectWorkout = true;
+              },
+            },
+            {
+              text: 'Save',
+              handler: () => {
+                console.log('Confirm Okay');
+                this.selectWorkout = true;
+              },
+            },
+          ],
+        });
+      return alert.present();
+    }
   },
 });
 </script>
