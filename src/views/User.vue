@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>User</ion-title>
       </ion-toolbar>

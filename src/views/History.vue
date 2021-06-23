@@ -1,37 +1,45 @@
 <template>
-<ion-page>
-  <div v-if="selectWorkout" style="height: 100vh">
-    <div style="justify-content: flex-start">
-      <div class="title">
-        <h1>Workout History</h1>
-        <h2>Tap to view a report</h2>
-      </div>
-      <div id="history-grid">
-        <ion-card v-for="pastWorkout in pastWorkouts" :key="pastWorkout.date.seconds" @click="goToWorkout(pastWorkout)">
-          <ion-card-header>
-            <ion-card-subtitle>{{ pastWorkout.name }}</ion-card-subtitle>
-            <ion-card-title>date</ion-card-title>
-          </ion-card-header>
-        </ion-card>
+  <ion-page>
+    <div v-if="selectWorkout" style="height: 100vh">
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title>Workout History</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <div style="justify-content: flex-start">
+        <div id="history-grid">
+          <ion-card
+            v-for="pastWorkout in pastWorkouts"
+            :key="pastWorkout.date.seconds"
+            @click="goToWorkout(pastWorkout)"
+          >
+            <ion-card-header>
+              <ion-card-subtitle>{{ pastWorkout.name }}</ion-card-subtitle>
+              <ion-card-title>date</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
       </div>
     </div>
-  </div>
-  <div v-else>
+    <div v-else>
       <h1>Hello workout</h1>
       <h2>Current workout: {{ currentWorkout.name }}</h2>
       <ion-button @click="selectWorkout = true">Go Back</ion-button>
-  </div>
-</ion-page>
+    </div>
+  </ion-page>
 </template>
 
 <script lang="ts">
 import {
   IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonButton
+  IonButton,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, reactive } from "vue";
 import { auth, db } from "../main";
@@ -40,11 +48,14 @@ export default defineComponent({
   name: "History",
   components: {
     IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
     IonCard,
     IonCardHeader,
     IonCardSubtitle,
     IonCardTitle,
-    IonButton
+    IonButton,
   },
   setup() {
     const type: object[] = [];

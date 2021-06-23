@@ -1,10 +1,16 @@
 <template>
   <ion-page>
     <div v-if="selectWorkout" style="height: 100vh">
-      <div class="title">
-        <h1>Welcome back!</h1>
-        <h2>Select your daily workout</h2>
-      </div>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button @click="router.push('/trainer')"
+              >Trainer</ion-button
+            >
+          </ion-buttons>
+          <ion-title>Workouts!</ion-title>
+        </ion-toolbar>
+      </ion-header>
       <ion-content>
         <ion-card
           v-for="workout in workouts"
@@ -33,6 +39,10 @@
 
 <script lang="ts">
 import {
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
   IonPage,
   IonContent,
   IonCard,
@@ -42,9 +52,10 @@ import {
   IonButton,
   IonFab,
   IonFabButton,
-  alertController
+  IonIcon,
+  alertController,
 } from "@ionic/vue";
-import { add }from 'ionicons/icons';
+import { add } from "ionicons/icons";
 import { defineComponent, onMounted, ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { auth, db } from "../main";
@@ -52,6 +63,10 @@ import { auth, db } from "../main";
 export default defineComponent({
   name: "home",
   components: {
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonButtons,
     IonPage,
     IonContent,
     IonCard,
@@ -60,6 +75,7 @@ export default defineComponent({
     IonCardTitle,
     IonButton,
     IonFab,
+    IonIcon,
     IonFabButton,
   },
   setup() {
@@ -99,33 +115,32 @@ export default defineComponent({
       this.selectWorkout = false;
       this.currentWorkout = selection;
     },
-        async presentAlertConfirm() {
-      const alert = await alertController
-        .create({
-          cssClass: 'my-custom-class',
-          header: 'Before exit',
-          message: 'Save current session?',
-          buttons: [
-            {
-              text: 'Discard',
-              role: 'cancel',
-              cssClass: 'secondary',
-              handler: blah => {
-                console.log('Confirm Cancel:', blah);
-                this.selectWorkout = true;
-              },
+    async presentAlertConfirm() {
+      const alert = await alertController.create({
+        cssClass: "my-custom-class",
+        header: "Before exit",
+        message: "Save current session?",
+        buttons: [
+          {
+            text: "Discard",
+            role: "cancel",
+            cssClass: "secondary",
+            handler: (blah) => {
+              console.log("Confirm Cancel:", blah);
+              this.selectWorkout = true;
             },
-            {
-              text: 'Save',
-              handler: () => {
-                console.log('Confirm Okay');
-                this.selectWorkout = true;
-              },
+          },
+          {
+            text: "Save",
+            handler: () => {
+              console.log("Confirm Okay");
+              this.selectWorkout = true;
             },
-          ],
-        });
+          },
+        ],
+      });
       return alert.present();
-    }
+    },
   },
 });
 </script>
