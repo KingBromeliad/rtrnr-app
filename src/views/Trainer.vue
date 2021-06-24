@@ -24,6 +24,9 @@
         </ion-avatar>
         <ion-label>{{ user.data.name }}</ion-label>
       </ion-item>
+          <ion-content class="ion-padding">
+      <ion-button @click="openModal" expand="block">Exercises</ion-button>
+    </ion-content>
     </ion-content>
   </ion-page>
 </template>
@@ -40,10 +43,12 @@ import {
   IonItem,
   IonAvatar,
   IonLabel,
+  modalController
 } from "@ionic/vue";
 import { db } from "../main";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import  ExerciseModal  from "../components/ExerciseModal.vue"
 
 export default {
   name: "User",
@@ -93,5 +98,18 @@ export default {
       getUsers,
     };
   },
+  methods: {
+        async openModal() {
+      const modal = await modalController
+        .create({
+          component: ExerciseModal,
+          cssClass: 'my-custom-class',
+          componentProps: {
+            title: 'New Title'
+          },
+        })
+      return modal.present();
+    },
+  }
 };
 </script>
