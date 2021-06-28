@@ -1,5 +1,8 @@
 <template>
   <ion-page>
+    <ion-modal :is-open="isOpenRef" @didDismiss="setOpen(false)">
+      <exercise-modal :createMode="false"></exercise-modal>
+    </ion-modal>
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>Personal Trainer mode</ion-title>
@@ -7,15 +10,15 @@
           <ion-button @click="router.push('/tabs/home')">User</ion-button>
         </ion-buttons>
       </ion-toolbar>
-  <ion-toolbar>
-    <ion-title color="primary">Select user</ion-title>
-  </ion-toolbar>
+      <ion-toolbar>
+        <ion-title color="primary">Select user</ion-title>
+      </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-item
         v-for="user in users"
         :key="user.uid"
-        @click="router.push({ name: 'editor', params: {id: user.uid }})"
+        @click="router.push({ name: 'editor', params: { id: user.uid } })"
       >
         <ion-avatar slot="start">
           <img
@@ -24,9 +27,9 @@
         </ion-avatar>
         <ion-label>{{ user.data.name }}</ion-label>
       </ion-item>
-          <ion-content class="ion-padding">
-      <ion-button @click="openModal" expand="block">Exercises</ion-button>
-    </ion-content>
+      <ion-content class="ion-padding">
+        <ion-button @click="setOpen(true)" expand="block">Exercises</ion-button>
+      </ion-content>
     </ion-content>
   </ion-page>
 </template>
@@ -43,14 +46,14 @@ import {
   IonItem,
   IonAvatar,
   IonLabel,
-  modalController
+  IonModal,
 } from "@ionic/vue";
 import { db } from "../main";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import  ExerciseModal  from "../components/ExerciseModal.vue"
+import ExerciseModal from "../components/ExerciseModal.vue";
 
-export default {
+export default defineComponent ({
   name: "User",
   components: {
     IonHeader,
@@ -63,6 +66,8 @@ export default {
     IonItem,
     IonAvatar,
     IonLabel,
+    IonModal,
+    ExerciseModal,
   },
   setup() {
     const router = useRouter();
@@ -90,26 +95,18 @@ export default {
 
     onMounted(() => {
       getUsers();
-      console.log(users.value);
     });
+
+    const isOpenRef = ref(false);
+    const setOpen = (state: boolean) => (isOpenRef.value = state);
+
     return {
       router,
       users,
       getUsers,
+      setOpen,
+      isOpenRef,
     };
   },
-  methods: {
-        async openModal() {
-      const modal = await modalController
-        .create({
-          component: ExerciseModal,
-          cssClass: 'my-custom-class',
-          componentProps: {
-            title: 'New Title'
-          },
-        })
-      return modal.present();
-    },
-  }
-};
+});
 </script>

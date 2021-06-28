@@ -1,118 +1,114 @@
 <template>
   <!-- Exercises list mode */ -->
-  <div v-if="listMode">
-    <ion-page>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{ title }}</ion-title>
-          <ion-buttons slot="primary">
-            <ion-button @click="close()">Close</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <!-- PRETTY BIG CARD COMPONENT -->
-        <ion-card v-for="exercise in exercises" :key="exercise.name">
-          <ion-item lines="none">
-            <ion-card-header>
-              <ion-card-subtitle>{{ exercise.subtitle }}</ion-card-subtitle>
-              <ion-card-title>{{ exercise.name }}</ion-card-title>
-            </ion-card-header>
-            <ion-button fill="outline" slot="end">View</ion-button>
-          </ion-item>
-          <ion-item lines="none">
-            <ion-icon
-              v-if="exercise.description != null"
-              :icon="checkmarkCircleOutline"
-              slot="start"
-              style="color: var(--ion-color-success)"
-            ></ion-icon>
-            <ion-icon
-              v-else
-              :icon="closeCircleOutline"
-              slot="start"
-              style="color: var(--ion-color-danger)"
-            ></ion-icon>
-            <ion-label>Description</ion-label>
-          </ion-item>
-          <ion-item lines="none">
-            <ion-icon
-              v-if="exercise.video != null"
-              :icon="checkmarkCircleOutline"
-              slot="start"
-              style="color: var(--ion-color-success)"
-            ></ion-icon>
-            <ion-icon
-              v-else
-              :icon="closeCircleOutline"
-              slot="start"
-              style="color: var(--ion-color-danger)"
-            ></ion-icon>
-            <ion-label>Video</ion-label>
-          </ion-item>
-        </ion-card>
-      </ion-content>
-      <ion-footer>
-        <ion-toolbar>
-          <ion-button
-            size="large"
-            expand="block"
-            color="primary"
-            fill="outline"
-            @click="listMode = false"
-            >Add a new exercise</ion-button
-          >
-        </ion-toolbar>
-      </ion-footer>
-    </ion-page>
-  </div>
-  <div v-else>
-    <ion-page>
-      <!-- Add new exercise mode -->
-      <ion-header class="ion-no-border">
-        <ion-toolbar>
-          <ion-title>New exercise</ion-title>
-          <ion-buttons slot="primary">
-            <ion-button color="success" @click="addExercise()">Save</ion-button>
-          </ion-buttons>
-          <ion-buttons slot="secondary">
-            <ion-button color="danger" @click="presentAlertConfirm()"
-              >Cancel</ion-button
-            >
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <ion-card>
-          <ion-item>
-            <ion-label position="floating">Name</ion-label>
-            <ion-input v-model="newExercise.name"></ion-input>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label position="floating">Subtitle</ion-label>
-            <ion-input v-model="newExercise.subtitle"></ion-input>
-          </ion-item>
-        </ion-card>
-        <ion-card>
-          <ion-item lines="none">
-            <ion-textarea
-              v-model="newExercise.description"
-              rows="10"
-              placeholder="Enter exercise description here..."
-            ></ion-textarea>
-          </ion-item>
-        </ion-card>
-
-        <ion-card>
+  <ion-page v-if="listMode">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Exercise List</ion-title>
+        <ion-buttons slot="primary">
+          <ion-button @click="close()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content style="--padding-top: 2vh">
+      <!-- PRETTY BIG CARD COMPONENT -->
+      <ion-card v-for="exercise in exercises" :key="exercise.name">
+        <ion-item lines="none">
           <ion-card-header>
-            <ion-card-subtitle>work in progress...</ion-card-subtitle>
-            <ion-card-title>Add video</ion-card-title>
+            <ion-card-subtitle>{{ exercise.subtitle }}</ion-card-subtitle>
+            <ion-card-title>{{ exercise.name }}</ion-card-title>
           </ion-card-header>
-        </ion-card>
-      </ion-content>
-    </ion-page>
-  </div>
+          <ion-button
+            v-if="createMode"
+            fill="outline"
+            slot="end"
+            size="large"
+            @click="addExerciseToWorkout(exercise)"
+            >Add</ion-button
+          >
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon
+            v-if="exercise.description != null"
+            :icon="checkmarkCircleOutline"
+            slot="start"
+            style="color: var(--ion-color-success)"
+          ></ion-icon>
+          <ion-icon
+            v-else
+            :icon="closeCircleOutline"
+            slot="start"
+            style="color: var(--ion-color-danger)"
+          ></ion-icon>
+          <ion-label>Description</ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon
+            v-if="exercise.video != null"
+            :icon="checkmarkCircleOutline"
+            slot="start"
+            style="color: var(--ion-color-success)"
+          ></ion-icon>
+          <ion-icon
+            v-else
+            :icon="closeCircleOutline"
+            slot="start"
+            style="color: var(--ion-color-danger)"
+          ></ion-icon>
+          <ion-label>Video</ion-label>
+        </ion-item>
+      </ion-card>
+      <ion-fab vertical="top" horizontal="start" slot="fixed">
+        <ion-fab-button @click="listMode = false">
+          <ion-icon :icon="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-content>
+  </ion-page>
+  <ion-page v-else>
+    <!-- Add new exercise mode -->
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-title>New exercise</ion-title>
+        <ion-buttons slot="primary">
+          <ion-button color="success" @click="addExercise()">Save</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="secondary">
+          <ion-button color="danger" @click="presentAlertConfirm()"
+            >Cancel</ion-button
+          >
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-card>
+        <ion-item>
+          <ion-label position="floating">Name</ion-label>
+          <ion-input v-model="newExercise.name"></ion-input>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-label position="floating">Subtitle</ion-label>
+          <ion-input v-model="newExercise.subtitle"></ion-input>
+        </ion-item>
+      </ion-card>
+      <ion-card>
+        <ion-item lines="none">
+          <ion-textarea
+            v-model="newExercise.description"
+            rows="10"
+            placeholder="Enter exercise description here..."
+          ></ion-textarea>
+        </ion-item>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-subtitle>work in progress...</ion-card-subtitle>
+          <ion-card-title>Add video</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script lang="ts">
@@ -135,38 +131,34 @@ import {
   IonButton,
   modalController,
   alertController,
-  IonFooter,
+  IonFab,
+  IonFabButton,
 } from "@ionic/vue";
 import { defineComponent, ref, onMounted } from "vue";
-import { checkmarkCircleOutline, closeCircleOutline } from "ionicons/icons";
+import {
+  checkmarkCircleOutline,
+  closeCircleOutline,
+  add,
+} from "ionicons/icons";
 import { db } from "../main";
 
 export default defineComponent({
-  name: "ExerciseModal",
+  name: "exercise-modal",
   props: {
-    title: { type: String, default: "Super Modal" },
+    createMode: Boolean,
+  },
+  emits: {
+    addToWorkout: null,
   },
   setup() {
-    const type: object[] = [];
-    const exercises = ref(type);
 
-    onMounted(() => {
-      db.collection("exercise").onSnapshot((querySnapshot) => {
-        const temp: object[] = [];
-        querySnapshot.forEach((doc) => {
-          temp.push(doc.data());
-        });
-
-        exercises.value = temp;
-      });
-    });
-
-    return { checkmarkCircleOutline, closeCircleOutline, exercises };
+    return { checkmarkCircleOutline, closeCircleOutline, add };
   },
   data() {
     return {
       content: "Content",
       listMode: true,
+      exercises: [] as object[],
       newExercise: {
         name: "",
         subtitle: "",
@@ -192,7 +184,15 @@ export default defineComponent({
     IonToolbar,
     IonButtons,
     IonButton,
-    IonFooter,
+    IonFab,
+    IonFabButton,
+  },
+  mounted() {
+    db.collection("exercise").onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          this.exercises.push(doc.data());
+        });
+      });
   },
   methods: {
     async close() {
@@ -241,6 +241,10 @@ export default defineComponent({
         });
       this.clearExercise();
       this.listMode = true;
+    },
+
+    addExerciseToWorkout(exercise: object) {
+      this.$emit("addToWorkout",  exercise );
     },
   },
 });
