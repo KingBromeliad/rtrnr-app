@@ -277,7 +277,7 @@ export default defineComponent({
     class NewWorkout {
       name: string;
       description: string;
-      exercises: object[];
+      exercises: WorkoutExercise[];
       note: string;
 
       constructor() {

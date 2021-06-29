@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <div v-if="selectWorkout" style="height: 100vh">
+    <div v-if="selectWorkoutRef" style="height: 100vh">
       <ion-header class="ion-no-border">
         <ion-toolbar>
           <ion-buttons slot="end">
@@ -28,7 +28,7 @@
       <h1>Hello workout</h1>
       <h2>Current workout: {{ currentWorkout.name }}</h2>
       <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button @click="selectWorkout = true">
+        <ion-fab-button @click="selectWorkout(true)">
           <ion-icon :icon="add"></ion-icon>
         </ion-fab-button>
       </ion-fab>
@@ -82,7 +82,8 @@ export default defineComponent({
     const router = useRouter();
     const type: object[] = [];
     const workouts = ref(type);
-    const selectWorkout = ref(true);
+    const selectWorkoutRef = ref(true);
+    const selectWorkout = (state: boolean) => (selectWorkoutRef.value = state);
     const currentWorkout = reactive({});
 
     function getWorkouts() {
@@ -106,13 +107,14 @@ export default defineComponent({
       router,
       getWorkouts,
       workouts,
-      selectWorkout,
+      selectWorkoutRef,
       currentWorkout,
+      selectWorkout
     };
   },
   methods: {
     goToWorkout(selection: object) {
-      this.selectWorkout = false;
+      this.selectWorkout(false);
       this.currentWorkout = selection;
     },
     async presentAlertConfirm() {
@@ -127,14 +129,14 @@ export default defineComponent({
             cssClass: "secondary",
             handler: (blah) => {
               console.log("Confirm Cancel:", blah);
-              this.selectWorkout = true;
+              this.selectWorkout(true);
             },
           },
           {
             text: "Save",
             handler: () => {
               console.log("Confirm Okay");
-              this.selectWorkout = true;
+              this.selectWorkout(true);
             },
           },
         ],
