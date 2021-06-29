@@ -134,7 +134,7 @@ import {
   IonFab,
   IonFabButton,
 } from "@ionic/vue";
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent } from "vue";
 import {
   checkmarkCircleOutline,
   closeCircleOutline,
