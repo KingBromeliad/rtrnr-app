@@ -316,7 +316,6 @@ export default defineComponent({
             // doc.data() is never undefined for query doc snapshots
             const item = new NewWorkout();
             temp.push(Object.assign(item, doc.data()));
-            console.log(temp);
           });
           workouts.value = temp;
         }

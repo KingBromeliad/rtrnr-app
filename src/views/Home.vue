@@ -1,39 +1,28 @@
 <template>
-  <ion-page>
-    <div v-if="selectWorkoutRef" style="height: 100vh">
-      <ion-header class="ion-no-border">
-        <ion-toolbar>
-          <ion-buttons slot="end">
-            <ion-button @click="router.push('/trainer')"
-              >Trainer</ion-button
-            >
-          </ion-buttons>
-          <ion-title>Workouts!</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <ion-card
-          v-for="workout in workouts"
-          :key="workout.name"
-          @click="goToWorkout(workout)"
-        >
-          <ion-card-header>
-            <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
-            <ion-card-title>{{ workout.name }}</ion-card-title>
-          </ion-card-header>
-        </ion-card>
-      </ion-content>
-    </div>
-    <div v-else>
-      <h1>Hello workout</h1>
-      <h2>Current workout: {{ currentWorkout.name }}</h2>
-      <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button @click="selectWorkout(true)">
-          <ion-icon :icon="add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
-      <ion-button @click="presentAlertConfirm()">Go Back</ion-button>
-    </div>
+  <ion-page v-if="selectWorkoutRef" style="height: 100vh">
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button @click="router.push('/trainer')">Trainer</ion-button>
+        </ion-buttons>
+        <ion-title>Workouts!</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-card
+        v-for="workout in workouts"
+        :key="workout.name"
+        @click="goToWorkout(workout)"
+      >
+        <ion-card-header>
+          <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
+          <ion-card-title>{{ workout.name }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-content>
+  </ion-page>
+  <ion-page v-else>
+    <workout :workout="currentWorkout" @exit-workout="selectWorkout(true);"></workout>
   </ion-page>
 </template>
 
@@ -50,19 +39,17 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonButton,
-  IonFab,
-  IonFabButton,
-  IonIcon,
-  alertController,
 } from "@ionic/vue";
 import { add } from "ionicons/icons";
-import { defineComponent, onMounted, ref, reactive } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { auth, db } from "../main";
+import { auth, db, NewWorkout } from "../main";
+import Workout from "../components/Workout.vue";
 
 export default defineComponent({
   name: "home",
   components: {
+    Workout,
     IonHeader,
     IonTitle,
     IonToolbar,
@@ -74,26 +61,27 @@ export default defineComponent({
     IonCardSubtitle,
     IonCardTitle,
     IonButton,
-    IonFab,
-    IonIcon,
-    IonFabButton,
   },
   setup() {
     const router = useRouter();
-    const type: object[] = [];
+    const type: NewWorkout[] = [];
     const workouts = ref(type);
     const selectWorkoutRef = ref(true);
     const selectWorkout = (state: boolean) => (selectWorkoutRef.value = state);
-    const currentWorkout = reactive({});
+    const workoutType = new NewWorkout();
+    const currentWorkout = ref(workoutType);
 
     function getWorkouts() {
       db.collection("user/" + auth.currentUser?.uid + "/workout")
         .get()
         .then((querySnapshot) => {
+          const temp: NewWorkout[] = [];
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            workouts.value.push(doc.data());
+            const item = new NewWorkout();
+            temp.push(Object.assign(item, doc.data()));
           });
+          workouts.value = temp;
         });
     }
 
@@ -102,6 +90,13 @@ export default defineComponent({
       console.log(workouts.value);
     });
 
+    //GOT TO WORKOUT
+    function goToWorkout(data: NewWorkout){
+      currentWorkout.value = data;
+      selectWorkout(false);
+    }
+
+
     return {
       add,
       router,
@@ -109,40 +104,9 @@ export default defineComponent({
       workouts,
       selectWorkoutRef,
       currentWorkout,
-      selectWorkout
+      selectWorkout,
+      goToWorkout,
     };
-  },
-  methods: {
-    goToWorkout(selection: object) {
-      this.selectWorkout(false);
-      this.currentWorkout = selection;
-    },
-    async presentAlertConfirm() {
-      const alert = await alertController.create({
-        cssClass: "my-custom-class",
-        header: "Before exit",
-        message: "Save current session?",
-        buttons: [
-          {
-            text: "Discard",
-            role: "cancel",
-            cssClass: "secondary",
-            handler: (blah) => {
-              console.log("Confirm Cancel:", blah);
-              this.selectWorkout(true);
-            },
-          },
-          {
-            text: "Save",
-            handler: () => {
-              console.log("Confirm Okay");
-              this.selectWorkout(true);
-            },
-          },
-        ],
-      });
-      return alert.present();
-    },
   },
 });
 </script>
