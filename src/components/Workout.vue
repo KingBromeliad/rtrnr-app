@@ -190,6 +190,7 @@
                       >
                         <ion-col size="auto"
                           ><ion-button
+                            shape="round"
                             color="dark"
                             @click="
                               exercise.repsDone--;
@@ -197,6 +198,7 @@
                             "
                             ><ion-icon
                               :icon="remove"
+                              size="small"
                               slot="icon-only"
                             ></ion-icon></ion-button
                         ></ion-col>
@@ -205,6 +207,7 @@
                         >
                         <ion-col size="auto"
                           ><ion-button
+                            shape="round"
                             color="dark"
                             @click="
                               exercise.repsDone++;
@@ -212,6 +215,7 @@
                             "
                             ><ion-icon
                               :icon="add"
+                              size="small"
                               slot="icon-only"
                             ></ion-icon></ion-button
                         ></ion-col>
@@ -240,6 +244,7 @@
                       >
                         <ion-col size="auto"
                           ><ion-button
+                            shape="round"
                             color="dark"
                             @click="
                               exercise.weightDone -= 2;
@@ -247,6 +252,7 @@
                             "
                             ><ion-icon
                               :icon="remove"
+                              size="small"
                               slot="icon-only"
                             ></ion-icon></ion-button
                         ></ion-col>
@@ -255,6 +261,7 @@
                         >
                         <ion-col size="auto"
                           ><ion-button
+                            shape="round"
                             color="dark"
                             @click="
                               exercise.weightDone += 2;
@@ -262,6 +269,7 @@
                             "
                             ><ion-icon
                               :icon="add"
+                              size="small"
                               slot="icon-only"
                             ></ion-icon></ion-button
                         ></ion-col>
@@ -397,7 +405,7 @@ export default defineComponent({
 
     function exitAndSave() {
       const doneWorkout: PastWorkout = unref(currentWorkout);
-            const arrayData: object[] = exercises.value.map((obj) => {
+      const arrayData: object[] = exercises.value.map((obj) => {
         return Object.assign({}, obj);
       });
 

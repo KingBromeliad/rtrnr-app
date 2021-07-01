@@ -1,65 +1,88 @@
 <template>
   <ion-page>
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>User</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
-      <div>
-      <ion-card color="tertiary" style="z-index: 10; margin-bottom: 0px">
-        <ion-card-header>
-          <ion-card-subtitle>animation test</ion-card-subtitle>
-          <ion-card-title>Animation</ion-card-title>
+    <ion-content color="light">
+      <ion-item lines="none" color="light">
+        <ion-text color="medium">
+          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
+            Your account
+          </h1>
+        </ion-text>
+      </ion-item>
+      <ion-card color="secondary" style="border-radius: 45px;">
+        <ion-card-header style="padding: 0px">
+          <div class="wrapper">
+            <img id="avatar" src="https://i.pravatar.cc/300" />
+            <ion-text color="medium">
+              <h1
+                style="font-weight: 550; font-size: 2.4em; margin-bottom: 0px; margin-top: 0px"
+              >
+                Kate Skate
+              </h1>
+              <h6
+                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+              >
+                mail@gmail.com
+              </h6>
+            </ion-text>
+          </div>
         </ion-card-header>
-        <ion-card-content><ion-button @click="showCard = !showCard">Show</ion-button></ion-card-content>
       </ion-card>
-      <transition name="bounce">
-        <ion-card color="warning" v-if="showCard" style="margin-top: 0px; transform: translateY(-8px); border-top-left-radius: 0px; border-top-right-radius: 0px">
-        <ion-card-header>
-          <ion-card-subtitle>animation test</ion-card-subtitle>
-          <ion-card-title>Animation</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>test</ion-card-content>
-      </ion-card>
-      </transition>
+      <div class="wrapper end">
+        <ion-button color="tertiary" shape="round"
+          ><ion-icon slot="start" :icon="logOut"></ion-icon>Logout</ion-button
+        >
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle,IonCardSubtitle, IonCardContent } from '@ionic/vue';
-import { defineComponent, ref } from '@vue/runtime-core';
+import {
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonText,
+  IonPage,
+  IonContent,
+  IonCard,
+  IonCardHeader,
+} from "@ionic/vue";
+import { defineComponent } from "@vue/runtime-core";
+import { logOut } from "ionicons/icons";
 
-
-export default defineComponent ({
-  name: 'User',
-  components: { IonHeader, IonToolbar, IonButton, IonTitle, IonContent, IonPage, IonCard, IonCardHeader, IonCardTitle,IonCardSubtitle, IonCardContent },
-  setup(){
-    const showCard = ref(false);
-    return{
-      showCard
-    }
-  }
+export default defineComponent({
+  name: "User",
+  components: {
+    IonButton,
+    IonIcon,
+    IonItem,
+    IonText,
+    IonContent,
+    IonPage,
+    IonCard,
+    IonCardHeader,
+  },
+  setup() {
+    return { logOut };
+  },
 });
 </script>
 <style scoped>
-/* Enter and leave animations can use different */
-/* durations and timing functions.              */
-.bounce-enter-active {
-  animation: bounce-in 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530);
+#avatar {
+  border-radius: 50%;
+  height: 7em;
+  width: 7em;
+  margin: 1em;
 }
-.bounce-leave-active {
-  animation: bounce-in 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: translateY(-160px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
+.end {
+  justify-content: flex-end;
+  margin-inline: 16px;
+}
 </style>
