@@ -131,7 +131,9 @@ export class PastWorkout {
 }
 
 const app = createApp(App)
-  .use(IonicVue)
+  .use(IonicVue, {
+    mode: 'ios'
+  })
   .use(router);
 
 router.isReady().then(() => {

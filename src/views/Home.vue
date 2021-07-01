@@ -13,6 +13,7 @@
         v-for="workout in workouts"
         :key="workout.name"
         @click="goToWorkout(workout)"
+        color="secondary"
       >
         <ion-card-header>
           <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
