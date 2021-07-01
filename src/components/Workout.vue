@@ -7,6 +7,9 @@
     <ion-modal :is-open="isNoteOpenRef">
       <note @exitNote="addNote" :id="noteId" :note="noteData"></note>
     </ion-modal>
+    <ion-modal :is-open="isVideoOpenRef">
+      <record @exitVideo="addVideo" :id="videoId"></record>
+    </ion-modal>
     <!-- HEADER -->
     <ion-header class="ion-no-border">
       <ion-toolbar>
@@ -141,7 +144,7 @@
                     <ion-button
                       style="height: 5em;"
                       color="light"
-                      @click="openRecord(exercise)"
+                      @click="openVideo(exercise.id, index)"
                     >
                       <ion-grid style=" width: 3em">
                         <ion-row
@@ -331,10 +334,13 @@ import {
 } from "ionicons/icons";
 import Info from "../components/modals/Info.vue";
 import Note from "../components/modals/Note.vue";
+import Record from "./modals/Record.vue";
+import { db, auth } from "../main";
 
 export default defineComponent({
   name: "workout",
   components: {
+    Record,
     Note,
     Info,
     IonPage,
@@ -390,8 +396,36 @@ export default defineComponent({
     /* SETUP COMPLETED */
 
     function exitAndSave() {
-      currentWorkout.value.exercises = exercises.value;
       const doneWorkout: PastWorkout = unref(currentWorkout);
+            const arrayData: object[] = exercises.value.map((obj) => {
+        return Object.assign({}, obj);
+      });
+
+      const today = new Date();
+      const date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
+      const time =
+        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateAndTime = date + " " + time;
+
+      db.collection("user/" + auth.currentUser?.uid + "/history")
+        .add({
+          name: doneWorkout.name,
+          description: doneWorkout.description,
+          exercises: arrayData,
+          timestamp: dateAndTime,
+        })
+        .then(() => {
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+
       console.log(doneWorkout);
       context.emit("exitWorkout");
     }
@@ -431,7 +465,27 @@ export default defineComponent({
       setNoteOpen(false);
     }
 
+    const isVideoOpenRef = ref(false);
+    const setVideoOpen = (state: boolean) => (isVideoOpenRef.value = state);
+    const videoId = ref("");
+    const videoExercise = ref();
+
+    function openVideo(id: string, index: number) {
+      videoId.value = id;
+      videoExercise.value = index;
+      setVideoOpen(true);
+    }
+
+    function addVideo() {
+      setVideoOpen(false);
+    }
+
     return {
+      db,
+      videoId,
+      isVideoOpenRef,
+      openVideo,
+      addVideo,
       noteId,
       noteData,
       isNoteOpenRef,

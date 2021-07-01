@@ -1,68 +1,80 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
-import Tabs from '../views/Tabs.vue'
-import { auth } from '../main'
+import { createRouter, createWebHistory } from "@ionic/vue-router";
+import {
+  RouteRecordRaw,
+  RouteLocationNormalized,
+  NavigationGuardNext,
+} from "vue-router";
+import Tabs from "../views/Tabs.vue";
+import { auth } from "../main";
 
-
-const guard = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+const guard = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
   try {
     if (auth.currentUser?.uid) {
       next();
-    }
-    else {
-      next("/")
+    } else {
+      next("/");
     }
   } catch (error) {
-    next("/")
+    next("/");
   }
-}
+};
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    redirect: '/login'
+    path: "/",
+    redirect: "/login",
   },
   {
-    path: '/login',
-    component: ()=> import('@/views/Login.vue')
+    path: "/login",
+    component: () => import("@/views/Login.vue"),
   },
   {
-    path: '/trainer',
-    component: ()=> import('@/views/Trainer.vue')
+    path: "/trainer",
+    component: () => import("@/views/Trainer.vue"),
   },
-    {
-    path: '/editor/:id',
-    name: 'editor',
+  {
+    path: "/editor/:id",
+    name: "editor",
     props: true,
-    component: ()=> import('@/views/Editor.vue')
+    component: () => import("@/views/Editor.vue"),
   },
   {
-    path: '/tabs/',
+    path: "/userhistory/:id",
+    name: "userhistory",
+    props: true,
+    component: () => import("@/views/UserHistory.vue"),
+  },
+  {
+    path: "/tabs/",
     component: Tabs,
     children: [
       {
-        path: '',
-        redirect: '/tabs/home'
+        path: "",
+        redirect: "/tabs/home",
       },
       {
-        path: 'home',
-        component: () => import('@/views/Home.vue'),
+        path: "home",
+        component: () => import("@/views/Home.vue"),
       },
       {
-        path: 'user',
-        component: () => import('@/views/User.vue')
+        path: "user",
+        component: () => import("@/views/User.vue"),
       },
       {
-        path: 'history',
-        component: () => import('@/views/History.vue')
-      }
-    ]
-  }
-]
+        path: "history",
+        component: () => import("@/views/History.vue"),
+      },
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

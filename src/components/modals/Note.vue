@@ -75,7 +75,6 @@ export default defineComponent({
     const newNote = ref("");
 
     onMounted(() => {
-      console.log(props.note);
       newNote.value = props.note;
     });
     return { arrowBackOutline, newNote };

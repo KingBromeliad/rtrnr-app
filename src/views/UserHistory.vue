@@ -3,19 +3,19 @@
     <ion-modal :is-open="isOpenRef">
       <past @exitPast="setOpen(false)" :workout="currentWorkout"></past>
     </ion-modal>
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-title>{{ userData.name }}</ion-title>
+        <ion-buttons slot="start">
+          <ion-back-button default-href="/trainer"></ion-back-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
     <div style="justify-content: flex-start; height: 100vh">
-      <ion-item lines="none" >
-        <ion-text color="dark">
-          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
-            Workout history
-          </h1>
-          <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">
-            Tap to view report
-          </h4>
-        </ion-text>
-      </ion-item>
       <div id="history-grid">
         <ion-card
+          color="tertiary"
           v-for="pastWorkout in pastWorkouts"
           :key="pastWorkout.timestamp"
           button="true"
@@ -28,14 +28,19 @@
         </ion-card>
       </div>
     </div>
+    </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
-  IonItem,
+  IonContent,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonHeader,
+  IonTitle,
   IonPage,
-  IonText,
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
@@ -43,30 +48,35 @@ import {
   IonModal,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, reactive } from "vue";
-import { auth, db } from "../main";
+import { db } from "../main";
 import Past from "../components/modals/Past.vue";
 
 export default defineComponent({
   name: "History",
   components: {
+    IonContent,
     Past,
-    IonItem,
     IonPage,
-    IonText,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonHeader,
+    IonTitle,
     IonCard,
     IonCardHeader,
     IonCardSubtitle,
     IonCardTitle,
     IonModal,
   },
-  setup() {
+  props: { id: String },
+  setup(props) {
     const type: object[] = [];
     const pastWorkouts = ref(type);
     const selectWorkout = ref(true);
     const currentWorkout = reactive({});
 
     function getWorkouts() {
-      db.collection("user/" + auth.currentUser?.uid + "/history")
+      db.collection("user/" + props.id + "/history")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -75,8 +85,29 @@ export default defineComponent({
           });
         });
     }
+    const userData = ref({});
+
+    function getUserData() {
+      const docRef = db.collection("user").doc(props.id);
+      docRef
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const temp: object | undefined = doc.data();
+            if (temp) userData.value = temp;
+            else console.log("Firebase support TS please");
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
 
     onMounted(() => {
+      getUserData();
       getWorkouts();
       console.log(pastWorkouts.value);
     });
@@ -91,6 +122,8 @@ export default defineComponent({
       pastWorkouts,
       selectWorkout,
       currentWorkout,
+      getUserData,
+      userData,
     };
   },
   methods: {

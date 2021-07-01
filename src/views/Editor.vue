@@ -264,7 +264,6 @@ export default defineComponent({
     const type: object[] = [];
     const workouts = ref(type);
     const userData = ref({});
-    //const currentWorkout = reactive({});
     const isOpenRef = ref(false);
     const setOpen = (state: boolean) => (isOpenRef.value = state);
     const buttons = ["Cancel", "Confirm"];

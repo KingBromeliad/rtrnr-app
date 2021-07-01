@@ -8,11 +8,23 @@
     <ion-content color="medium" style="--padding-top: 4em">
       <ion-item lines="none" color="medium">
         <ion-text color="dark">
-          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">{{ exercise.name }}</h1>
-          <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">{{ exercise.subtitle }}</h4>
+          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
+            Record execution
+          </h1>
+          <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">
+            {{ "On " + id }}
+          </h4>
         </ion-text>
       </ion-item>
-
+      <ion-item lines="none" color="medium">
+        <ion-text color="dark">
+          <h5 style="font-weight: 400; font-size: 1.2em;">
+            Your personal trainer will evaluate the recording of this exercise
+            and particular set. <br /><br />
+            Please try to record your full body during the execution.
+          </h5>
+        </ion-text>
+      </ion-item>
     </ion-content>
   </ion-page>
 </template>
@@ -31,12 +43,12 @@ import { defineComponent } from "@vue/runtime-core";
 import { arrowBackOutline } from "ionicons/icons";
 
 export default defineComponent({
-  name: "video",
+  name: "record",
   props: {
-    exercise: { type: Object, required: true },
+    id: { type: String, required: true },
   },
   emits: {
-    didDismiss: null,
+    exitVideo: null,
   },
   components: {
     IonItem,
@@ -49,7 +61,7 @@ export default defineComponent({
   },
   methods: {
     close() {
-      this.$emit("didDismiss");
+      this.$emit("exitVideo");
     },
   },
   setup() {

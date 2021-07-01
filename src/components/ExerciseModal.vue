@@ -232,7 +232,6 @@ export default defineComponent({
     },
 
     addExercise() {
-      console.log(this.newExercise);
       db.collection("exercise")
         .doc(this.newExercise.name)
         .set(this.newExercise)
