@@ -106,6 +106,10 @@
           <ion-card-subtitle>work in progress...</ion-card-subtitle>
           <ion-card-title>Add video</ion-card-title>
         </ion-card-header>
+        <ion-item lines="none">
+          <ion-label position="floating">Video url</ion-label>
+          <ion-input v-model="newExercise.video"></ion-input>
+        </ion-item>
       </ion-card>
     </ion-content>
   </ion-page>
@@ -151,7 +155,6 @@ export default defineComponent({
     addToWorkout: null,
   },
   setup() {
-
     return { checkmarkCircleOutline, closeCircleOutline, add };
   },
   data() {
@@ -189,10 +192,10 @@ export default defineComponent({
   },
   mounted() {
     db.collection("exercise").onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          this.exercises.push(doc.data());
-        });
+      querySnapshot.forEach((doc) => {
+        this.exercises.push(doc.data());
       });
+    });
   },
   methods: {
     async close() {
@@ -244,7 +247,7 @@ export default defineComponent({
     },
 
     addExerciseToWorkout(exercise: object) {
-      this.$emit("addToWorkout",  exercise );
+      this.$emit("addToWorkout", exercise);
     },
   },
 });

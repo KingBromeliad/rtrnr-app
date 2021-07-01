@@ -1,11 +1,20 @@
 <template>
   <ion-page>
+    <!-- MODALS -->
+    <ion-modal :is-open="isInfoOpenRef">
+      <info @didDismiss="setInfoOpen(false)" :exercise="infoData"></info>
+    </ion-modal>
+    <ion-modal :is-open="isNoteOpenRef">
+      <note @exitNote="addNote" :id="noteId" :note="noteData"></note>
+    </ion-modal>
     <!-- HEADER -->
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>Workout on!</ion-title>
         <ion-buttons slot="secondary">
-          <ion-button color="danger" @click="presentAlertQuit()">Quit</ion-button>
+          <ion-button color="danger" @click="presentAlertQuit()"
+            >Quit</ion-button
+          >
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -60,7 +69,7 @@
           color="dark"
           style="
             border-radius: 0px 0px 45px 45px;
-            transform: translateY(-45px);
+            transform: translateY(-55px);
             margin-top: 0px;
             padding-top: 40px;
           "
@@ -71,11 +80,11 @@
                 <ion-col size="4">
                   <ion-row class="ion-justify-content-start">
                     <ion-button
-                      style="height: 5em"
+                      style="height: 5em; widht: 4.5em"
                       color="light"
-                      @click="openDescription(exercise.data)"
+                      @click="openInfo(exercise.data)"
                     >
-                      <ion-grid>
+                      <ion-grid style=" width: 3em">
                         <ion-row
                           class="
                             ion-align-items-center ion-justify-content-center
@@ -86,8 +95,9 @@
                             style="font-size: 1.2em"
                           ></ion-icon>
                         </ion-row>
-                        <ion-row class="ion-align-items-center"
-                          ><h6 style="font-size: 0.8em">
+                        <ion-row
+                          class="ion-align-items-center ion-justify-content-center"
+                          ><h6 style="font-size: 0.8em; font-w">
                             Learn the <br />
                             exercise
                           </h6></ion-row
@@ -100,11 +110,11 @@
                 <ion-col size="4" class="ion-justify-content-center">
                   <ion-row class="ion-justify-content-center">
                     <ion-button
-                      style="height: 5em"
+                      style="height: 5em; widht: 4.5em"
                       color="light"
-                      @click="openNote(exercise)"
+                      @click="openNote(exercise.id, exercise.note, index)"
                     >
-                      <ion-grid>
+                      <ion-grid style=" width: 3em">
                         <ion-row
                           class="
                           ion-align-items-center ion-justify-content-center
@@ -115,7 +125,8 @@
                             style="font-size: 1.2em"
                           ></ion-icon>
                         </ion-row>
-                        <ion-row class="ion-align-items-center"
+                        <ion-row
+                          class="ion-align-items-center ion-justify-content-center"
                           ><h6 style="font-size: 0.8em">
                             Leave <br />
                             a note
@@ -128,11 +139,11 @@
                 <ion-col size="4">
                   <ion-row class="ion-justify-content-end">
                     <ion-button
-                      style="height: 5em"
+                      style="height: 5em;"
                       color="light"
                       @click="openRecord(exercise)"
                     >
-                      <ion-grid>
+                      <ion-grid style=" width: 3em">
                         <ion-row
                           class="
                           ion-align-items-center ion-justify-content-center
@@ -143,7 +154,8 @@
                             style="font-size: 1.2em"
                           ></ion-icon>
                         </ion-row>
-                        <ion-row class="ion-align-items-center"
+                        <ion-row
+                          class="ion-align-items-center ion-justify-content-center"
                           ><h6 style="font-size: 0.8em">
                             Record <br />
                             execution
@@ -298,6 +310,7 @@ import {
   IonTitle,
   IonButtons,
   alertController,
+  IonModal,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, unref } from "@vue/runtime-core";
 import {
@@ -316,10 +329,14 @@ import {
   document,
   camera,
 } from "ionicons/icons";
+import Info from "../components/modals/Info.vue";
+import Note from "../components/modals/Note.vue";
 
 export default defineComponent({
   name: "workout",
   components: {
+    Note,
+    Info,
     IonPage,
     IonCard,
     IonCardHeader,
@@ -338,12 +355,13 @@ export default defineComponent({
     IonHeader,
     IonTitle,
     IonButtons,
+    IonModal,
   },
   props: {
     workout: { type: NewWorkout, required: true },
   },
   emits: {
-    'exitWorkout' : null
+    exitWorkout: null,
   },
   setup(props, context) {
     // setup current workout
@@ -360,7 +378,7 @@ export default defineComponent({
         if (setsN >= 1) {
           for (let index = 0; index < setsN; index++) {
             const temp = new DoneExercise(element);
-            temp.id = temp.id + " set number: " + index.toString;
+            temp.id = temp.id + ", set number " + (index + 1);
             exercises.value.push(temp);
           }
         } else {
@@ -375,7 +393,7 @@ export default defineComponent({
       currentWorkout.value.exercises = exercises.value;
       const doneWorkout: PastWorkout = unref(currentWorkout);
       console.log(doneWorkout);
-      context.emit('exitWorkout');
+      context.emit("exitWorkout");
     }
 
     /* CARD CONTROLLER */
@@ -384,7 +402,41 @@ export default defineComponent({
       data.state = "done";
       console.log(index);
     }
+
+    /* -MODALS- */
+    const isInfoOpenRef = ref(false);
+    const setInfoOpen = (state: boolean) => (isInfoOpenRef.value = state);
+    const infoData = ref({});
+
+    function openInfo(data: object) {
+      infoData.value = data;
+      setInfoOpen(true);
+    }
+
+    const isNoteOpenRef = ref(false);
+    const setNoteOpen = (state: boolean) => (isNoteOpenRef.value = state);
+    const noteData = ref("");
+    const noteId = ref("");
+    const noteExercise = ref();
+
+    function openNote(id: string, data: string, index: number) {
+      noteData.value = data;
+      noteId.value = id;
+      noteExercise.value = index;
+      setNoteOpen(true);
+    }
+
+    function addNote(note: string) {
+      exercises.value[noteExercise.value].note = note;
+      setNoteOpen(false);
+    }
+
     return {
+      noteId,
+      noteData,
+      isNoteOpenRef,
+      openNote,
+      addNote,
       NewWorkout,
       WorkoutExercise,
       PastWorkout,
@@ -401,6 +453,10 @@ export default defineComponent({
       document,
       camera,
       exerciseDone,
+      isInfoOpenRef,
+      setInfoOpen,
+      infoData,
+      openInfo,
     };
   },
   methods: {
@@ -416,7 +472,7 @@ export default defineComponent({
             cssClass: "secondary",
             handler: () => {
               console.log("Confirm Cancel:");
-              this.$emit('exitWorkout');
+              this.$emit("exitWorkout");
             },
           },
           {
@@ -430,6 +486,6 @@ export default defineComponent({
       });
       return alert.present();
     },
-  }
+  },
 });
 </script>
