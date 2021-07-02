@@ -223,7 +223,7 @@ import {
   IonFabButton,
 } from "@ionic/vue";
 import { onMounted, ref, unref, defineComponent } from "vue";
-import { db } from "../main";
+import { db, ExerciseData, NewWorkout, WorkoutExercise } from "../main";
 import ExerciseModal from "../components/ExerciseModal.vue";
 import {
   checkmarkOutline,
@@ -273,39 +273,13 @@ export default defineComponent({
     const editMode = (state: boolean) => (editModeRef.value = state);
 
     //create workout
-    class NewWorkout {
-      name: string;
-      description: string;
-      exercises: WorkoutExercise[];
-      note: string;
 
-      constructor() {
-        this.name = "";
-        this.description = "";
-        this.exercises = [];
-        this.note = "";
-      }
-    }
 
     const workout = new NewWorkout();
     const newWorkout = ref(workout);
 
     //create workout exercise
-    class WorkoutExercise {
-      data: object;
-      sets: number;
-      reps: number;
-      weight: number;
-      rest: number;
 
-      constructor(exercise: object) {
-        this.data = exercise;
-        this.sets = NaN;
-        this.reps = NaN;
-        this.weight = NaN;
-        this.rest = NaN;
-      }
-    }
 
     function getWorkouts() {
       db.collection("user/" + props.id + "/workout").onSnapshot(
@@ -353,7 +327,7 @@ export default defineComponent({
     const toastRef = ref(false);
     const showToast = (state: boolean) => (toastRef.value = state);
 
-    function addToWorkout(exercise: object) {
+    function addToWorkout(exercise: ExerciseData) {
       const tempExercise = new WorkoutExercise(exercise);
       newWorkout.value.exercises.push(tempExercise);
       showToast(true);
@@ -379,6 +353,7 @@ export default defineComponent({
           description: data.description,
           exercises: arrayData,
           note: data.note,
+          color: data.color,
         })
         .then(() => {
           console.log("Document successfully written!");

@@ -1,67 +1,94 @@
 <template>
-  <ion-page v-if="selectWorkoutRef" style="height: 100vh">
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-buttons slot="end">
-          <ion-button @click="router.push('/trainer')">Trainer</ion-button>
-        </ion-buttons>
-        <ion-title>Workouts!</ion-title>
-      </ion-toolbar>
+  <ion-page
+    v-if="selectWorkoutRef"
+    style="background-color: var(--ion-color-medium)"
+  >
+    <ion-header>
+      <ion-item lines="none" color="medium">
+        <ion-text color="light">
+          <h1 style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px">
+            Welcome back!
+          </h1>
+          <h4 style="font-weight: 400; font-size: 1.5em; margin-top: 0.2em">
+            Select your daily workout
+          </h4>
+        </ion-text>
+      </ion-item>
     </ion-header>
-    <ion-content>
-      <ion-card
-        v-for="workout in workouts"
-        :key="workout.name"
-        @click="goToWorkout(workout)"
-        color="secondary"
-      >
-        <ion-card-header>
-          <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
-          <ion-card-title>{{ workout.name }}</ion-card-title>
-        </ion-card-header>
-      </ion-card>
-    </ion-content>
+    <div class="rounded-container">
+      <ion-content color="light">
+        <ion-card
+          v-for="workout in workouts"
+          :key="workout.name"
+          button="true"
+          @click="goToWorkout(workout)"
+          v-bind:style="{ '--color': workout.color,}"
+          style="border-radius: 45px;"
+        >
+          <ion-item lines="none" v-bind:style="{ '--background': workout.color,}">
+            <ion-card-header>
+                <h1
+                  style="font-weight: 550; font-size: 2.2em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
+                >
+                  {{ workout.name }}
+                </h1>
+                <h6
+                  style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.5em; color: var(--ion-color-light);"
+                >
+                  {{ workout.description }}
+                </h6>
+            </ion-card-header>
+            <ion-fab-button
+              slot="end"
+              style="--box-shadow: 0px;"
+              color="light"
+              ><ion-icon v-bind:style="{ color: workout.color,}" :icon="caretForward"></ion-icon
+            ></ion-fab-button>
+          </ion-item>
+        </ion-card>
+      </ion-content>
+    </div>
   </ion-page>
   <ion-page v-else>
-    <workout :workout="currentWorkout" @exit-workout="selectWorkout(true);"></workout>
+    <workout
+      :workout="currentWorkout"
+      @exit-workout="selectWorkout(true)"
+    ></workout>
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
+  IonText,
+  IonItem,
   IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
   IonPage,
   IonContent,
   IonCard,
   IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonButton,
+  IonFabButton,
+  IonIcon,
 } from "@ionic/vue";
 import { add } from "ionicons/icons";
 import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { auth, db, NewWorkout } from "../main";
 import Workout from "../components/Workout.vue";
+import { caretForward } from "ionicons/icons";
 
 export default defineComponent({
   name: "home",
   components: {
+    IonText,
+    IonItem,
     Workout,
     IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonButtons,
     IonPage,
     IonContent,
     IonCard,
     IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonButton,
+    IonFabButton,
+    IonIcon,
   },
   setup() {
     const router = useRouter();
@@ -92,11 +119,10 @@ export default defineComponent({
     });
 
     //GOT TO WORKOUT
-    function goToWorkout(data: NewWorkout){
+    function goToWorkout(data: NewWorkout) {
       currentWorkout.value = data;
       selectWorkout(false);
     }
-
 
     return {
       add,
@@ -107,6 +133,7 @@ export default defineComponent({
       currentWorkout,
       selectWorkout,
       goToWorkout,
+      caretForward,
     };
   },
 });
@@ -116,5 +143,13 @@ export default defineComponent({
   background-color: var(--ion-color-primary-contrast);
   color: var(--ion-color-primary);
   padding-left: 1vh;
+}
+.rounded-container {
+  display: block;
+  background-color: var(--ion-color-light);
+  height: 100vh;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 20px;
 }
 </style>

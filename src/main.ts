@@ -63,12 +63,26 @@ export class NewWorkout {
   description: string;
   exercises: WorkoutExercise[];
   note: string;
+  color: string;
 
   constructor() {
     this.name = "";
     this.description = "";
     this.exercises = [];
     this.note = "";
+
+    const colors = [
+      "#A1FAB5",
+      "#A8A1FA",
+      "#FAB1A1",
+      "#FAD6A1",
+      "#E8A1FA",
+      "#A1C5FA",
+      "#A1FACF",
+    ];
+
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+
   }
 }
 
@@ -121,12 +135,14 @@ export class PastWorkout {
   description: string;
   exercises: DoneExercise[];
   timestamp: string;
+  color: string;
 
   constructor(data: NewWorkout) {
     this.name = data.name;
     this.description = data.description;
     this.exercises = [];
     this.timestamp = "";
+    this.color = data.color;
   }
 }
 

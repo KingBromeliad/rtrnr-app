@@ -35,6 +35,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/trainer",
     component: () => import("@/views/Trainer.vue"),
+    beforeEnter: guard,
   },
   {
     path: "/editor/:id",
@@ -59,6 +60,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "home",
         component: () => import("@/views/Home.vue"),
+        beforeEnter: guard,
       },
       {
         path: "user",
