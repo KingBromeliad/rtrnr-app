@@ -1,0 +1,8 @@
+{
+  "name": "rtrnr-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "mode": "ios"
+}

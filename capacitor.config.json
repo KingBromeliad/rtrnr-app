@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "rtrnr-app",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}
