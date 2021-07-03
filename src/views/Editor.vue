@@ -342,7 +342,7 @@ export default defineComponent({
 
     function saveWorkout() {
       const data: NewWorkout = unref(newWorkout);
-      const arrayData: object[] = data.exercises.map((obj) => {
+      const arrayData: WorkoutExercise[] = data.exercises.map((obj) => {
         return Object.assign({}, obj);
       });
 

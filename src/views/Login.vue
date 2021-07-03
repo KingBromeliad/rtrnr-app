@@ -9,7 +9,45 @@
           {{ mode === AuthMode.SignIn ? "Sign In" : "Sign Up" }}
         </h1>
       </ion-item>
+      <div v-if="chooseMode" style="width: 90vw">
+        <div style="margin-bottom: 2em; margin-top: 2em;">
+          <ion-button
+            expand="block"
+            color="medium"
+            style="--border-radius: 30px; --padding-top: 1.8em;  --padding-bottom: 1.8em; font-size: 1.2em"
+            @click="googleSignIn()"
+            ><ion-icon
+              style="color: #303136;"
+              slot="start"
+              :icon="logoGoogle"
+            ></ion-icon>
+            Sign in with Google</ion-button
+          >
+        </div>
+
+        <div>
+          <ion-button
+            expand="block"
+            color="medium"
+            style="--border-radius: 30px; --padding-top: 1.8em;  --padding-bottom: 1.8em; font-size: 1.2em"
+            @click="
+              chooseMode = false;
+              emailSignIn = true;
+            "
+            ><ion-icon
+              style="color: #303136;"
+              slot="start"
+              :icon="mail"
+            ></ion-icon>
+            Sign in with Email</ion-button
+          >
+        </div>
+      </div>
+
+      <!-- EMAIL SIGN IN -->
       <form
+        v-if="emailSignIn"
+        style="width: 75vw"
         @submit.prevent="
           mode === AuthMode.SignIn
             ? signInWithEmailAndPassword(email, password)
@@ -29,7 +67,7 @@
           <ion-input v-model="password" type="password"></ion-input>
         </ion-item>
         <ion-button
-          style="border-radius: 30px;"
+          style="--border-radius: 20px; --padding-top: 1.6em;  --padding-bottom: 1.6em; font-size: 1em"
           expand="block"
           color="secondary"
           class="ion-margin-top"
@@ -38,7 +76,7 @@
           {{ mode === AuthMode.SignIn ? "Sign In" : "Sign Up" }}
         </ion-button>
         <ion-button
-          style="border-radius: 30px;"
+          style="--border-radius: 20px; --padding-top: 1.6em;  --padding-bottom: 1.6em; font-size: 1em"
           expand="block"
           color="medium"
           class="ion-margin-top"
@@ -48,23 +86,46 @@
         >
           {{ mode === AuthMode.SignIn ? "Sign Up" : "Cancel" }}
         </ion-button>
+        <ion-button
+          v-if="!chooseMode && mode === AuthMode.SignIn"
+          style="--border-radius: 20px; --padding-top: 1.6em; --padding-bottom: 1.6em; font-size: 1em;"
+          expand="block"
+          color="tertiary"
+          class="ion-margin-top"
+          @click="
+            emailSignIn = false;
+            chooseMode = true;
+          "
+          ><ion-icon slot="start" :icon="arrowBack"></ion-icon>
+          Go back
+        </ion-button>
       </form>
     </div>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonButton, IonInput, IonItem, IonLabel } from "@ionic/vue";
+import {
+  IonPage,
+  IonButton,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonIcon,
+} from "@ionic/vue";
 import { useRouter } from "vue-router";
-import { reactive, toRefs } from "vue";
+import { reactive, ref, toRefs, defineComponent } from "vue";
 import { auth, db } from "../main";
+import { logoGoogle, mail, arrowBack } from "ionicons/icons";
+
+
 
 enum AuthMode {
   SignIn,
   SignUp,
 }
 
-export default {
+export default defineComponent({
   name: "Login",
   components: {
     IonButton,
@@ -72,6 +133,7 @@ export default {
     IonInput,
     IonItem,
     IonLabel,
+    IonIcon,
   },
   setup() {
     const router = useRouter();
@@ -127,21 +189,41 @@ export default {
       }
     };
 
+    /*SIGN IN MODES */
+    const emailSignIn = ref(true);
+    const chooseMode = ref(false);
+
+
+
+
+
+    function googleSignIn() {
+
+      router.push("/tabs/home");
+
+    }
+
     return {
       ...toRefs(state),
       signInWithEmailAndPassword,
       signUpWithEmailAndPassword,
       AuthMode,
       router,
+      emailSignIn,
+      chooseMode,
+      logoGoogle,
+      mail,
+      arrowBack,
+      googleSignIn,
     };
   },
-};
+});
 </script>
 <style scoped>
 .box {
   height: 100vh;
   display: flex;
-  padding-top: 4em;
+  padding-top: 6em;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;

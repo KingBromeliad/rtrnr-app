@@ -1,6 +1,6 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "rtrnr-app",
-	"webDir": "dist",
-	"bundledWebRuntime": false
+  "appId": "com.bromeliad.rtrnr",
+  "appName": "rtrnr-app",
+  "webDir": "dist",
+  "bundledWebRuntime": false
 }

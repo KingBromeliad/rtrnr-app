@@ -6,7 +6,7 @@
       :translucent="true"
       @didDismiss="setOpen(false)"
     >
-      <ion-item>
+      <ion-item lines="none">
         <ion-text>
           {{note}}
         </ion-text>

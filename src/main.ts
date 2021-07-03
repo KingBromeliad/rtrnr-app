@@ -27,6 +27,11 @@ import "@ionic/vue/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import { Howl } from "howler";
+   export const alarm = new Howl({
+            src: [require("./chime.mp3")],
+          });
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -40,6 +45,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const db = firebase.firestore();
 
 //types
@@ -118,12 +124,12 @@ export class DoneExercise {
   constructor(exercise: WorkoutExercise) {
     this.id = exercise.data.name;
     this.data = exercise.data;
-    this.sets = exercise.sets;
-    this.repsDone = exercise.reps;
+    this.sets = Number(exercise.sets);
+    this.repsDone = Number(exercise.reps);
     this.repsDifference = 0;
-    this.weightDone = exercise.weight;
+    this.weightDone = Number(exercise.weight);
     this.weightDifference = 0;
-    this.rest = exercise.rest;
+    this.rest = Number(exercise.rest);
     this.note = "";
     this.video = null;
     this.state = "active";

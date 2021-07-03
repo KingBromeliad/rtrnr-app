@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page style="background-color: var(--ion-color-medium)">
     <!-- MODALS -->
     <ion-modal :is-open="isInfoOpenRef">
       <info @didDismiss="setInfoOpen(false)" :exercise="infoData"></info>
@@ -11,17 +11,13 @@
       <record @exitVideo="addVideo" :id="videoId"></record>
     </ion-modal>
     <!-- HEADER -->
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>Workout on!</ion-title>
-        <ion-buttons slot="secondary">
-          <ion-button color="danger" @click="presentAlertQuit()"
-            >Quit</ion-button
-          >
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
+    <ion-content color="light" style="--padding-top: 4em">
+
+      <ion-fab vertical="top" horizontal="start" slot="fixed">
+        <ion-fab-button size="small" @click="presentAlertQuit()">
+          <ion-icon :icon="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
       <!-- CARD ELEMENT -->
 
       <div v-for="(exercise, index) in exercises" :key="exercise.id">
@@ -43,6 +39,7 @@
               }}</ion-card-subtitle>
             </ion-card-header>
             <ion-fab-button
+              style="--box-shadow: 0px"
               v-if="exercise.state == 'edit'"
               slot="end"
               color="dark"
@@ -51,6 +48,7 @@
               <ion-icon :icon="cloudDoneOutline"></ion-icon>
             </ion-fab-button>
             <ion-fab-button
+              style="--box-shadow: 0px"
               v-if="exercise.state == 'active'"
               slot="end"
               color="dark"
@@ -59,6 +57,7 @@
               <ion-icon :icon="add"></ion-icon>
             </ion-fab-button>
             <ion-fab-button
+              style="--box-shadow: 0px"
               v-if="exercise.state == 'done'"
               slot="end"
               color="light"
@@ -178,53 +177,51 @@
                 margin-bottom: 0.5em;
               "
             >
-              <ion-grid style="--ion-grid-padding: 0px">
+              <ion-grid
+                style="--ion-grid-padding: 0px; --ion-grid-column-padding: 0px;"
+              >
                 <ion-row class="ion-align-items-center">
                   <ion-col class="ion-justify-content-center" size="4">
                     <h2 style="text-align: center">Modify reps</h2>
                   </ion-col>
-                  <ion-col size="8">
-                    <ion-grid>
-                      <ion-row
-                        class="ion-justify-content-end ion-align-items-center"
-                      >
-                        <ion-col size="auto"
-                          ><ion-button
-                            shape="round"
-                            color="dark"
-                            @click="
-                              exercise.repsDone--;
-                              exercise.repsDifference--;
-                            "
-                            ><ion-icon
-                              :icon="remove"
-                              size="small"
-                              slot="icon-only"
-                            ></ion-icon></ion-button
-                        ></ion-col>
-                        <ion-col size="auto"
-                          ><h2>{{ exercise.repsDone }}</h2></ion-col
-                        >
-                        <ion-col size="auto"
-                          ><ion-button
-                            shape="round"
-                            color="dark"
-                            @click="
-                              exercise.repsDone++;
-                              exercise.repsDifference++;
-                            "
-                            ><ion-icon
-                              :icon="add"
-                              size="small"
-                              slot="icon-only"
-                            ></ion-icon></ion-button
-                        ></ion-col>
-                      </ion-row>
-                    </ion-grid>
-                  </ion-col>
+
+                  <ion-col size="3"
+                    ><ion-button
+                      shape="round"
+                      color="dark"
+                      @click="
+                        exercise.repsDone--;
+                        exercise.repsDifference--;
+                      "
+                      ><ion-icon
+                        :icon="remove"
+                        size="small"
+                        slot="icon-only"
+                      ></ion-icon></ion-button
+                  ></ion-col>
+                  <ion-col size="2"
+                    ><h2 style="text-align: center">
+                      {{ exercise.repsDone }}
+                    </h2></ion-col
+                  >
+                  <ion-col size="3"
+                    ><ion-button
+                      shape="round"
+                      color="dark"
+                      @click="
+                        exercise.repsDone++;
+                        exercise.repsDifference++;
+                      "
+                      ><ion-icon
+                        :icon="add"
+                        size="small"
+                        slot="icon-only"
+                      ></ion-icon></ion-button
+                  ></ion-col>
                 </ion-row>
               </ion-grid>
             </div>
+
             <div
               style="
                 background-color: var(--ion-color-light);
@@ -232,50 +229,47 @@
                 border-radius: 16px;
               "
             >
-              <ion-grid style="--ion-grid-padding: 0px">
+              <ion-grid
+                style="--ion-grid-padding: 0px; --ion-grid-column-padding: 0px;"
+              >
                 <ion-row class="ion-align-items-center">
                   <ion-col class="ion-justify-content-center" size="4">
                     <h2 style="text-align: center">Modify weight</h2>
                   </ion-col>
-                  <ion-col size="8">
-                    <ion-grid>
-                      <ion-row
-                        class="ion-justify-content-end ion-align-items-center"
-                      >
-                        <ion-col size="auto"
-                          ><ion-button
-                            shape="round"
-                            color="dark"
-                            @click="
-                              exercise.weightDone -= 2;
-                              exercise.weightDifference -= 2;
-                            "
-                            ><ion-icon
-                              :icon="remove"
-                              size="small"
-                              slot="icon-only"
-                            ></ion-icon></ion-button
-                        ></ion-col>
-                        <ion-col size="auto"
-                          ><h2>{{ exercise.weightDone }}</h2></ion-col
-                        >
-                        <ion-col size="auto"
-                          ><ion-button
-                            shape="round"
-                            color="dark"
-                            @click="
-                              exercise.weightDone += 2;
-                              exercise.weightDifference += 2;
-                            "
-                            ><ion-icon
-                              :icon="add"
-                              size="small"
-                              slot="icon-only"
-                            ></ion-icon></ion-button
-                        ></ion-col>
-                      </ion-row>
-                    </ion-grid>
-                  </ion-col>
+
+                  <ion-col size="3"
+                    ><ion-button
+                      shape="round"
+                      color="dark"
+                      @click="
+                        exercise.weightDone -= 2;
+                        exercise.weightDifference -= 2;
+                      "
+                      ><ion-icon
+                        :icon="remove"
+                        size="small"
+                        slot="icon-only"
+                      ></ion-icon></ion-button
+                  ></ion-col>
+                  <ion-col size="2"
+                    ><h2 style="text-align: center">
+                      {{ exercise.weightDone }}
+                    </h2></ion-col
+                  >
+                  <ion-col size="3"
+                    ><ion-button
+                      shape="round"
+                      color="dark"
+                      @click="
+                        this.exercises[index].weightDone += 2;
+                        this.exercises[index].weightDifference += 2;
+                      "
+                      ><ion-icon
+                        :icon="add"
+                        size="small"
+                        slot="icon-only"
+                      ></ion-icon></ion-button
+                  ></ion-col>
                 </ion-row>
               </ion-grid>
             </div>
@@ -284,10 +278,12 @@
         <!-- TIMER -->
         <ion-card
           v-if="exercise.state == 'active'"
-          type="button"
-          color="dark"
+          button="true"
+          :color="
+            exercise.rest % 2 == 0 && exercise.rest < 10 ? 'primary' : 'dark'
+          "
           style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
-          @click="exerciseDone(exercise, index)"
+          @click="setTimer(index, exercise.rest)"
         >
           <ion-card-header
             ><ion-card-subtitle>{{
@@ -297,6 +293,9 @@
         </ion-card>
       </div>
     </ion-content>
+    <ion-footer>
+      <div class="rounded-container-bottom"></div>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -316,12 +315,10 @@ import {
   IonCol,
   IonGrid,
   IonRow,
-  IonToolbar,
-  IonHeader,
-  IonTitle,
-  IonButtons,
   alertController,
   IonModal,
+  IonFooter,
+  IonFab,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, unref } from "@vue/runtime-core";
 import {
@@ -343,7 +340,7 @@ import {
 import Info from "../components/modals/Info.vue";
 import Note from "../components/modals/Note.vue";
 import Record from "./modals/Record.vue";
-import { db, auth } from "../main";
+import { db, auth, alarm } from "../main";
 
 export default defineComponent({
   name: "workout",
@@ -365,11 +362,9 @@ export default defineComponent({
     IonCol,
     IonGrid,
     IonRow,
-    IonToolbar,
-    IonHeader,
-    IonTitle,
-    IonButtons,
     IonModal,
+    IonFooter,
+    IonFab,
   },
   props: {
     workout: { type: NewWorkout, required: true },
@@ -440,9 +435,30 @@ export default defineComponent({
 
     /* CARD CONTROLLER */
 
-    function exerciseDone(data: DoneExercise, index: number) {
-      data.state = "done";
-      console.log(index);
+    function exerciseDone(index: number) {
+      exercises.value[index].state = "done";
+    }
+
+    // TIMER
+
+    const isTimerActive = ref(false);
+    function setTimer(index: number, seconds: number) {
+      if (!isTimerActive.value) {
+        isTimerActive.value = true;
+
+        let interval = seconds;
+        //timer
+        const timerObject = setInterval(function() {
+          interval--;
+          exercises.value[index].rest = interval;
+          if (interval <= 0) {
+            clearInterval(timerObject);
+            exerciseDone(index);
+            isTimerActive.value = false;
+            alarm.play();
+          }
+        }, 1000);
+      }
     }
 
     /* -MODALS- */
@@ -519,6 +535,7 @@ export default defineComponent({
       setInfoOpen,
       infoData,
       openInfo,
+      setTimer,
     };
   },
   methods: {
@@ -530,7 +547,6 @@ export default defineComponent({
         buttons: [
           {
             text: "Discard",
-            role: "cancel",
             cssClass: "secondary",
             handler: () => {
               console.log("Confirm Cancel:");
@@ -551,3 +567,12 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+.rounded-container-bottom {
+  display: block;
+  background-color: var(--ion-color-light);
+  height: 21px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+</style>

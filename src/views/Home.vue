@@ -14,8 +14,8 @@
           </h4>
         </ion-text>
       </ion-item>
+      <div class="rounded-container-top"></div>
     </ion-header>
-    <div class="rounded-container">
       <ion-content color="light">
         <ion-card
           v-for="workout in workouts"
@@ -47,7 +47,9 @@
           </ion-item>
         </ion-card>
       </ion-content>
-    </div>
+    <ion-footer>
+      <div class="rounded-container-bottom"></div>
+    </ion-footer>
   </ion-page>
   <ion-page v-else>
     <workout
@@ -68,6 +70,7 @@ import {
   IonCardHeader,
   IonFabButton,
   IonIcon,
+  IonFooter,
 } from "@ionic/vue";
 import { add } from "ionicons/icons";
 import { defineComponent, onMounted, ref } from "vue";
@@ -89,6 +92,7 @@ export default defineComponent({
     IonCardHeader,
     IonFabButton,
     IonIcon,
+    IonFooter,
   },
   setup() {
     const router = useRouter();
@@ -144,12 +148,18 @@ export default defineComponent({
   color: var(--ion-color-primary);
   padding-left: 1vh;
 }
-.rounded-container {
+.rounded-container-bottom {
   display: block;
   background-color: var(--ion-color-light);
-  height: 100vh;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-radius: 20px;
+  height: 21px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.rounded-container-top {
+  display: block;
+  background-color: var(--ion-color-light);
+  height: 21px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 </style>
