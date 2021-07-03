@@ -8,7 +8,7 @@
           </h1>
         </ion-text>
       </ion-item>
-      <ion-card color="primary" style="border-radius: 45px;">
+      <ion-card v-if="userData.ispersonaltrainer" color="primary" style="border-radius: 45px;">
         <ion-item lines="none" color="primary">
           <ion-card-header>
             <ion-text color="light">
@@ -44,7 +44,7 @@
                 {{ userData.name }}
               </h1>
               <h6
-                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 300; font-size: 1.1em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
                 {{ userData.email }}
               </h6>

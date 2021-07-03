@@ -5,7 +5,7 @@
       <ion-toolbar>
         <ion-title>Exercise List</ion-title>
         <ion-buttons slot="primary">
-          <ion-button @click="close()">Close</ion-button>
+          <ion-button color="danger" @click="close()">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -22,6 +22,7 @@
             fill="outline"
             slot="end"
             size="large"
+            color="light"
             @click="addExerciseToWorkout(exercise)"
             >Add</ion-button
           >
@@ -102,14 +103,10 @@
       </ion-card>
 
       <ion-card>
-        <ion-card-header>
-          <ion-card-subtitle>work in progress...</ion-card-subtitle>
-          <ion-card-title>Add video</ion-card-title>
-        </ion-card-header>
-        <ion-item lines="none">
-          <ion-label position="floating">Video url</ion-label>
-          <ion-input v-model="newExercise.video"></ion-input>
-        </ion-item>
+          <ion-item lines="none">
+            <ion-label position="floating">Video url</ion-label>
+            <ion-input v-model="newExercise.video"></ion-input>
+          </ion-item>
       </ion-card>
     </ion-content>
   </ion-page>

@@ -136,7 +136,7 @@
         <ion-button
           size="large"
           expand="block"
-          color="dark"
+          color="light"
           fill="solid"
           @click="setOpen(true)"
           >Add exercise to workout</ion-button
@@ -186,8 +186,8 @@
         <ion-button
           size="large"
           expand="block"
-          color="primary"
-          fill="outline"
+          color="success"
+          fill="solid"
           @click="createWorkout()"
           >Add a new workout</ion-button
         >

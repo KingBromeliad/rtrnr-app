@@ -12,10 +12,9 @@
     </ion-modal>
     <!-- HEADER -->
     <ion-content color="light" style="--padding-top: 4em">
-
       <ion-fab vertical="top" horizontal="start" slot="fixed">
-        <ion-fab-button size="small" @click="presentAlertQuit()">
-          <ion-icon :icon="add"></ion-icon>
+        <ion-fab-button color="dark" size="small" @click="presentAlertQuit()">
+          <ion-icon :icon="close"></ion-icon>
         </ion-fab-button>
       </ion-fab>
       <!-- CARD ELEMENT -->
@@ -261,8 +260,8 @@
                       shape="round"
                       color="dark"
                       @click="
-                        this.exercises[index].weightDone += 2;
-                        this.exercises[index].weightDifference += 2;
+                        exercise.weightDone += 2;
+                        exercise.weightDifference += 2;
                       "
                       ><ion-icon
                         :icon="add"
@@ -336,11 +335,17 @@ import {
   remove,
   document,
   camera,
+  close,
 } from "ionicons/icons";
 import Info from "../components/modals/Info.vue";
 import Note from "../components/modals/Note.vue";
 import Record from "./modals/Record.vue";
 import { db, auth, alarm } from "../main";
+import {
+  LocalNotifications,
+  ScheduleOptions,
+} from "@capacitor/local-notifications";
+import { App } from "@capacitor/app";
 
 export default defineComponent({
   name: "workout",
@@ -439,9 +444,43 @@ export default defineComponent({
       exercises.value[index].state = "done";
     }
 
+    /* LOCAL NOTIFICATIONS */
+
+    //app state
+    const appActiveState = ref(true);
+
+    App.addListener("appStateChange", ({ isActive }) => {
+      appActiveState.value = isActive;
+    });
+
+    function sendNotification(index: number) {
+      if (!appActiveState.value) {
+        const exercise = exercises.value[index + 1].id;
+        const options: ScheduleOptions = {
+          notifications: [
+            {
+              title: "Rest over! Next up...",
+              body: exercise,
+              id: index,
+            },
+          ],
+        };
+        LocalNotifications.schedule(options);
+      }
+    }
+
     // TIMER
 
     const isTimerActive = ref(false);
+
+    function exitTimer(timer: number, index: number) {
+      clearInterval(timer);
+      exerciseDone(index);
+      isTimerActive.value = false;
+      alarm.play();
+      sendNotification(index);
+    }
+
     function setTimer(index: number, seconds: number) {
       if (!isTimerActive.value) {
         isTimerActive.value = true;
@@ -452,10 +491,7 @@ export default defineComponent({
           interval--;
           exercises.value[index].rest = interval;
           if (interval <= 0) {
-            clearInterval(timerObject);
-            exerciseDone(index);
-            isTimerActive.value = false;
-            alarm.play();
+            exitTimer(timerObject, index);
           }
         }, 1000);
       }
@@ -536,18 +572,19 @@ export default defineComponent({
       infoData,
       openInfo,
       setTimer,
+      close,
     };
   },
   methods: {
     async presentAlertQuit() {
       const alert = await alertController.create({
-        cssClass: "my-custom-class",
+        cssClass: "alert-class",
         header: "Before exit",
         message: "Save current session?",
         buttons: [
           {
             text: "Discard",
-            cssClass: "secondary",
+            cssClass: "discard",
             handler: () => {
               console.log("Confirm Cancel:");
               this.$emit("exitWorkout");
@@ -574,5 +611,11 @@ export default defineComponent({
   height: 21px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+}
+.alert-class{
+  --background: var(--ion-color-light);
+}
+.discard{
+  color: var(--ion-color-danger)
 }
 </style>

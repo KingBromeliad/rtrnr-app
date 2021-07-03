@@ -29,7 +29,7 @@
       <ion-toolbar>
         <ion-title>Personal Trainer mode</ion-title>
         <ion-buttons slot="start">
-          <ion-button @click="router.push('/tabs/home')">User</ion-button>
+          <ion-button color="danger" @click="router.push('/tabs/home')">User</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
