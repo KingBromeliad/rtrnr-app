@@ -1,12 +1,24 @@
 <template>
-  <ion-page style="background-color: #303136">
+  <ion-page v-if="completeSignUp">
+    <PTform :name="name" :email="email"></PTform>
+  </ion-page>
+  <ion-page v-else style="background-color: #303136">
+    <ion-toast
+      color="danger"
+      position="top"
+      :is-open="isOpenRef"
+      :message="errorMsg"
+      :duration="1000"
+      @didDismiss="setOpen(false)"
+    >
+    </ion-toast>
     <div class="box">
       <img src="./logo.svg" />
       <ion-item lines="none" color="light">
         <h1
           style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px; color: #718187"
         >
-          {{ mode === AuthMode.SignIn ? "Sign In" : "Sign Up" }}
+          {{ existingUser ? "Sign In" : "Sign Up" }}
         </h1>
       </ion-item>
       <div v-if="chooseMode" style="width: 90vw">
@@ -45,24 +57,16 @@
       </div>
 
       <!-- EMAIL SIGN IN -->
-      <form
-        v-if="emailSignIn"
-        style="width: 75vw"
-        @submit.prevent="
-          mode === AuthMode.SignIn
-            ? signInWithEmailAndPassword(email, password)
-            : signUpWithEmailAndPassword(name, email, password)
-        "
-      >
-        <ion-item v-if="mode === AuthMode.SignUp" style="--background: #303136">
+      <div v-if="emailSignIn" style="width: 75vw">
+        <ion-item color="light" lines="inset" v-if="!existingUser">
           <ion-label position="floating">Name</ion-label>
           <ion-input v-model="name"></ion-input>
         </ion-item>
-        <ion-item style="--background: #303136">
+        <ion-item color="light" lines="inset">
           <ion-label position="floating">Email</ion-label>
           <ion-input v-model="email"></ion-input>
         </ion-item>
-        <ion-item style="--background: #303136">
+        <ion-item color="light" lines="inset">
           <ion-label position="floating">Password</ion-label>
           <ion-input v-model="password" type="password"></ion-input>
         </ion-item>
@@ -71,23 +75,25 @@
           expand="block"
           color="secondary"
           class="ion-margin-top"
-          type="submit"
+          @click="
+            existingUser
+              ? signInWithEmailAndPassword()
+              : signUpWithEmailAndPassword()
+          "
         >
-          {{ mode === AuthMode.SignIn ? "Sign In" : "Sign Up" }}
+          {{ existingUser ? "Sign In" : "Sign Up" }}
         </ion-button>
         <ion-button
           style="--border-radius: 20px; --padding-top: 1.6em;  --padding-bottom: 1.6em; font-size: 1em"
           expand="block"
           color="medium"
           class="ion-margin-top"
-          @click="
-            mode = mode === AuthMode.SignIn ? AuthMode.SignUp : AuthMode.SignIn
-          "
+          @click="existingUser = !existingUser"
         >
-          {{ mode === AuthMode.SignIn ? "Sign Up" : "Cancel" }}
+          {{ existingUser ? "Sign Up" : "Cancel" }}
         </ion-button>
         <ion-button
-          v-if="!chooseMode && mode === AuthMode.SignIn"
+          v-if="!chooseMode && existingUser"
           style="--border-radius: 20px; --padding-top: 1.6em; --padding-bottom: 1.6em; font-size: 1em;"
           expand="block"
           color="tertiary"
@@ -99,7 +105,7 @@
           ><ion-icon slot="start" :icon="arrowBack"></ion-icon>
           Go back
         </ion-button>
-      </form>
+      </div>
     </div>
   </ion-page>
 </template>
@@ -112,102 +118,80 @@ import {
   IonItem,
   IonLabel,
   IonIcon,
+  IonToast,
 } from "@ionic/vue";
 import { useRouter } from "vue-router";
-import { reactive, ref, toRefs, defineComponent } from "vue";
-import { auth, db } from "../main";
+import { ref, defineComponent } from "vue";
+import { auth } from "../main";
 import { logoGoogle, mail, arrowBack } from "ionicons/icons";
-
-
-
-enum AuthMode {
-  SignIn,
-  SignUp,
-}
+import PTform from "@/components/PTform.vue";
 
 export default defineComponent({
   name: "Login",
   components: {
+    PTform,
     IonButton,
     IonPage,
     IonInput,
     IonItem,
     IonLabel,
     IonIcon,
+    IonToast,
   },
   setup() {
+    const isOpenRef = ref(false);
+    const setOpen = (state: boolean) => (isOpenRef.value = state);
+
     const router = useRouter();
-    const state = reactive({
-      name: "",
-      email: "",
-      password: "",
-      mode: AuthMode.SignIn,
-      errorMsg: "",
-    });
+    const completeSignUp = ref(false);
 
-    const signInWithEmailAndPassword = async (
-      email: string,
-      password: string
-    ) => {
-      try {
-        if (!email || !password) {
-          state.errorMsg = "Email and Password required";
-          return;
-        }
+    const existingUser = ref(true);
+    const email = ref("");
+    const password = ref("");
+    const name = ref("");
+    const errorMsg = ref("");
 
-        await auth.signInWithEmailAndPassword(email, password);
-        router.push("/tabs/home");
-      } catch (error) {
-        state.errorMsg = error.message;
-      }
-    };
+    function signInWithEmailAndPassword() {
+      auth
+        .signInWithEmailAndPassword(email.value, password.value)
+        .then(() => {
+          // Signed in
+          router.push("/tabs/home");
+        })
+        .catch((error) => {
+          errorMsg.value = error.message;
+          setOpen(true);
+        });
+    }
 
-    const signUpWithEmailAndPassword = async (
-      name: string,
-      email: string,
-      password: string
-    ) => {
-      try {
-        if (!name || !email || !password) {
-          state.errorMsg = "Name, email and password required!";
-          return;
-        }
-        const authRes = await auth.createUserWithEmailAndPassword(
-          email,
-          password
-        );
-
-        db.collection("user")
-          .doc(authRes.user?.uid)
-          .set({
-            name,
-            email,
+    function signUpWithEmailAndPassword() {
+      if (email.value != "" && name.value != "" && password.value != "") {
+        auth
+          .createUserWithEmailAndPassword(email.value, password.value)
+          .then(() => {
+            completeSignUp.value = true;
+          })
+          .catch((error) => {
+            errorMsg.value = error.message;
+            setOpen(true);
           });
-        router.push("/tabs/home");
-      } catch (error) {
-        state.errorMsg = error.message;
+      } else {
+        errorMsg.value = "All fields are required!";
+        setOpen(true);
       }
-    };
+    }
 
     /*SIGN IN MODES */
     const emailSignIn = ref(true);
     const chooseMode = ref(false);
 
-
-
-
-
     function googleSignIn() {
-
       router.push("/tabs/home");
-
     }
 
     return {
-      ...toRefs(state),
       signInWithEmailAndPassword,
       signUpWithEmailAndPassword,
-      AuthMode,
       router,
       emailSignIn,
       chooseMode,
@@ -215,6 +199,14 @@ export default defineComponent({
       mail,
       arrowBack,
       googleSignIn,
+      completeSignUp,
+      name,
+      email,
+      password,
+      existingUser,
+      isOpenRef,
+      errorMsg,
+      setOpen
     };
   },
 });

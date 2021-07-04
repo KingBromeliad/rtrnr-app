@@ -8,6 +8,7 @@ import { IonicVue } from "@ionic/vue";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css";
@@ -28,10 +29,9 @@ import "@ionic/vue/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import { Howl } from "howler";
-   export const alarm = new Howl({
-            src: [require("./chime.mp3")],
-          });
-
+export const alarm = new Howl({
+  src: [require("./chime.mp3")],
+});
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -45,10 +45,74 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
-export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const db = firebase.firestore();
+export const storage = firebase.storage();
 
 //types
+
+export class AppUser {
+  name: string;
+  email: string;
+  ispersonaltrainer: boolean;
+  age: number;
+  gender: string;
+  height: number;
+  weight: number;
+  trainingfrequence: number;
+  trainingtype: string;
+
+  constructor(
+    name: string,
+    email: string,
+    istrainer: boolean,
+    age: number,
+    gender: string,
+    height: number,
+    weight: number,
+    trainingfrequence: number,
+    trainingtype: string
+  ) {
+    this.name = name;
+    this.email = email;
+    this.ispersonaltrainer = istrainer;
+    this.age = age;
+    this.gender = gender;
+    this.height = height;
+    this.weight = weight;
+    this.trainingfrequence = trainingfrequence;
+    this.trainingtype = trainingtype;
+  }
+}
+
+export const userConverter = {
+  toFirestore: function(u: AppUser) {
+    return {
+      name: u.name,
+      email: u.email,
+      ispersonaltrainer: u.ispersonaltrainer,
+      age: u.age,
+      gender: u.gender,
+      height: u.height,
+      weight: u.weight,
+      trainingfrequence: u.trainingfrequence,
+      trainingtype: u.trainingtype,
+    };
+  },
+  fromFirestore: function(snapshot: any, options: any) {
+    const data = snapshot.data(options);
+    return new AppUser(
+      data.name,
+      data.email,
+      Boolean(data.ispersonaltrainer),
+      data.age,
+      data.gender,
+      data.height,
+      data.weight,
+      data.trainingfrequence,
+      data.trainingtype
+    );
+  },
+};
 
 export class ExerciseData {
   name: string;
@@ -88,7 +152,6 @@ export class NewWorkout {
     ];
 
     this.color = colors[Math.floor(Math.random() * colors.length)];
-
   }
 }
 
@@ -154,7 +217,7 @@ export class PastWorkout {
 
 const app = createApp(App)
   .use(IonicVue, {
-    mode: 'ios'
+    mode: "ios",
   })
   .use(router);
 

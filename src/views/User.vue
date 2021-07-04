@@ -8,7 +8,11 @@
           </h1>
         </ion-text>
       </ion-item>
-      <ion-card v-if="userData.ispersonaltrainer" color="primary" style="border-radius: 45px;">
+      <ion-card
+        v-if="userData.ispersonaltrainer"
+        color="primary"
+        style="border-radius: 45px;"
+      >
         <ion-item lines="none" color="primary">
           <ion-card-header>
             <ion-text color="light">
@@ -57,10 +61,13 @@
           ><ion-icon slot="start" :icon="logOut"></ion-icon>Logout</ion-button
         >
       </div>
-      <ion-card color="secondary" style="border-radius: 45px;">
-        <ion-item lines="none" color="secondary">
+      <ion-card
+        :color="editMode ? 'medium' : 'secondary'"
+        style="border-radius: 45px;"
+      >
+        <ion-item lines="none" :color="editMode ? 'medium' : 'secondary'">
           <ion-card-header>
-            <ion-text color="dark">
+            <ion-text :color="editMode ? 'light' : 'dark'">
               <h1
                 style="font-weight: 600; font-size: 1.6em; margin-bottom: 0px; margin-top: 0px"
               >
@@ -88,69 +95,114 @@
             ><ion-icon :icon="pencil"></ion-icon
           ></ion-fab-button>
         </ion-item>
-        <ion-card-content>
-          <ion-item
-            :color="editMode ? 'primary' : 'secondary'"
-            style="border-radius: 20px"
-          >
-            <ion-input
-              v-if="editMode"
-              inputmode="numeric"
-              type="number"
-              placeholder="Your weight... Kg"
-              v-model="userData.weight"
-              style="font-weight: 300; font-size: 1.2em;"
-            ></ion-input>
-            <ion-text v-else color="light">
-              <h6
-                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-              >
-                {{ "Weight: " + userData.weight + " Kg" }}
-              </h6>
-            </ion-text>
-          </ion-item>
-          <ion-item
-            :color="editMode ? 'primary' : 'secondary'"
-            style="border-radius: 20px"
-          >
-            <ion-input
-              v-if="editMode"
-              inputmode="numeric"
-              type="number"
-              placeholder="Your height... Meters"
-              v-model="userData.height"
-              style="font-weight: 300; font-size: 1.2em;"
-            ></ion-input>
-            <ion-text v-else color="light">
-              <h6
-                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-              >
-                {{ "Height: " + userData.height + " m" }}
-              </h6>
-            </ion-text>
-          </ion-item>
-          <ion-item
-            :color="editMode ? 'primary' : 'secondary'"
-            lines="none"
-            style="border-radius: 20px"
-          >
-            <ion-input
-              v-if="editMode"
-              inputmode="numeric"
-              type="number"
-              placeholder="Your max pull-ups..."
-              v-model="userData.pullups"
-              style="font-weight: 300; font-size: 1.2em;"
-            ></ion-input>
-            <ion-text v-else color="light">
-              <h6
-                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-              >
-                {{ "Max pull-ups: " + userData.pullups }}
-              </h6>
-            </ion-text>
-          </ion-item>
-        </ion-card-content>
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="calendarClear"></ion-icon>
+          <ion-input
+            v-if="editMode"
+            required="true"
+            v-model="userData.age"
+            placeholder="Age"
+            type="number"
+            color="medium"
+          ></ion-input>
+          <ion-text v-else>
+            <h6
+              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+            >
+              {{ userData.age }}
+            </h6>
+          </ion-text>
+        </ion-item>
+        <ion-item size="small" lines="none">
+          <ion-icon size="small" slot="start" :icon="maleFemale"></ion-icon>
+          <ion-input
+            v-if="editMode"
+            required="true"
+            v-model="userData.gender"
+            placeholder="Gender"
+            type="text"
+            color="medium"
+          ></ion-input>
+          <ion-text v-else>
+            <h6
+              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+            >
+              {{ userData.gender }}
+            </h6>
+          </ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="arrowUp"></ion-icon>
+          <ion-input
+            v-if="editMode"
+            required="true"
+            v-model="userData.height"
+            placeholder="Height (Meters)"
+            type="number"
+            color="medium"
+          ></ion-input>
+          <ion-text v-else>
+            <h6
+              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+            >
+              {{ userData.height }}
+            </h6>
+          </ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="scale"></ion-icon>
+          <ion-input
+            v-if="editMode"
+            required="true"
+            v-model="userData.weight"
+            placeholder="Weight (Kilograms)"
+            type="number"
+            color="medium"
+          ></ion-input>
+          <ion-text v-else>
+            <h6
+              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+            >
+              {{ userData.weight }}
+            </h6>
+          </ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="barbell"></ion-icon>
+          <ion-input
+            v-if="editMode"
+            required="true"
+            v-model="userData.trainingfrequence"
+            placeholder="Number of weekly workouts"
+            type="number"
+            color="medium"
+          ></ion-input>
+          <ion-text v-else>
+            <h6
+              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+            >
+              {{ userData.trainingfrequence }}
+            </h6>
+          </ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="football"></ion-icon>
+          <ion-input
+            v-if="editMode"
+            required="true"
+            v-model="userData.trainingtype"
+            placeholder="Sport/Exercise type"
+            type="text"
+            color="medium"
+          ></ion-input>
+          <ion-text v-else>
+            <h6
+              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+            >
+              {{ userData.trainingtype }}
+            </h6>
+          </ion-text>
+        </ion-item>
       </ion-card>
     </ion-content>
 
@@ -171,13 +223,25 @@ import {
   IonContent,
   IonCard,
   IonCardHeader,
-  IonCardContent,
   IonInput,
   IonFooter,
 } from "@ionic/vue";
-import { defineComponent, ref } from "@vue/runtime-core";
-import { logOut, chevronForward, pencil, checkmark } from "ionicons/icons";
-import { db, auth } from "../main";
+
+import { defineComponent, onMounted, onUpdated, ref } from "@vue/runtime-core";
+import {
+  logOut,
+  chevronForward,
+  pencil,
+  checkmark,
+  arrowBackOutline,
+  calendarClear,
+  maleFemale,
+  football,
+  barbell,
+  scale,
+  arrowUp,
+} from "ionicons/icons";
+import { db, auth, userConverter, AppUser } from "../main";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -192,89 +256,54 @@ export default defineComponent({
     IonPage,
     IonCard,
     IonCardHeader,
-    IonCardContent,
     IonInput,
     IonFooter,
   },
   setup() {
     const router = useRouter();
 
-    class User {
-      name: string;
-      email: string;
-      ispersonaltrainer: boolean;
-      weight: number;
-      height: number;
-      pullups: number;
-
-      constructor(
-        name: string,
-        email: string,
-        bool: boolean,
-        weight: number,
-        height: number,
-        pullups: number
-      ) {
-        this.name = name;
-        this.email = email;
-        this.ispersonaltrainer = bool;
-        this.weight = weight;
-        this.height = height;
-        this.pullups = pullups;
-      }
-    }
-
-    // Firestore data converter
-    const userConverter = {
-      toFirestore: function(user: User) {
-        return {
-          name: user.name,
-          email: user.email,
-          ispersonaltrainer: user.ispersonaltrainer,
-          weight: user.weight,
-          height: user.height,
-          pullups: user.height,
-        };
-      },
-      fromFirestore: function(snapshot: any, options: any) {
-        const data = snapshot.data(options);
-        return new User(
-          data.name,
-          data.email,
-          data.ispersonaltrainer,
-          data.weight,
-          data.height,
-          data.pullups
-        );
-      },
-    };
     //USER DATA
-    const type = new User("", "", false, 0, 0, 0);
+
+    const type = new AppUser("", "", false, 0, "", 0, 0, 0, "");
     const userData = ref(type);
 
-    db.collection("user")
-      .doc(auth.currentUser?.uid)
-      .withConverter(userConverter)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          // Convert to City object
-          const temp: User | undefined = doc.data();
-          if (temp) userData.value = temp;
-          else console.log("Firebase support TS please");
-        } else {
-          console.log("No such document!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
-      });
+    function fetchUser() {
+      db.collection("user")
+        .doc(auth.currentUser?.uid)
+        .withConverter(userConverter)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            // Convert
+            const temp: AppUser | undefined = doc.data();
+            if (temp) userData.value = temp;
+            else console.log("Firebase support TS please");
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
+
+    onMounted(() => {
+      fetchUser();
+    });
+
+    onUpdated(()=> {
+      fetchUser();
+    })
 
     /* MODIFY DATA */
     const editMode = ref(false);
 
     function saveData() {
       editMode.value = false;
+      db.collection("user")
+        .doc(auth.currentUser?.uid)
+        .withConverter(userConverter)
+        .set(userData.value);
     }
 
     /* LOGOUT */
@@ -284,6 +313,7 @@ export default defineComponent({
       auth
         .signOut()
         .then(() => {
+          userData.value = new AppUser("", "", false, 0, "", 0, 0, 0, "");
           router.push("/login");
         })
         .catch((error) => {
@@ -300,6 +330,13 @@ export default defineComponent({
       checkmark,
       saveData,
       logout,
+      arrowBackOutline,
+      calendarClear,
+      maleFemale,
+      football,
+      barbell,
+      scale,
+      arrowUp,
     };
   },
 });
