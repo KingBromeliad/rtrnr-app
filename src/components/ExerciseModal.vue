@@ -25,6 +25,14 @@
             color="light"
             @click="addExerciseToWorkout(exercise)"
             >Add</ion-button
+          >          <ion-button
+            v-else
+            fill="outline"
+            slot="end"
+            size="large"
+            color="danger"
+            @click="presentAlertDelete(exercise.name)"
+            >Delete</ion-button
           >
         </ion-item>
         <ion-item lines="none">
@@ -189,9 +197,11 @@ export default defineComponent({
   },
   mounted() {
     db.collection("exercise").onSnapshot((querySnapshot) => {
+      const temp: object[] = [];
       querySnapshot.forEach((doc) => {
-        this.exercises.push(doc.data());
+        temp.push(doc.data());
       });
+      this.exercises = temp;
     });
   },
   methods: {
@@ -228,6 +238,32 @@ export default defineComponent({
       return alert.present();
     },
 
+        async presentAlertDelete(name: string) {
+      const alert = await alertController
+        .create({
+          cssClass: 'my-custom-class',
+          header: 'Delete?',
+          message: 'This action is permanent',
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: blah => {
+                console.log('Confirm Cancel:', blah)
+              },
+            },
+            {
+              text: 'Delete',
+              handler: () => {
+                this.deleteExercise(name)
+              },
+            },
+          ],
+        });
+      return alert.present();
+    },
+
     addExercise() {
       db.collection("exercise")
         .doc(this.newExercise.name)
@@ -245,6 +281,20 @@ export default defineComponent({
     addExerciseToWorkout(exercise: object) {
       this.$emit("addToWorkout", exercise);
     },
+
+    deleteExercise(exercise: string) {
+            db.collection("exercise")
+        .doc(exercise)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch((error) => {
+          console.error("Error removing document: ", error);
+        });
+    }
   },
 });
+
+
 </script>
