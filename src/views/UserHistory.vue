@@ -76,15 +76,20 @@ export default defineComponent({
     const currentWorkout = reactive({});
 
     function getWorkouts() {
-      db.collection("user/" + props.id + "/history")
-        .get()
-        .then((querySnapshot) => {
+      db.collection("user/" + props.id + "/history").onSnapshot(
+        (querySnapshot) => {
+          const temp: object[] = [];
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            pastWorkouts.value.push(doc.data());
+            const item = doc.data();
+            temp.push(item);
           });
-        });
+          pastWorkouts.value = temp;
+        }
+      );
     }
+
+
     const userData = ref({});
 
     function getUserData() {
@@ -95,7 +100,6 @@ export default defineComponent({
           if (doc.exists) {
             const temp: object | undefined = doc.data();
             if (temp) userData.value = temp;
-            else console.log("Firebase support TS please");
           } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
@@ -109,7 +113,6 @@ export default defineComponent({
     onMounted(() => {
       getUserData();
       getWorkouts();
-      console.log(pastWorkouts.value);
     });
     /* MODAL CONTROLLER */
     const isOpenRef = ref(false);
