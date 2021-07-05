@@ -8,23 +8,31 @@
     <ion-content color="medium" style="--padding-top: 4em">
       <ion-item lines="none" color="medium">
         <ion-text color="dark">
-          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">{{ exercise.name }}</h1>
-          <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">{{ exercise.subtitle }}</h4>
+          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
+            {{ exercise.name }}
+          </h1>
+          <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">
+            {{ exercise.subtitle }}
+          </h4>
         </ion-text>
       </ion-item>
-      <div style="--aspect-ratio: 16/9; margin: 1em;">
-        <iframe
-          :src="exercise.video"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          style="border-radius: 20px"
-        ></iframe>
+      <div style="height: 28vh; display: flex; flex-direction: row; align-items: center; justify-content: center">
+          <iframe
+            width="350"
+            height="195"
+            style="border-radius: 20px"
+            :src="exercise.video"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
       </div>
       <ion-item lines="none" color="medium">
         <ion-text color="dark">
-          <h5 style="font-weight: 400; font-size: 1.2em;">{{ exercise.description }}</h5>
+          <h5 style="font-weight: 400; font-size: 1.2em;">
+            {{ exercise.description }}
+          </h5>
         </ion-text>
       </ion-item>
     </ion-content>

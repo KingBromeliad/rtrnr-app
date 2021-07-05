@@ -88,19 +88,21 @@ export default defineComponent({
     const currentWorkout = reactive({});
 
     function getWorkouts() {
-      db.collection("user/" + auth.currentUser?.uid + "/history")
-        .get()
-        .then((querySnapshot) => {
+      db.collection("user/" + auth.currentUser?.uid + "/history").onSnapshot(
+        (querySnapshot) => {
+          const temp: object[] = [];
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            pastWorkouts.value.push(doc.data());
+            const item = doc.data();
+            temp.push(item);
           });
-        });
+          pastWorkouts.value = temp;
+        }
+      );
     }
 
     onMounted(() => {
       getWorkouts();
-      console.log(pastWorkouts.value);
     });
     /* MODAL CONTROLLER */
     const isOpenRef = ref(false);

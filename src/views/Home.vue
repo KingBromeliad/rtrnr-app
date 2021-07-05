@@ -16,37 +16,37 @@
       </ion-item>
       <div class="rounded-container-top"></div>
     </ion-header>
-      <ion-content color="light">
-        <ion-card
-          v-for="workout in workouts"
-          :key="workout.name"
-          button="true"
-          @click="goToWorkout(workout)"
-          v-bind:style="{ '--color': workout.color,}"
-          style="border-radius: 45px;"
-        >
-          <ion-item lines="none" v-bind:style="{ '--background': workout.color,}">
-            <ion-card-header>
-                <h1
-                  style="font-weight: 550; font-size: 2.2em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
-                >
-                  {{ workout.name }}
-                </h1>
-                <h6
-                  style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.5em; color: var(--ion-color-light);"
-                >
-                  {{ workout.description }}
-                </h6>
-            </ion-card-header>
-            <ion-fab-button
-              slot="end"
-              style="--box-shadow: 0px;"
-              color="light"
-              ><ion-icon v-bind:style="{ color: workout.color,}" :icon="caretForward"></ion-icon
-            ></ion-fab-button>
-          </ion-item>
-        </ion-card>
-      </ion-content>
+    <ion-content color="light">
+      <ion-card
+        v-for="workout in workouts"
+        :key="workout.name"
+        button="true"
+        @click="goToWorkout(workout)"
+        v-bind:style="{ '--color': workout.color }"
+        style="border-radius: 45px;"
+      >
+        <ion-item lines="none" v-bind:style="{ '--background': workout.color }">
+          <ion-card-header>
+            <h1
+              style="font-weight: 550; font-size: 2.2em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
+            >
+              {{ workout.name }}
+            </h1>
+            <h6
+              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.5em; color: var(--ion-color-light);"
+            >
+              {{ workout.description }}
+            </h6>
+          </ion-card-header>
+          <ion-fab-button slot="end" style="--box-shadow: 0px;" color="light"
+            ><ion-icon
+              v-bind:style="{ color: workout.color }"
+              :icon="caretForward"
+            ></ion-icon
+          ></ion-fab-button>
+        </ion-item>
+      </ion-card>
+    </ion-content>
     <ion-footer>
       <div class="rounded-container-bottom"></div>
     </ion-footer>
@@ -78,6 +78,7 @@ import { useRouter } from "vue-router";
 import { auth, db, NewWorkout } from "../main";
 import Workout from "../components/Workout.vue";
 import { caretForward } from "ionicons/icons";
+import { useBackButton } from '@ionic/vue';
 
 export default defineComponent({
   name: "home",
@@ -95,6 +96,9 @@ export default defineComponent({
     IonFooter,
   },
   setup() {
+    useBackButton(10, () => {
+      console.log("Handler was called!");
+    });
     const router = useRouter();
     const type: NewWorkout[] = [];
     const workouts = ref(type);
@@ -104,9 +108,8 @@ export default defineComponent({
     const currentWorkout = ref(workoutType);
 
     function getWorkouts() {
-      db.collection("user/" + auth.currentUser?.uid + "/workout")
-        .get()
-        .then((querySnapshot) => {
+      db.collection("user/" + auth.currentUser?.uid + "/workout").onSnapshot(
+        (querySnapshot) => {
           const temp: NewWorkout[] = [];
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
@@ -114,12 +117,12 @@ export default defineComponent({
             temp.push(Object.assign(item, doc.data()));
           });
           workouts.value = temp;
-        });
+        }
+      );
     }
 
     onMounted(() => {
       getWorkouts();
-      console.log(workouts.value);
     });
 
     //GOT TO WORKOUT

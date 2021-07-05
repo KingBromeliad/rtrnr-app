@@ -11,7 +11,7 @@
       <record @exitVideo="addVideo" :id="videoId"></record>
     </ion-modal>
     <!-- HEADER -->
-    <ion-content color="light" style="--padding-top: 4em">
+    <ion-content color="light" style="--padding-top: 4em;">
       <ion-fab vertical="top" horizontal="start" slot="fixed">
         <ion-fab-button color="dark" size="small" @click="presentAlertQuit()">
           <ion-icon :icon="close"></ion-icon>
@@ -284,10 +284,9 @@
           style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
           @click="setTimer(index, exercise.rest)"
         >
-          <ion-card-header
-            ><ion-card-subtitle>{{
-              exercise.rest + " Seconds"
-            }}</ion-card-subtitle></ion-card-header
+          <ion-item lines="none"
+            ><ion-icon size="small" slot="start" :icon="timerOutline"></ion-icon
+            ><ion-label>{{ exercise.rest + " Seconds" }}</ion-label></ion-item
           >
         </ion-card>
       </div>
@@ -318,6 +317,7 @@ import {
   IonModal,
   IonFooter,
   IonFab,
+  IonLabel,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, unref } from "@vue/runtime-core";
 import {
@@ -336,6 +336,7 @@ import {
   document,
   camera,
   close,
+  timerOutline,
 } from "ionicons/icons";
 import Info from "../components/modals/Info.vue";
 import Note from "../components/modals/Note.vue";
@@ -346,6 +347,7 @@ import {
   ScheduleOptions,
 } from "@capacitor/local-notifications";
 import { App } from "@capacitor/app";
+import { useBackButton } from "@ionic/vue";
 
 export default defineComponent({
   name: "workout",
@@ -370,6 +372,7 @@ export default defineComponent({
     IonModal,
     IonFooter,
     IonFab,
+    IonLabel,
   },
   props: {
     workout: { type: NewWorkout, required: true },
@@ -434,7 +437,6 @@ export default defineComponent({
           console.error("Error writing document: ", error);
         });
 
-      console.log(doneWorkout);
       context.emit("exitWorkout");
     }
 
@@ -540,6 +542,36 @@ export default defineComponent({
       setVideoOpen(false);
     }
 
+    // ALERT
+    const presentAlertQuit = async () => {
+      const alert = await alertController.create({
+        cssClass: "alert-class",
+        header: "Before exit",
+        message: "Save current session?",
+        buttons: [
+          {
+            text: "Discard",
+            cssClass: "discard",
+            handler: () => {
+              context.emit("exitWorkout");
+            },
+          },
+          {
+            text: "Save",
+            handler: () => {
+              exitAndSave();
+            },
+          },
+        ],
+      });
+      return alert.present();
+    };
+
+    useBackButton(10, () => {
+      console.log("Handler was called!");
+      presentAlertQuit();
+    });
+
     return {
       db,
       videoId,
@@ -573,34 +605,9 @@ export default defineComponent({
       openInfo,
       setTimer,
       close,
+      timerOutline,
+      presentAlertQuit,
     };
-  },
-  methods: {
-    async presentAlertQuit() {
-      const alert = await alertController.create({
-        cssClass: "alert-class",
-        header: "Before exit",
-        message: "Save current session?",
-        buttons: [
-          {
-            text: "Discard",
-            cssClass: "discard",
-            handler: () => {
-              console.log("Confirm Cancel:");
-              this.$emit("exitWorkout");
-            },
-          },
-          {
-            text: "Save",
-            handler: () => {
-              console.log("Confirm Okay");
-              this.exitAndSave();
-            },
-          },
-        ],
-      });
-      return alert.present();
-    },
   },
 });
 </script>
@@ -612,10 +619,10 @@ export default defineComponent({
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
-.alert-class{
+.alert-class {
   --background: var(--ion-color-light);
 }
-.discard{
-  color: var(--ion-color-danger)
+.discard {
+  color: var(--ion-color-danger);
 }
 </style>

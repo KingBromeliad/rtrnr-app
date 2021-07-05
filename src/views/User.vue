@@ -1,5 +1,12 @@
 <template>
   <ion-page style="background-color: var(--ion-color-medium)">
+    <ion-toast
+      :is-open="isOpenRef"
+      message="Copied to clipboard!"
+      :duration="1000"
+      @didDismiss="setOpen(false)"
+    >
+    </ion-toast>
     <ion-content color="light">
       <ion-item lines="none" color="light">
         <ion-text color="medium">
@@ -37,37 +44,45 @@
         </ion-item>
       </ion-card>
 
-      <ion-card color="secondary" style="border-radius: 45px;">
+      <ion-card
+        button="true"
+        @click="showData = !showData"
+        color="secondary"
+        style="border-radius: 45px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+      >
         <ion-card-header style="padding: 0px">
           <div class="wrapper">
             <img id="avatar" src="https://i.pravatar.cc/300" />
-            <ion-text color="medium">
+            <ion-text color="light">
               <h1
                 style="font-weight: 550; font-size: 2.4em; margin-bottom: 0px; margin-top: 0px"
               >
                 {{ userData.name }}
               </h1>
               <h6
-                style="font-weight: 300; font-size: 1.1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 300; font-size: 1.3em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
-                {{ userData.email }}
+                {{ showData ? 'Tap to close' : 'Tap to view your data' }}
               </h6>
             </ion-text>
           </div>
         </ion-card-header>
       </ion-card>
-      <div class="wrapper end">
-        <ion-button color="tertiary" shape="round" @click="logout()"
-          ><ion-icon slot="start" :icon="logOut"></ion-icon>Logout</ion-button
-        >
-      </div>
+
       <ion-card
-        :color="editMode ? 'medium' : 'secondary'"
-        style="border-radius: 45px;"
+        v-if="showData"
+        color="medium"
+        style="
+            border-radius: 0px 0px 45px 45px;
+            transform: translateY(-55px);
+            margin-top: 0px;
+            padding-top: 40px;
+            padding-bottom: 0.3em;
+          "
       >
-        <ion-item lines="none" :color="editMode ? 'medium' : 'secondary'">
+        <ion-item lines="none" color="medium">
           <ion-card-header>
-            <ion-text :color="editMode ? 'light' : 'dark'">
+            <ion-text :color="editMode ? 'secondary' : 'light'">
               <h1
                 style="font-weight: 600; font-size: 1.6em; margin-bottom: 0px; margin-top: 0px"
               >
@@ -204,6 +219,82 @@
           </ion-text>
         </ion-item>
       </ion-card>
+
+      <div class="wrapper end">
+        <ion-button color="tertiary" shape="round" @click="logout()"
+          ><ion-icon slot="start" :icon="logOut"></ion-icon>Logout</ion-button
+        >
+      </div>
+      <!-- PERSONAL TRAINER CARD -->
+      <ion-item lines="none" color="light">
+        <ion-text color="medium">
+          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0.3em">
+            Personal trainer
+          </h1>
+        </ion-text>
+      </ion-item>
+      <div>
+        <ion-card
+          color="primary"
+          style="border-radius: 45px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+        >
+          <ion-card-header style="padding: 0px">
+            <div class="wrapper">
+              <img id="avatar" :src="trainerData.profilepicture" />
+              <ion-text color="light">
+                <h1
+                  style="font-weight: 550; font-size: 2.4em; margin-bottom: 0px; margin-top: 0px"
+                >
+                  {{ trainerData.name }}
+                </h1>
+              </ion-text>
+            </div>
+          </ion-card-header>
+        </ion-card>
+        <ion-card
+          color="secondary"
+          style="
+            border-radius: 0px 0px 45px 45px;
+            transform: translateY(-55px);
+            margin-top: 0px;
+            padding-top: 40px;
+            padding-bottom: 0.3em;
+          "
+        >
+          <ion-card-content>
+            <ion-item
+              button="true"
+              lines="none"
+              color="light"
+              style="--border-radius: 20px; margin-bottom: 0.5em"
+              :href="trainerData.instagram"
+            >
+              <ion-icon slot="start" :icon="logoInstagram"></ion-icon>
+              <ion-label>{{ trainerData.name }}</ion-label>
+            </ion-item>
+            <ion-item
+              button="true"
+              lines="none"
+              color="light"
+              style="--border-radius: 20px; margin-bottom: 0.5em"
+              @click="writeToClipboard(trainerData.contactemail)"
+            >
+              <ion-icon slot="start" :icon="mailOutline"></ion-icon>
+              <ion-label>{{ trainerData.contactemail }}</ion-label>
+            </ion-item>
+            <ion-item
+              button="true"
+              lines="none"
+              color="light"
+              style="--border-radius: 20px; margin-bottom: 0.5em"
+              @click="writeToClipboard(trainerData.contactnumber)"
+            >
+              <ion-icon slot="start" :icon="callOutline"></ion-icon>
+              <ion-label>{{ trainerData.contactnumber }}</ion-label>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </div>
     </ion-content>
 
     <ion-footer>
@@ -225,6 +316,9 @@ import {
   IonCardHeader,
   IonInput,
   IonFooter,
+  IonLabel,
+  IonCardContent,
+  IonToast,
 } from "@ionic/vue";
 
 import { defineComponent, onMounted, onUpdated, ref } from "@vue/runtime-core";
@@ -240,9 +334,13 @@ import {
   barbell,
   scale,
   arrowUp,
+  logoInstagram,
+  mailOutline,
+  callOutline,
 } from "ionicons/icons";
-import { db, auth, userConverter, AppUser } from "../main";
+import { db, auth, userConverter, AppUser, Trainer } from "../main";
 import { useRouter } from "vue-router";
+import { Clipboard } from "@capacitor/clipboard";
 
 export default defineComponent({
   name: "User",
@@ -258,14 +356,22 @@ export default defineComponent({
     IonCardHeader,
     IonInput,
     IonFooter,
+    IonLabel,
+    IonCardContent,
+    IonToast,
   },
   setup() {
     const router = useRouter();
+    const showData = ref(false);
+    const isOpenRef = ref(false);
+    const setOpen = (state: boolean) => (isOpenRef.value = state);
 
     //USER DATA
 
     const type = new AppUser("", "", false, 0, "", 0, 0, 0, "");
     const userData = ref(type);
+    const trainertype = new Trainer();
+    const trainerData = ref(trainertype);
 
     function fetchUser() {
       db.collection("user")
@@ -287,13 +393,32 @@ export default defineComponent({
         });
     }
 
+    function fetchTrainer() {
+      db.collection("trainer")
+        .doc("SSSS-PPPP")
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const type = new Trainer();
+            trainerData.value = Object.assign(type, doc.data());
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
+
     onMounted(() => {
       fetchUser();
+      fetchTrainer();
     });
 
-    onUpdated(()=> {
+    onUpdated(() => {
       fetchUser();
-    })
+    });
 
     /* MODIFY DATA */
     const editMode = ref(false);
@@ -309,7 +434,6 @@ export default defineComponent({
     /* LOGOUT */
 
     function logout() {
-      console.log("logout");
       auth
         .signOut()
         .then(() => {
@@ -320,6 +444,14 @@ export default defineComponent({
           console.log(error);
         });
     }
+
+    const writeToClipboard = async (text: string) => {
+      await Clipboard.write({
+        string: text,
+      });
+      setOpen(true);
+    };
+
     return {
       logOut,
       userData,
@@ -337,6 +469,14 @@ export default defineComponent({
       barbell,
       scale,
       arrowUp,
+      logoInstagram,
+      mailOutline,
+      callOutline,
+      trainerData,
+      writeToClipboard,
+      isOpenRef,
+      setOpen,
+      showData,
     };
   },
 });

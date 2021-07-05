@@ -20,7 +20,7 @@
         <ion-item color="medium">
           <ion-textarea
             placeholder="Leave a note..."
-            rows="22"
+            rows="14"
             v-model="newNote"
             style="padding-top: 0.4em; font-weight: 400; font-size: 1.2em;"
           ></ion-textarea>

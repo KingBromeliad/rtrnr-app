@@ -29,7 +29,7 @@
       <ion-toolbar>
         <ion-title>Personal Trainer mode</ion-title>
         <ion-buttons slot="start">
-          <ion-button color="danger" @click="router.push('/tabs/home')">User</ion-button>
+          <ion-button color="danger" @click="exit()">User</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -40,6 +40,7 @@
           v-for="user in users"
           :key="user.uid"
           @click="setPopOpen(true, user.uid, $event)"
+          button="true"
         >
           <ion-label>{{ user.data.name }}</ion-label>
         </ion-item>
@@ -152,6 +153,9 @@ export default defineComponent({
       isPopOpenRef.value = false;
       router.push({ name: "userhistory", params: { id: selectedUid.value } });
     }
+    function exit() {
+      router.push('/tabs/user');
+    }
     return {
       navigateToWorkout,
       selectedUid,
@@ -163,7 +167,8 @@ export default defineComponent({
       getUsers,
       setOpen,
       isOpenRef,
-      navigateToHistory
+      navigateToHistory,
+      exit
     };
   },
 });

@@ -47,8 +47,24 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const storage = firebase.storage();
+export const persistance = firebase.auth.Auth.Persistence.LOCAL;
 
 //types
+export class Trainer {
+  name: string;
+  instagram: string;
+  contactemail: string;
+  contactnumber: string;
+  profilepicture: string;
+
+  constructor() {
+    this.name = "Personal Trainer";
+    this.instagram = "trainer@instagram";
+    this.contactemail = "trainer@email.com";
+    this.contactnumber = "123 123 1234";
+    this.profilepicture = "https://i.pravatar.cc/300";
+  }
+}
 
 export class AppUser {
   name: string;

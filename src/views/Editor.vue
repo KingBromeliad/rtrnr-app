@@ -11,7 +11,7 @@
       message="Exercise successfully added to workout."
       :duration="800"
       @didDismiss="showToast(false)"
-      position="top"
+      position="bottom"
       translucent="true"
     >
     </ion-toast>
