@@ -18,6 +18,7 @@
       <ion-card
         v-if="userData.ispersonaltrainer"
         color="primary"
+        button="true"
         style="border-radius: 45px;"
       >
         <ion-item lines="none" color="primary">
@@ -46,13 +47,22 @@
 
       <ion-card
         button="true"
-        @click="showData = !showData"
+        @click="toggle()"
         color="secondary"
         style="border-radius: 45px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
       >
         <ion-card-header style="padding: 0px">
           <div class="wrapper">
-            <img id="avatar" src="https://i.pravatar.cc/300" />
+            <div v-if="editMode" id="camera">
+              <ion-fab-button color="medium" @click="takePicture()">
+                <ion-icon
+                  :icon="camera"
+                  style="color: var(--ion-color-light); font-size: 3em;"
+                ></ion-icon>
+              </ion-fab-button>
+            </div>
+            <img v-else id="avatar" :src="userData.picture" />
+
             <ion-text color="light">
               <h1
                 style="font-weight: 550; font-size: 2.4em; margin-bottom: 0px; margin-top: 0px"
@@ -60,9 +70,9 @@
                 {{ userData.name }}
               </h1>
               <h6
-                style="font-weight: 300; font-size: 1.3em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
-                {{ showData ? 'Tap to close' : 'Tap to view your data' }}
+                {{ showData ? userData.email : "Tap to view your data" }}
               </h6>
             </ion-text>
           </div>
@@ -111,7 +121,12 @@
           ></ion-fab-button>
         </ion-item>
         <ion-item lines="none">
-          <ion-icon size="small" slot="start" :icon="calendarClear"></ion-icon>
+          <ion-icon
+            style="color: var(--ion-color-light);"
+            size="small"
+            slot="start"
+            :icon="calendarClear"
+          ></ion-icon>
           <ion-input
             v-if="editMode"
             required="true"
@@ -129,7 +144,12 @@
           </ion-text>
         </ion-item>
         <ion-item size="small" lines="none">
-          <ion-icon size="small" slot="start" :icon="maleFemale"></ion-icon>
+          <ion-icon
+            style="color: var(--ion-color-light);"
+            size="small"
+            slot="start"
+            :icon="maleFemale"
+          ></ion-icon>
           <ion-input
             v-if="editMode"
             required="true"
@@ -147,7 +167,12 @@
           </ion-text>
         </ion-item>
         <ion-item lines="none">
-          <ion-icon size="small" slot="start" :icon="arrowUp"></ion-icon>
+          <ion-icon
+            style="color: var(--ion-color-light);"
+            size="small"
+            slot="start"
+            :icon="arrowUp"
+          ></ion-icon>
           <ion-input
             v-if="editMode"
             required="true"
@@ -165,7 +190,12 @@
           </ion-text>
         </ion-item>
         <ion-item lines="none">
-          <ion-icon size="small" slot="start" :icon="scale"></ion-icon>
+          <ion-icon
+            style="color: var(--ion-color-light);"
+            size="small"
+            slot="start"
+            :icon="scale"
+          ></ion-icon>
           <ion-input
             v-if="editMode"
             required="true"
@@ -183,7 +213,12 @@
           </ion-text>
         </ion-item>
         <ion-item lines="none">
-          <ion-icon size="small" slot="start" :icon="barbell"></ion-icon>
+          <ion-icon
+            style="color: var(--ion-color-light);"
+            size="small"
+            slot="start"
+            :icon="barbell"
+          ></ion-icon>
           <ion-input
             v-if="editMode"
             required="true"
@@ -201,7 +236,12 @@
           </ion-text>
         </ion-item>
         <ion-item lines="none">
-          <ion-icon size="small" slot="start" :icon="football"></ion-icon>
+          <ion-icon
+            style="color: var(--ion-color-light);"
+            size="small"
+            slot="start"
+            :icon="football"
+          ></ion-icon>
           <ion-input
             v-if="editMode"
             required="true"
@@ -337,10 +377,12 @@ import {
   logoInstagram,
   mailOutline,
   callOutline,
+  camera,
 } from "ionicons/icons";
-import { db, auth, userConverter, AppUser, Trainer } from "../main";
+import { db, auth, userConverter, AppUser, Trainer, storage } from "../main";
 import { useRouter } from "vue-router";
 import { Clipboard } from "@capacitor/clipboard";
+import { Camera, CameraResultType } from "@capacitor/camera";
 
 export default defineComponent({
   name: "User",
@@ -368,7 +410,19 @@ export default defineComponent({
 
     //USER DATA
 
-    const type = new AppUser("", "", false, 0, "", 0, 0, 0, "");
+    const type = new AppUser(
+      "",
+      "",
+      "https://firebasestorage.googleapis.com/v0/b/rtrnr-app.appspot.com/o/placeholder.png?alt=media&token=68777f82-4934-4e91-a64d-22b4b992918c",
+      false,
+      0,
+      "",
+      0,
+      0,
+      0,
+      "",
+      "SSSS-PPPP"
+    );
     const userData = ref(type);
     const trainertype = new Trainer();
     const trainerData = ref(trainertype);
@@ -382,27 +436,22 @@ export default defineComponent({
           if (doc.exists) {
             // Convert
             const temp: AppUser | undefined = doc.data();
-            if (temp) userData.value = temp;
-            else console.log("Firebase support TS please");
+            if (temp) {
+              userData.value = temp;
+              db.collection("trainer")
+                .where("code", "==", temp.trainer)
+                .get()
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    const type = new Trainer();
+                    trainerData.value = Object.assign(type, doc.data());
+                  });
+                })
+                .catch((error) => {
+                  console.log("Error getting documents: ", error);
+                });
+            } else console.log("Firebase support TS please");
           } else {
-            console.log("No such document!");
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
-    }
-
-    function fetchTrainer() {
-      db.collection("trainer")
-        .doc("SSSS-PPPP")
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            const type = new Trainer();
-            trainerData.value = Object.assign(type, doc.data());
-          } else {
-            // doc.data() will be undefined in this case
             console.log("No such document!");
           }
         })
@@ -413,7 +462,6 @@ export default defineComponent({
 
     onMounted(() => {
       fetchUser();
-      fetchTrainer();
     });
 
     onUpdated(() => {
@@ -422,6 +470,34 @@ export default defineComponent({
 
     /* MODIFY DATA */
     const editMode = ref(false);
+
+    /* PICTURE */
+    function toggle() {
+      if (!editMode.value) showData.value = !showData.value;
+    }
+
+    const takePicture = async () => {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+      });
+
+      if (image?.base64String) {
+        const user = auth.currentUser;
+
+        const filePath = `${user?.uid}/profile/avatar.${image.format}`;
+
+        const storageRef = storage.ref();
+
+        await storageRef
+          .child(filePath)
+          .putString(image.base64String, "base64");
+        userData.value.picture = await storageRef
+          .child(filePath)
+          .getDownloadURL();
+      }
+    };
 
     function saveData() {
       editMode.value = false;
@@ -437,7 +513,19 @@ export default defineComponent({
       auth
         .signOut()
         .then(() => {
-          userData.value = new AppUser("", "", false, 0, "", 0, 0, 0, "");
+          userData.value = new AppUser(
+            "",
+            "",
+            "https://firebasestorage.googleapis.com/v0/b/rtrnr-app.appspot.com/o/placeholder.png?alt=media&token=68777f82-4934-4e91-a64d-22b4b992918c",
+            false,
+            0,
+            "",
+            0,
+            0,
+            0,
+            "",
+            ""
+          );
           router.push("/login");
         })
         .catch((error) => {
@@ -477,6 +565,9 @@ export default defineComponent({
       isOpenRef,
       setOpen,
       showData,
+      camera,
+      toggle,
+      takePicture,
     };
   },
 });
@@ -487,6 +578,16 @@ export default defineComponent({
   height: 7em;
   width: 7em;
   margin: 1em;
+}
+#camera {
+  border-radius: 50%;
+  height: 7em;
+  width: 7em;
+  margin: 1em;
+  display: grid;
+  place-content: center;
+  border: 3px solid;
+  border-color: var(--ion-color-medium);
 }
 .wrapper {
   display: flex;

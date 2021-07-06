@@ -9,6 +9,12 @@
       "smallIcon": "small_icon",
       "iconColor": "#718187",
       "sound": "beep.wav"
+    },
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#ffffff",
+      "splashFullScreen": true,
+      "splashImmersive": true
     }
   }
 }

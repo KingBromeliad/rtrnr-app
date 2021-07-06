@@ -34,20 +34,26 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/trainer",
-    component: () => import("@/views/Trainer.vue"),
+    component: () => import("@/views/Trainer/Trainer.vue"),
     beforeEnter: guard,
   },
   {
     path: "/editor/:id",
     name: "editor",
     props: true,
-    component: () => import("@/views/Editor.vue"),
+    component: () => import("@/views/Trainer/Editor.vue"),
   },
   {
     path: "/userhistory/:id",
     name: "userhistory",
     props: true,
-    component: () => import("@/views/UserHistory.vue"),
+    component: () => import("@/views/Trainer/UserHistory.vue"),
+  },
+  {
+    path: "/userdata/:id",
+    name: "userdata",
+    props: true,
+    component: () => import("@/views/Trainer/UserData.vue"),
   },
   {
     path: "/tabs/",

@@ -104,6 +104,7 @@ export default defineComponent({
     onMounted(() => {
       getWorkouts();
     });
+
     /* MODAL CONTROLLER */
     const isOpenRef = ref(false);
     const setOpen = (state: boolean) => (isOpenRef.value = state);

@@ -1,6 +1,6 @@
 <template>
   <ion-page v-if="completeSignUp">
-    <sign-up :name="name" :email="email"></sign-up>
+    <sign-up :name="name" :email="email" @done="completeSignUp = false"></sign-up>
   </ion-page>
   <ion-page v-else style="background-color: #303136">
     <ion-toast
@@ -129,6 +129,8 @@ import { auth, persistance } from "../main";
 import { logoGoogle, mail, arrowBack } from "ionicons/icons";
 import SignUp from "@/components/SignUp.vue";
 import { useBackButton } from "@ionic/vue";
+import { SplashScreen } from "@capacitor/splash-screen";
+import { StatusBar } from "@capacitor/status-bar";
 
 export default defineComponent({
   name: "Login",
@@ -149,24 +151,21 @@ export default defineComponent({
       console.log("Handler was called!");
     });
     const router = useRouter();
+    const completeSignUp = ref(false);
+    const existingUser = ref(true);
 
     onMounted(() => {
+      StatusBar.setBackgroundColor({ color: "#303136" });
       auth.onAuthStateChanged((user) => {
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
+        if (user && existingUser.value) {
           router.push("/tabs/home");
-          // ...
-        } 
+        } else SplashScreen.hide();
       });
     });
 
     const isOpenRef = ref(false);
     const setOpen = (state: boolean) => (isOpenRef.value = state);
 
-    const completeSignUp = ref(false);
-
-    const existingUser = ref(true);
     const email = ref("");
     const password = ref("");
     const name = ref("");
@@ -216,6 +215,7 @@ export default defineComponent({
     function googleSignIn() {
       router.push("/tabs/home");
     }
+
 
     return {
       signInWithEmailAndPassword,

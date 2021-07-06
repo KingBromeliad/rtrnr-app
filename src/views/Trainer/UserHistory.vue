@@ -48,8 +48,8 @@ import {
   IonModal,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, reactive } from "vue";
-import { db } from "../main";
-import Past from "../components/modals/Past.vue";
+import { db } from "@/main";
+import Past from "@/components/modals/Past.vue";
 
 export default defineComponent({
   name: "History",

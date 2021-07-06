@@ -11,7 +11,20 @@
     >
     </ion-toast>
     <ion-content color="light" style="--padding-top: 4em">
-      <ion-item lines="none" color="medium">
+      <ion-item v-if="trainerSignUp" lines="none" color="light">
+        <ion-text color="dark">
+          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
+            Welcome to RTRNR!
+          </h1>
+          <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">
+            {{
+              name +
+                " create your profile and personal code, users can use your code to became clients"
+            }}
+          </h4>
+        </ion-text>
+      </ion-item>
+      <ion-item v-else lines="none" color="light">
         <ion-text color="dark">
           <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
             Welcome to RTRNR!
@@ -81,27 +94,79 @@
           ></ion-input>
         </ion-item>
       </ion-card>
-      <ion-card v-if="enterCode" style="border-radius: 20px" color="primary">
-        <ion-item lines="none" color="primary">
-          <ion-icon slot="start" :icon="barbell"></ion-icon>
+      <ion-card style="border-radius: 20px" color="primary">
+        <ion-item>
+          <ion-label position="stacked">{{
+            trainerSignUp
+              ? "Create your code as: XXXX-XXXX"
+              : "Personal trainer code"
+          }}</ion-label>
           <ion-input
-            v-model="code"
-            placeholder="Enter code"
-            type="password"
+            v-model="trainer"
+            placeholder="XXXX-XXXX"
+            type="text"
+            maxlength="9"
           ></ion-input>
-          <ion-button
-            slot="end"
-            color="light"
-            shape="round"
-            @click="isTrainer()"
-          >
-            validate
-          </ion-button>
         </ion-item>
       </ion-card>
-      <!-- UPLOAD IMAGE -->
 
-      <ion-card button="true" style="border-radius: 20px" @click="saveUser()"
+      <ion-card v-if="trainerSignUp" style="border-radius: 20px">
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="person"></ion-icon>
+          <ion-input
+            required="true"
+            v-model="profilename"
+            placeholder="Profile name"
+            type="text"
+          ></ion-input>
+        </ion-item>
+        <ion-item size="small" lines="none">
+          <ion-icon size="small" slot="start" :icon="logoInstagram"></ion-icon>
+          <ion-input
+            required="true"
+            v-model="instagram"
+            placeholder="Instagram link"
+            type="text"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="mailOutline"></ion-icon>
+          <ion-input
+            required="true"
+            v-model="contactemail"
+            placeholder="Contact email"
+            type="text"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="callOutline"></ion-icon>
+          <ion-input
+            required="true"
+            v-model="contactnumber"
+            placeholder="Contact number"
+            type="number"
+          ></ion-input>
+        </ion-item>
+      </ion-card>
+
+      <!-- UPLOAD IMAGE -->
+      <ion-card
+        button="true"
+        style="border-radius: 20px"
+        @click="takePicture()"
+      >
+        <ion-card-header>
+          <ion-item lines="none">
+            <ion-icon slot="start" :icon="camera"></ion-icon>
+            Take a picture
+          </ion-item>
+        </ion-card-header>
+      </ion-card>
+
+      <ion-card
+        button="true"
+        style="border-radius: 20px"
+        @click="trainerSignUp ? personalTrainerSignUp() : userSignUp()"
         ><ion-card-header>
           <h6
             style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em; margin-bottom: 0.2em; text-align: center"
@@ -119,8 +184,12 @@
         fill="clear"
         size="small"
         color="medium"
-        @click="enterCode = !enterCode"
-        >Have a personal trainer code?</ion-button
+        @click="trainerSignUp = !trainerSignUp"
+        >{{
+          trainerSignUp
+            ? "Sign up as normal user"
+            : "Sign up as personal trainer"
+        }}</ion-button
       >
     </ion-footer>
   </ion-page>
@@ -139,6 +208,7 @@ import {
   IonToast,
   IonFooter,
   IonButton,
+  IonLabel,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 import {
@@ -150,16 +220,25 @@ import {
   scale,
   arrowUp,
   cloudUpload,
+  camera,
+  logoInstagram,
+  mailOutline,
+  callOutline,
+  person,
 } from "ionicons/icons";
-import { auth, db, AppUser, userConverter } from "@/main";
+import { auth, db, AppUser, userConverter, storage } from "@/main";
 import { useRouter } from "vue-router";
 import { useBackButton } from "@ionic/vue";
+import { Camera, CameraResultType } from "@capacitor/camera";
 
 export default defineComponent({
   name: "ptform",
   props: {
     name: { type: String, required: true },
     email: { type: String, required: true },
+  },
+  emits: {
+    done: null,
   },
   components: {
     IonItem,
@@ -173,13 +252,10 @@ export default defineComponent({
     IonToast,
     IonFooter,
     IonButton,
+    IonLabel,
   },
-  methods: {
-    close() {
-      this.$emit("exitVideo");
-    },
-  },
-  setup(props) {
+
+  setup(props, context) {
     useBackButton(10, () => {
       console.log("Handler was called!");
     });
@@ -187,7 +263,7 @@ export default defineComponent({
     const router = useRouter();
     const isOpenRef = ref(false);
     const setOpen = (state: boolean) => (isOpenRef.value = state);
-    const enterCode = ref(false);
+    const trainerSignUp = ref(false);
     const color = ref<string>("danger");
     const message = ref<string>("All fields are required!");
 
@@ -203,51 +279,71 @@ export default defineComponent({
     const trainingfrequence = ref<number | null>(null);
     const trainingtype = ref<string | null>(null);
     const code = ref<string | null>(null);
+    const trainer = ref<string | null>(null);
+    const picture = ref(
+      "https://firebasestorage.googleapis.com/v0/b/rtrnr-app.appspot.com/o/placeholder.png?alt=media&token=68777f82-4934-4e91-a64d-22b4b992918c"
+    );
+
+    /*TRAINER */
+    const profilename = ref<string | null>(null);
+    const instagram = ref<string | null>(null);
+    const contactemail = ref<string | null>(null);
+    const contactnumber = ref<string | null>(null);
 
     onMounted(() => {
       name.value = props.name;
       email.value = props.email;
     });
 
-    const istrainer = ref(false);
+    /* GET AVATAR */
 
-    function isTrainer() {
-      if (code.value == "bulgari") {
-        istrainer.value = true;
-        enterCode.value = false;
-        color.value = "success";
-        message.value = "You are now Personal Trainer!";
-      } else {
-        color.value = "danger";
-        message.value = "This code does not exist!";
+    const takePicture = async () => {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+      });
+
+      if (image?.base64String) {
+        const user = auth.currentUser;
+
+        const filePath = `${user?.uid}/profile/avatar.${image.format}`;
+
+        const storageRef = storage.ref();
+
+        await storageRef
+          .child(filePath)
+          .putString(image.base64String, "base64");
+        picture.value = await storageRef.child(filePath).getDownloadURL();
       }
-      setOpen(true);
-    }
+    };
 
-    function saveUser() {
+    function userSignUp() {
       if (
         name.value &&
         email.value &&
+        picture.value &&
         age.value &&
         gender.value &&
         height.value &&
         weight.value &&
         trainingfrequence.value &&
-        trainingtype.value
+        trainingtype.value &&
+        trainer.value
       ) {
         const newUser = new AppUser(
           name.value,
           email.value,
+          picture.value,
           false,
           age.value,
           gender.value,
           height.value,
           weight.value,
           trainingfrequence.value,
-          trainingtype.value
+          trainingtype.value,
+          trainer.value
         );
-
-        if (istrainer.value) newUser.ispersonaltrainer = true;
 
         /* db */
         db.collection("user")
@@ -256,6 +352,64 @@ export default defineComponent({
           .set(newUser);
 
         router.push("/tabs/home");
+        context.emit("done");
+      } else {
+        color.value = "danger";
+        message.value = "All fields are required!";
+        setOpen(true);
+      }
+    }
+
+    function personalTrainerSignUp() {
+      if (
+        name.value &&
+        email.value &&
+        picture.value &&
+        age.value &&
+        gender.value &&
+        height.value &&
+        weight.value &&
+        trainingfrequence.value &&
+        trainingtype.value &&
+        trainer.value &&
+        profilename.value &&
+        instagram.value &&
+        contactemail.value &&
+        contactnumber.value
+      ) {
+        const newUser = new AppUser(
+          name.value,
+          email.value,
+          picture.value,
+          true,
+          age.value,
+          gender.value,
+          height.value,
+          weight.value,
+          trainingfrequence.value,
+          trainingtype.value,
+          trainer.value
+        );
+
+        /* db */
+        db.collection("user")
+          .doc(auth.currentUser?.uid)
+          .withConverter(userConverter)
+          .set(newUser);
+
+        db.collection("trainer")
+          .doc(auth.currentUser?.uid)
+          .set({
+            name: profilename.value,
+            code: trainer.value,
+            instagram: instagram.value,
+            contactemail: contactemail.value,
+            contactnumber: contactnumber.value,
+            profilepicture: picture.value,
+          });
+
+        router.push("/tabs/home");
+        context.emit("done");
       } else {
         color.value = "danger";
         message.value = "All fields are required!";
@@ -279,14 +433,25 @@ export default defineComponent({
       trainingtype,
       isOpenRef,
       setOpen,
-      saveUser,
-      enterCode,
+      userSignUp,
+      trainerSignUp,
       code,
-      isTrainer,
       message,
       color,
       cloudUpload,
       image,
+      camera,
+      takePicture,
+      profilename,
+      instagram,
+      contactemail,
+      contactnumber,
+      personalTrainerSignUp,
+      logoInstagram,
+      mailOutline,
+      callOutline,
+      person,
+      trainer,
     };
   },
 });

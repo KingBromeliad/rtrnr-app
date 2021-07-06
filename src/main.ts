@@ -52,6 +52,7 @@ export const persistance = firebase.auth.Auth.Persistence.LOCAL;
 //types
 export class Trainer {
   name: string;
+  code: string;
   instagram: string;
   contactemail: string;
   contactnumber: string;
@@ -59,6 +60,7 @@ export class Trainer {
 
   constructor() {
     this.name = "Personal Trainer";
+    this.code = "0000-000N"
     this.instagram = "trainer@instagram";
     this.contactemail = "trainer@email.com";
     this.contactnumber = "123 123 1234";
@@ -69,6 +71,7 @@ export class Trainer {
 export class AppUser {
   name: string;
   email: string;
+  picture: string;
   ispersonaltrainer: boolean;
   age: number;
   gender: string;
@@ -76,20 +79,24 @@ export class AppUser {
   weight: number;
   trainingfrequence: number;
   trainingtype: string;
+  trainer: string;
 
   constructor(
     name: string,
     email: string,
+    picture: string,
     istrainer: boolean,
     age: number,
     gender: string,
     height: number,
     weight: number,
     trainingfrequence: number,
-    trainingtype: string
+    trainingtype: string,
+    trainer: string,
   ) {
     this.name = name;
     this.email = email;
+    this.picture = picture;
     this.ispersonaltrainer = istrainer;
     this.age = age;
     this.gender = gender;
@@ -97,6 +104,7 @@ export class AppUser {
     this.weight = weight;
     this.trainingfrequence = trainingfrequence;
     this.trainingtype = trainingtype;
+    this.trainer = trainer;
   }
 }
 
@@ -105,6 +113,7 @@ export const userConverter = {
     return {
       name: u.name,
       email: u.email,
+      picture: u.picture,
       ispersonaltrainer: u.ispersonaltrainer,
       age: u.age,
       gender: u.gender,
@@ -112,6 +121,7 @@ export const userConverter = {
       weight: u.weight,
       trainingfrequence: u.trainingfrequence,
       trainingtype: u.trainingtype,
+      trainer: u.trainer,
     };
   },
   fromFirestore: function(snapshot: any, options: any) {
@@ -119,13 +129,15 @@ export const userConverter = {
     return new AppUser(
       data.name,
       data.email,
+      data.picture,
       Boolean(data.ispersonaltrainer),
       data.age,
       data.gender,
       data.height,
       data.weight,
       data.trainingfrequence,
-      data.trainingtype
+      data.trainingtype,
+      data.trainer,
     );
   },
 };

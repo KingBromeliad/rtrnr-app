@@ -78,7 +78,9 @@ import { useRouter } from "vue-router";
 import { auth, db, NewWorkout } from "../main";
 import Workout from "../components/Workout.vue";
 import { caretForward } from "ionicons/icons";
-import { useBackButton } from '@ionic/vue';
+import { useBackButton } from "@ionic/vue";
+import { SplashScreen } from "@capacitor/splash-screen";
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 export default defineComponent({
   name: "home",
@@ -123,12 +125,14 @@ export default defineComponent({
 
     onMounted(() => {
       getWorkouts();
+      SplashScreen.hide();
     });
 
     //GOT TO WORKOUT
     function goToWorkout(data: NewWorkout) {
       currentWorkout.value = data;
       selectWorkout(false);
+      StatusBar.hide();
     }
 
     return {

@@ -15,7 +15,7 @@
         <ion-item button="true" @click="navigateToHistory()">
           <ion-label>Past workouts</ion-label>
         </ion-item>
-        <ion-item button="true">
+        <ion-item button="true" @click="navigateToData()">
           <ion-label>User data</ion-label>
         </ion-item>
       </ion-list>
@@ -75,10 +75,10 @@ import {
   IonCardTitle,
   IonCardSubtitle,
 } from "@ionic/vue";
-import { db } from "../main";
+import { db } from "@/main";
 import { onMounted, ref, defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import ExerciseModal from "../components/ExerciseModal.vue";
+import ExerciseModal from "@/components/ExerciseModal.vue";
 
 export default defineComponent({
   name: "User",
@@ -153,8 +153,13 @@ export default defineComponent({
       isPopOpenRef.value = false;
       router.push({ name: "userhistory", params: { id: selectedUid.value } });
     }
+
+    function navigateToData() {
+      isPopOpenRef.value = false;
+      router.push({ name: "userdata", params: { id: selectedUid.value } });
+    }
     function exit() {
-      router.push('/tabs/user');
+      router.push("/tabs/user");
     }
     return {
       navigateToWorkout,
@@ -168,7 +173,8 @@ export default defineComponent({
       setOpen,
       isOpenRef,
       navigateToHistory,
-      exit
+      exit,
+      navigateToData,
     };
   },
 });

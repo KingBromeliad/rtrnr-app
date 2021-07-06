@@ -223,8 +223,8 @@ import {
   IonFabButton,
 } from "@ionic/vue";
 import { onMounted, ref, unref, defineComponent } from "vue";
-import { db, ExerciseData, NewWorkout, WorkoutExercise } from "../main";
-import ExerciseModal from "../components/ExerciseModal.vue";
+import { db, ExerciseData, NewWorkout, WorkoutExercise } from "@/main";
+import ExerciseModal from "@/components/ExerciseModal.vue";
 import {
   checkmarkOutline,
   pencilOutline,
