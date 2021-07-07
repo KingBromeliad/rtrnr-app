@@ -1,8 +1,6 @@
 <template>
   <ion-page v-if="completeSignUp">
     <sign-up
-      :name="name"
-      :email="email"
       @done="completeSignUp = false"
     ></sign-up>
   </ion-page>

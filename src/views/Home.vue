@@ -19,7 +19,9 @@
     <ion-content color="light">
       <ion-item v-if="workouts.length == 0" lines="none" color="light">
         <ion-text color="medium">
-          <h4 style="font-weight: 400; font-size: 1.5em; margin-top: 0.4em; line-height: 1.3em">
+          <h4
+            style="font-weight: 400; font-size: 1.5em; margin-top: 0.4em; line-height: 1.3em"
+          >
             You don't have any workouts yet, contact your personal trainer
           </h4>
         </ion-text>
@@ -80,7 +82,7 @@ import {
   IonFooter,
 } from "@ionic/vue";
 import { add } from "ionicons/icons";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, onUpdated, ref } from "vue";
 import { useRouter } from "vue-router";
 import { auth, db, NewWorkout } from "../main";
 import Workout from "../components/Workout.vue";
@@ -115,7 +117,6 @@ export default defineComponent({
     const selectWorkout = (state: boolean) => (selectWorkoutRef.value = state);
     const workoutType = new NewWorkout();
     const currentWorkout = ref(workoutType);
-    
 
     function getWorkouts() {
       db.collection("user/" + auth.currentUser?.uid + "/workout").onSnapshot(
@@ -131,9 +132,27 @@ export default defineComponent({
       );
     }
 
+    function getWorkoutsOnce() {
+      db.collection("user/" + auth.currentUser?.uid + "/workout")
+        .get()
+        .then((querySnapshot) => {
+          const temp: NewWorkout[] = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            const item = new NewWorkout();
+            temp.push(Object.assign(item, doc.data()));
+          });
+          workouts.value = temp;
+        });
+    }
+
     onMounted(() => {
-      getWorkouts();
+      getWorkoutsOnce();
       SplashScreen.hide();
+    });
+
+    onUpdated(() => {
+      getWorkouts();
     });
 
     //GOT TO WORKOUT

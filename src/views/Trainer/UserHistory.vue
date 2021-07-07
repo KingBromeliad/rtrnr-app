@@ -5,29 +5,29 @@
     </ion-modal>
     <ion-header class="ion-no-border">
       <ion-toolbar>
-        <ion-title>{{ userData.name }}</ion-title>
+        <ion-title>{{ props.id }}</ion-title>
         <ion-buttons slot="start">
           <ion-back-button default-href="/trainer"></ion-back-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-    <div style="justify-content: flex-start; height: 100vh">
-      <div id="history-grid">
-        <ion-card
-          color="tertiary"
-          v-for="pastWorkout in pastWorkouts"
-          :key="pastWorkout.timestamp"
-          button="true"
-          @click="goToWorkout(pastWorkout)"
-        >
-          <ion-card-header>
-            <ion-card-subtitle>{{ pastWorkout.timestamp }}</ion-card-subtitle>
-            <ion-card-title>{{ pastWorkout.name }}</ion-card-title>
-          </ion-card-header>
-        </ion-card>
+      <div style="justify-content: flex-start; height: 100vh">
+        <div id="history-grid">
+          <ion-card
+            color="tertiary"
+            v-for="pastWorkout in pastWorkouts"
+            :key="pastWorkout.timestamp"
+            button="true"
+            @click="goToWorkout(pastWorkout)"
+          >
+            <ion-card-header>
+              <ion-card-subtitle>{{ pastWorkout.timestamp }}</ion-card-subtitle>
+              <ion-card-title>{{ pastWorkout.name }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </div>
       </div>
-    </div>
     </ion-content>
   </ion-page>
 </template>
@@ -47,7 +47,7 @@ import {
   IonCardTitle,
   IonModal,
 } from "@ionic/vue";
-import { defineComponent, onMounted, ref, reactive } from "vue";
+import { defineComponent, onMounted, ref, reactive, onUpdated } from "vue";
 import { db } from "@/main";
 import Past from "@/components/modals/Past.vue";
 
@@ -76,8 +76,9 @@ export default defineComponent({
     const currentWorkout = reactive({});
 
     function getWorkouts() {
-      db.collection("user/" + props.id + "/history").onSnapshot(
-        (querySnapshot) => {
+      db.collection("user/" + props.id + "/history")
+        .get()
+        .then((querySnapshot) => {
           const temp: object[] = [];
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
@@ -85,33 +86,14 @@ export default defineComponent({
             temp.push(item);
           });
           pastWorkouts.value = temp;
-        }
-      );
-    }
-
-
-    const userData = ref({});
-
-    function getUserData() {
-      const docRef = db.collection("user").doc(props.id);
-      docRef
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            const temp: object | undefined = doc.data();
-            if (temp) userData.value = temp;
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
         });
     }
 
     onMounted(() => {
-      getUserData();
+      getWorkouts();
+    });
+
+    onUpdated(() => {
       getWorkouts();
     });
     /* MODAL CONTROLLER */
@@ -125,8 +107,6 @@ export default defineComponent({
       pastWorkouts,
       selectWorkout,
       currentWorkout,
-      getUserData,
-      userData,
     };
   },
   methods: {

@@ -15,6 +15,7 @@
         </ion-text>
       </ion-item>
     </ion-header>
+    <ion-content>
     <div
       style="justify-content: flex-start; height: 100vh"
       class="rounded-container-bottom"
@@ -35,11 +36,9 @@
           button="true"
           @click="goToWorkout(pastWorkout)"
           style="border-radius: 28px;"
+          :color="pastWorkout.color"
         >
-          <ion-item
-            lines="none"
-            v-bind:style="{ '--background': pastWorkout.color }"
-          >
+          <ion-item lines="none" :color="pastWorkout.color">
             <div class="info-box">
               <h1
                 style="font-weight: 550; font-size: 1.8em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
@@ -60,6 +59,7 @@
         </ion-card>
       </div>
     </div>
+    </ion-content>
   </ion-page>
 </template>
 
@@ -72,8 +72,9 @@ import {
   IonCard,
   IonModal,
   IonIcon,
+  IonContent,
 } from "@ionic/vue";
-import { defineComponent, onMounted, ref, reactive } from "vue";
+import { defineComponent, onMounted, ref, reactive, onUpdated } from "vue";
 import { auth, db } from "../main";
 import Past from "../components/modals/Past.vue";
 import { chevronForward } from "ionicons/icons";
@@ -89,6 +90,7 @@ export default defineComponent({
     IonCard,
     IonModal,
     IonIcon,
+    IonContent,
   },
   setup() {
     const type: object[] = [];
@@ -96,9 +98,10 @@ export default defineComponent({
     const selectWorkout = ref(true);
     const currentWorkout = reactive({});
 
-    function getWorkouts() {
-      db.collection("user/" + auth.currentUser?.uid + "/history").onSnapshot(
-        (querySnapshot) => {
+    function getWorkoutsOnce() {
+      db.collection("user/" + auth.currentUser?.uid + "/history")
+        .get()
+        .then((querySnapshot) => {
           const temp: object[] = [];
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
@@ -106,12 +109,15 @@ export default defineComponent({
             temp.push(item);
           });
           pastWorkouts.value = temp;
-        }
-      );
+        });
     }
 
     onMounted(() => {
-      getWorkouts();
+      getWorkoutsOnce();
+    });
+
+    onUpdated(() => {
+      getWorkoutsOnce();
     });
 
     /* MODAL CONTROLLER */
@@ -121,7 +127,6 @@ export default defineComponent({
     return {
       isOpenRef,
       setOpen,
-      getWorkouts,
       pastWorkouts,
       selectWorkout,
       currentWorkout,

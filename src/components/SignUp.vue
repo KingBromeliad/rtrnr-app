@@ -40,6 +40,15 @@
 
       <ion-card style="border-radius: 20px">
         <ion-item lines="none">
+          <ion-icon size="small" slot="start" :icon="person"></ion-icon>
+          <ion-input
+            required="true"
+            v-model="name"
+            placeholder="Name"
+            type="text"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
           <ion-icon size="small" slot="start" :icon="calendarClear"></ion-icon>
           <ion-input
             required="true"
@@ -233,10 +242,6 @@ import { Camera, CameraResultType } from "@capacitor/camera";
 
 export default defineComponent({
   name: "ptform",
-  props: {
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-  },
   emits: {
     done: null,
   },
@@ -291,8 +296,13 @@ export default defineComponent({
     const contactnumber = ref<string | null>(null);
 
     onMounted(() => {
-      name.value = props.name;
-      email.value = props.email;
+      if (auth.currentUser?.displayName && auth.currentUser?.email) {
+        name.value = auth.currentUser?.displayName;
+        email.value = auth.currentUser?.email;
+      } else {
+        name.value = "guest";
+        email.value = "guest@email.com";
+      }
     });
 
     /* GET AVATAR */
@@ -351,6 +361,13 @@ export default defineComponent({
           .withConverter(userConverter)
           .set(newUser);
 
+        const user = auth.currentUser;
+        if (user) {
+          user.updateProfile({
+            displayName: name.value,
+          });
+        }
+
         router.push("/tabs/home");
         context.emit("done");
       } else {
@@ -407,6 +424,12 @@ export default defineComponent({
             contactnumber: contactnumber.value,
             profilepicture: picture.value,
           });
+        const user = auth.currentUser;
+        if (user) {
+          user.updateProfile({
+            displayName: name.value,
+          });
+        }
 
         router.push("/tabs/home");
         context.emit("done");
