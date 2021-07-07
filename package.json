@@ -23,6 +23,7 @@
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
     "@types/howler": "^2.2.2",
+    "capacitor-firebase-auth": "^3.0.0-rc.0",
     "core-js": "^3.6.5",
     "firebase": "^8.6.8",
     "howler": "^2.2.3",

@@ -44,7 +44,7 @@
               color="dark"
               @click="exercise.state = 'active'"
             >
-              <ion-icon :icon="cloudDoneOutline"></ion-icon>
+              <ion-icon :icon="remove"></ion-icon>
             </ion-fab-button>
             <ion-fab-button
               style="--box-shadow: 0px"
@@ -276,15 +276,37 @@
         </ion-card>
         <!-- TIMER -->
         <ion-card
-          v-if="exercise.state == 'active'"
+          v-if="exercise.state == 'active' && exercise.timerActive == false"
           button="true"
-          :color="
-            exercise.rest % 2 == 0 && exercise.rest < 10 ? 'primary' : 'dark'
-          "
+          color="dark"
           style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
           @click="setTimer(index, exercise.rest)"
         >
           <ion-item lines="none"
+            ><ion-icon size="small" slot="start" :icon="flame"></ion-icon
+            ><ion-label>Done</ion-label>
+            <ion-label slot="end" style="text-align: right" color="medium">{{
+              "rest: " + exercise.rest + "s"
+            }}</ion-label></ion-item
+          >
+        </ion-card>
+        <ion-card
+          v-else-if="exercise.state == 'active' && exercise.timerActive == true"
+          button="false"
+          :color="
+            exercise.rest % 2 == 0 && exercise.rest < 10
+              ? 'primary'
+              : 'secondary'
+          "
+          style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
+        >
+          <ion-item
+            lines="none"
+            :color="
+              exercise.rest % 2 == 0 && exercise.rest < 10
+                ? 'primary'
+                : 'secondary'
+            "
             ><ion-icon size="small" slot="start" :icon="timerOutline"></ion-icon
             ><ion-label>{{ exercise.rest + " Seconds" }}</ion-label></ion-item
           >
@@ -337,6 +359,7 @@ import {
   camera,
   close,
   timerOutline,
+  flame,
 } from "ionicons/icons";
 import Info from "../components/modals/Info.vue";
 import Note from "../components/modals/Note.vue";
@@ -348,6 +371,7 @@ import {
 } from "@capacitor/local-notifications";
 import { App } from "@capacitor/app";
 import { useBackButton } from "@ionic/vue";
+import { StatusBar } from "@capacitor/status-bar";
 
 export default defineComponent({
   name: "workout",
@@ -403,10 +427,13 @@ export default defineComponent({
           exercises.value.push(temp);
         }
       });
+      exercises.value[exercises.value.length - 1].rest = 0;
     });
     /* SETUP COMPLETED */
+    const onExit = ref(false);
 
     function exitAndSave() {
+      onExit.value = true;
       const doneWorkout: PastWorkout = unref(currentWorkout);
       const arrayData: object[] = exercises.value.map((obj) => {
         return Object.assign({}, obj);
@@ -436,7 +463,7 @@ export default defineComponent({
         .catch((error) => {
           console.error("Error writing document: ", error);
         });
-
+      StatusBar.show();
       context.emit("exitWorkout");
     }
 
@@ -456,19 +483,17 @@ export default defineComponent({
     });
 
     function sendNotification(index: number) {
-      if (!appActiveState.value) {
-        const exercise = exercises.value[index + 1].id;
-        const options: ScheduleOptions = {
-          notifications: [
-            {
-              title: "Rest over! Next up...",
-              body: exercise,
-              id: index,
-            },
-          ],
-        };
-        LocalNotifications.schedule(options);
-      }
+      const exercise = exercises.value[index + 1].id;
+      const options: ScheduleOptions = {
+        notifications: [
+          {
+            title: "Rest over! Next up...",
+            body: exercise,
+            id: index,
+          },
+        ],
+      };
+      LocalNotifications.schedule(options);
     }
 
     // TIMER
@@ -477,13 +502,17 @@ export default defineComponent({
 
     function exitTimer(timer: number, index: number) {
       clearInterval(timer);
-      exerciseDone(index);
-      isTimerActive.value = false;
-      alarm.play();
-      sendNotification(index);
+      if (!onExit.value) {
+        exerciseDone(index);
+        isTimerActive.value = false;
+        if (appActiveState.value) {
+          alarm.play();
+        } else sendNotification(index);
+      }
     }
 
     function setTimer(index: number, seconds: number) {
+      exercises.value[index].timerActive = true;
       if (!isTimerActive.value) {
         isTimerActive.value = true;
 
@@ -553,6 +582,7 @@ export default defineComponent({
             text: "Discard",
             cssClass: "discard",
             handler: () => {
+              onExit.value = true;
               context.emit("exitWorkout");
             },
           },
@@ -607,6 +637,7 @@ export default defineComponent({
       close,
       timerOutline,
       presentAlertQuit,
+      flame,
     };
   },
 });

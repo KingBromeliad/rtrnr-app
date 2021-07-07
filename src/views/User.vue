@@ -381,6 +381,7 @@ import { db, auth, userConverter, AppUser, Trainer, storage } from "../main";
 import { useRouter } from "vue-router";
 import { Clipboard } from "@capacitor/clipboard";
 import { Camera, CameraResultType } from "@capacitor/camera";
+import {cfaSignOut} from 'capacitor-firebase-auth';
 
 export default defineComponent({
   name: "User",
@@ -508,6 +509,7 @@ export default defineComponent({
     /* LOGOUT */
 
     function logout() {
+      cfaSignOut().subscribe()
       auth
         .signOut()
         .then(() => {

@@ -1,6 +1,10 @@
 <template>
   <ion-page v-if="completeSignUp">
-    <sign-up :name="name" :email="email" @done="completeSignUp = false"></sign-up>
+    <sign-up
+      :name="name"
+      :email="email"
+      @done="completeSignUp = false"
+    ></sign-up>
   </ion-page>
   <ion-page v-else style="background-color: #303136">
     <ion-toast
@@ -125,12 +129,14 @@ import {
 } from "@ionic/vue";
 import { useRouter } from "vue-router";
 import { ref, defineComponent, onMounted } from "vue";
-import { auth, persistance } from "../main";
+import { auth, FirebaseUser, persistance, db } from "../main";
 import { logoGoogle, mail, arrowBack } from "ionicons/icons";
 import SignUp from "@/components/SignUp.vue";
 import { useBackButton } from "@ionic/vue";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { StatusBar } from "@capacitor/status-bar";
+
+import { cfaSignIn } from "capacitor-firebase-auth";
 
 export default defineComponent({
   name: "Login",
@@ -209,13 +215,26 @@ export default defineComponent({
     }
 
     /*SIGN IN MODES */
-    const emailSignIn = ref(true);
-    const chooseMode = ref(false);
+    const emailSignIn = ref(false);
+    const chooseMode = ref(true);
 
     function googleSignIn() {
-      router.push("/tabs/home");
-    }
+      existingUser.value = false;
+      cfaSignIn("google.com").subscribe((user: FirebaseUser) => {
+        console.log("LOGIN SUCCESS!");
 
+        const check = db.collection("user").doc(user.uid);
+
+        check.get().then((doc) => {
+          if (doc.exists) {
+            router.push("/tabs/home");
+          } else {
+            // doc.data() will be undefined in this case
+            completeSignUp.value = true;
+          }
+        });
+      });
+    }
 
     return {
       signInWithEmailAndPassword,

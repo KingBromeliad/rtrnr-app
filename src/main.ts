@@ -48,6 +48,7 @@ export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const storage = firebase.storage();
 export const persistance = firebase.auth.Auth.Persistence.LOCAL;
+export type FirebaseUser = firebase.User;
 
 //types
 export class Trainer {
@@ -211,6 +212,7 @@ export class DoneExercise {
   note: string;
   video: string | null;
   state: string;
+  timerActive: boolean;
 
   constructor(exercise: WorkoutExercise) {
     this.id = exercise.data.name;
@@ -224,6 +226,7 @@ export class DoneExercise {
     this.note = "";
     this.video = null;
     this.state = "active";
+    this.timerActive = false;
   }
 }
 
