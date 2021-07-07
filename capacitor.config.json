@@ -13,7 +13,7 @@
     "SplashScreen": {
       "launchAutoHide": false,
       "backgroundColor": "#ffffff",
-      "splashFullScreen": true,
+      "splashFullScreen": false,
       "splashImmersive": true
     },
     "CapacitorFirebaseAuth": {
