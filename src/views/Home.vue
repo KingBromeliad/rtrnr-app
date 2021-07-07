@@ -17,6 +17,13 @@
       <div class="rounded-container-top"></div>
     </ion-header>
     <ion-content color="light">
+      <ion-item v-if="workouts.length == 0" lines="none" color="light">
+        <ion-text color="medium">
+          <h4 style="font-weight: 400; font-size: 1.5em; margin-top: 0.4em; line-height: 1.3em">
+            You don't have any workouts yet, contact your personal trainer
+          </h4>
+        </ion-text>
+      </ion-item>
       <ion-card
         v-for="workout in workouts"
         :key="workout.name"
@@ -80,7 +87,7 @@ import Workout from "../components/Workout.vue";
 import { caretForward } from "ionicons/icons";
 import { useBackButton } from "@ionic/vue";
 import { SplashScreen } from "@capacitor/splash-screen";
-import { StatusBar, Style } from '@capacitor/status-bar';
+import { StatusBar } from "@capacitor/status-bar";
 
 export default defineComponent({
   name: "home",
@@ -108,6 +115,7 @@ export default defineComponent({
     const selectWorkout = (state: boolean) => (selectWorkoutRef.value = state);
     const workoutType = new NewWorkout();
     const currentWorkout = ref(workoutType);
+    
 
     function getWorkouts() {
       db.collection("user/" + auth.currentUser?.uid + "/workout").onSnapshot(

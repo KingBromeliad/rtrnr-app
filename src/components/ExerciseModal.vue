@@ -149,7 +149,7 @@ import {
   closeCircleOutline,
   add,
 } from "ionicons/icons";
-import { db } from "../main";
+import { db } from "@/main";
 
 export default defineComponent({
   name: "exercise-modal",

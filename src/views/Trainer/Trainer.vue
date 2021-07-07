@@ -23,6 +23,9 @@
     <ion-modal :is-open="isOpenRef" @didDismiss="setOpen(false)">
       <exercise-modal :createMode="false"></exercise-modal>
     </ion-modal>
+    <ion-modal :is-open="isEditOpenRef" @didDismiss="setEditOpen(false)">
+      <edit-info></edit-info>
+    </ion-modal>
 
     <!-- PAGE -->
     <ion-header class="ion-no-border">
@@ -32,6 +35,18 @@
           <ion-button color="danger" @click="exit()">User</ion-button>
         </ion-buttons>
       </ion-toolbar>
+      <ion-card button="true" color="primary" @click="setOpen(true)">
+        <ion-card-header>
+          <ion-card-subtitle>tap to open</ion-card-subtitle>
+          <ion-card-title color="dark">Exercise library</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+      <ion-card button="true" color="tertiary" @click="setEditOpen(true)">
+        <ion-card-header>
+          <ion-card-subtitle>tap to open</ion-card-subtitle>
+          <ion-card-title color="dark">Edit trainer info</ion-card-title>
+        </ion-card-header>
+      </ion-card>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-list>
@@ -45,12 +60,6 @@
           <ion-label>{{ user.data.name }}</ion-label>
         </ion-item>
       </ion-list>
-      <ion-card button="true" color="primary" @click="setOpen(true)">
-        <ion-card-header>
-          <ion-card-subtitle>tap to open</ion-card-subtitle>
-          <ion-card-title color="dark">Exercise library</ion-card-title>
-        </ion-card-header>
-      </ion-card>
     </ion-content>
   </ion-page>
 </template>
@@ -79,10 +88,12 @@ import { db } from "@/main";
 import { onMounted, ref, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import ExerciseModal from "@/components/ExerciseModal.vue";
+import EditInfo from "@/components/modals/EditInfo.vue";
 
 export default defineComponent({
   name: "User",
   components: {
+    EditInfo,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -129,9 +140,12 @@ export default defineComponent({
     onMounted(() => {
       getUsers();
     });
-
+    /*MODALS*/
     const isOpenRef = ref(false);
     const setOpen = (state: boolean) => (isOpenRef.value = state);
+
+    const isEditOpenRef = ref(false);
+    const setEditOpen = (state: boolean) => (isEditOpenRef.value = state);
 
     /* POP OVER */
     const selectedUid = ref("");
@@ -175,6 +189,8 @@ export default defineComponent({
       navigateToHistory,
       exit,
       navigateToData,
+      isEditOpenRef,
+      setEditOpen,
     };
   },
 });

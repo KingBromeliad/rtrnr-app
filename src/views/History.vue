@@ -19,6 +19,15 @@
       style="justify-content: flex-start; height: 100vh"
       class="rounded-container-bottom"
     >
+      <ion-item v-if="pastWorkouts.length == 0" lines="none" color="light">
+        <ion-text color="dark">
+          <h4
+            style="font-weight: 400; font-size: 1.5em; margin-top: 0.4em; line-height: 1.3em"
+          >
+            Completed workouts will be shown here
+          </h4>
+        </ion-text>
+      </ion-item>
       <div id="history-grid">
         <ion-card
           v-for="pastWorkout in pastWorkouts"

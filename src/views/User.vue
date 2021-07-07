@@ -20,6 +20,7 @@
         color="primary"
         button="true"
         style="border-radius: 45px;"
+        @click="router.push('/trainer')"
       >
         <ion-item lines="none" color="primary">
           <ion-card-header>
@@ -36,10 +37,7 @@
               </h6>
             </ion-text>
           </ion-card-header>
-          <ion-fab-button
-            slot="end"
-            color="light"
-            @click="router.push('/trainer')"
+          <ion-fab-button slot="end" color="light"
             ><ion-icon :icon="chevronForward"></ion-icon
           ></ion-fab-button>
         </ion-item>
