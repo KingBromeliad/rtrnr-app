@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page style="background-color: var(--ion-color-dark)">
     <ion-popover
       animated="false"
       :is-open="isPopOpenRef"
@@ -29,7 +29,7 @@
 
     <!-- PAGE -->
     <ion-header class="ion-no-border">
-      <ion-toolbar>
+      <ion-toolbar color="dark">
         <ion-title>Personal Trainer mode</ion-title>
         <ion-buttons slot="start">
           <ion-button color="danger" @click="exit()">User</ion-button>
@@ -48,7 +48,12 @@
         </ion-card-header>
       </ion-card>
     </ion-header>
-    <ion-content :fullscreen="true">
+    <ion-content>
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="primary" @click="share()">
+          <ion-icon color="dark" :icon="shareSocial"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
       <ion-list>
         <ion-list-header>User list</ion-list-header>
         <ion-item
@@ -83,12 +88,17 @@ import {
   IonCard,
   IonCardTitle,
   IonCardSubtitle,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from "@ionic/vue";
-import { db } from "@/main";
+import { db, auth, Trainer } from "@/main";
 import { onMounted, ref, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import ExerciseModal from "@/components/ExerciseModal.vue";
 import EditInfo from "@/components/modals/EditInfo.vue";
+import { shareSocial } from "ionicons/icons";
+import { Share } from "@capacitor/share";
 
 export default defineComponent({
   name: "User",
@@ -112,6 +122,9 @@ export default defineComponent({
     IonCard,
     IonCardTitle,
     IonCardSubtitle,
+    IonFab,
+    IonFabButton,
+    IonIcon,
   },
   setup() {
     const router = useRouter();
@@ -175,6 +188,31 @@ export default defineComponent({
     function exit() {
       router.push("/tabs/user");
     }
+
+    function share() {
+
+            db.collection("trainer")
+        .doc(auth.currentUser?.uid)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            // Convert
+            const type = new Trainer();
+            const trainer = Object.assign(type, doc.data());
+                  Share.share({
+        title: "RTRNR App",
+        text: "Join me on Remote Trainer with my code: " + trainer.code,
+        url: "https://drive.google.com/file/d/15xMWiLJpI17cxzezAYiyvxn4ow08lgcB/view?usp=sharing",
+        dialogTitle: "Share",
+      });
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
     return {
       navigateToWorkout,
       selectedUid,
@@ -191,6 +229,8 @@ export default defineComponent({
       navigateToData,
       isEditOpenRef,
       setEditOpen,
+      shareSocial,
+      share,
     };
   },
 });

@@ -31,7 +31,7 @@
         :key="workout.name"
         button="true"
         @click="goToWorkout(workout)"
-        v-bind:style="{ '--color': workout.color }"
+        v-bind:style="{ '--background': workout.color }"
         style="border-radius: 45px;"
       >
         <ion-item lines="none" v-bind:style="{ '--background': workout.color }">

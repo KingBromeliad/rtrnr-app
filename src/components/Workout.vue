@@ -17,15 +17,43 @@
           <ion-icon :icon="close"></ion-icon>
         </ion-fab-button>
       </ion-fab>
+
+      <ion-card
+        color="tertiary"
+        button="true"
+        @click="showWorkoutNote = !showWorkoutNote"
+        style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;; z-index: 10"
+      >
+        <ion-item color="tertiary" lines="none">
+          <ion-icon
+            style="color: var(--ion-color-primary)"
+            slot="start"
+            :icon="document"
+          ></ion-icon>
+          <ion-label color="primary">Workout note</ion-label>
+        </ion-item>
+      </ion-card>
+      <ion-card
+        v-if="showWorkoutNote"
+        style="
+            border-radius: 0px 0px 20px 20px;
+            transform: translateY(-30px);
+            margin-top: 0px;
+            margin-bottom: 0.4em
+            padding-top: 0.4em;
+          "
+          color="secondary"
+        ><ion-card-content>{{ workout.note }}</ion-card-content></ion-card
+      >
       <!-- CARD ELEMENT -->
 
       <div v-for="(exercise, index) in exercises" :key="exercise.id">
         <ion-card
-          :color="exercise.state == 'done' ? 'success' : 'tertiary'"
+          :color="exercise.state == 'done' ? 'primary' : 'success'"
           style="border-radius: 45px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
         >
           <ion-item
-            :color="exercise.state == 'done' ? 'success' : 'tertiary'"
+            :color="exercise.state == 'done' ? 'primary' : 'dark'"
             lines="none"
           >
             <ion-card-header>
@@ -41,19 +69,25 @@
               style="--box-shadow: 0px"
               v-if="exercise.state == 'edit'"
               slot="end"
-              color="dark"
+              color="light"
               @click="exercise.state = 'active'"
             >
-              <ion-icon :icon="remove"></ion-icon>
+              <ion-icon
+                style="color: var(--ion-color-dark)"
+                :icon="remove"
+              ></ion-icon>
             </ion-fab-button>
             <ion-fab-button
               style="--box-shadow: 0px"
               v-if="exercise.state == 'active'"
               slot="end"
-              color="dark"
+              color="light"
               @click="exercise.state = 'edit'"
             >
-              <ion-icon :icon="add"></ion-icon>
+              <ion-icon
+                style="color: var(--ion-color-dark)"
+                :icon="add"
+              ></ion-icon>
             </ion-fab-button>
             <ion-fab-button
               style="--box-shadow: 0px"
@@ -67,7 +101,7 @@
         </ion-card>
         <ion-card
           v-if="exercise.state == 'edit'"
-          color="dark"
+          color="secondary"
           style="
             border-radius: 0px 0px 45px 45px;
             transform: translateY(-55px);
@@ -278,11 +312,11 @@
         <ion-card
           v-if="exercise.state == 'active' && exercise.timerActive == false"
           button="true"
-          color="dark"
+          color="secondary"
           style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
           @click="setTimer(index, exercise.rest)"
         >
-          <ion-item lines="none"
+          <ion-item lines="none" color="secondary"
             ><ion-icon size="small" slot="start" :icon="flame"></ion-icon
             ><ion-label>Done</ion-label>
             <ion-label slot="end" style="text-align: right" color="medium">{{
@@ -296,7 +330,7 @@
           :color="
             exercise.rest % 2 == 0 && exercise.rest < 10
               ? 'primary'
-              : 'secondary'
+              : 'tertiary'
           "
           style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
         >
@@ -456,6 +490,7 @@ export default defineComponent({
           description: doneWorkout.description,
           exercises: arrayData,
           timestamp: dateAndTime,
+          color: doneWorkout.color,
         })
         .then(() => {
           console.log("Document successfully written!");
@@ -466,7 +501,8 @@ export default defineComponent({
       StatusBar.show();
       context.emit("exitWorkout");
     }
-
+    /* NOTE */
+    const showWorkoutNote = ref(false);
     /* CARD CONTROLLER */
 
     function exerciseDone(index: number) {
@@ -512,10 +548,9 @@ export default defineComponent({
     }
 
     function setTimer(index: number, seconds: number) {
-      exercises.value[index].timerActive = true;
       if (!isTimerActive.value) {
         isTimerActive.value = true;
-
+        exercises.value[index].timerActive = true;
         let interval = seconds;
         //timer
         const timerObject = setInterval(function() {
@@ -638,6 +673,7 @@ export default defineComponent({
       timerOutline,
       presentAlertQuit,
       flame,
+      showWorkoutNote,
     };
   },
 });

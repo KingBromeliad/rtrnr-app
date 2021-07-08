@@ -13,13 +13,13 @@
       </ion-item>
     </ion-popover>
     <ion-fab vertical="top" horizontal="start" slot="fixed">
-      <ion-fab-button @click="close()" color="dark">
-        <ion-icon :icon="arrowBackOutline" color="medium"></ion-icon>
+      <ion-fab-button @click="exit()" color="dark">
+        <ion-icon :icon="arrowBackOutline" color="tertiary"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-content color="medium" style="--padding-top: 4em">
-      <ion-item lines="none" color="medium">
-        <ion-text color="dark">
+    <ion-content color="tertiary" style="--padding-top: 4em">
+      <ion-item lines="none" color="tertiary">
+        <ion-text color="primary">
           <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
             {{ workout.name }}
           </h1>
@@ -47,7 +47,7 @@
             color="dark"
           >
             <ion-label
-              :color="exercise.repsDifference >= 0 ? 'success' : 'danger'"
+              :color="exercise.repsDifference >= 0 ? 'primary' : 'danger'"
               >{{
                 (exercise.repsDifference >= 0 ? "+" : "") +
                   exercise.repsDifference +
@@ -55,7 +55,7 @@
               }}</ion-label
             >
             <ion-label
-              :color="exercise.weightDifference >= 0 ? 'success' : 'danger'"
+              :color="exercise.weightDifference >= 0 ? 'primary' : 'danger'"
               >{{
                 (exercise.weightDifference >= 0 ? "+" : "") +
                   exercise.weightDifference +
@@ -86,17 +86,17 @@
             <ion-icon slot="start" :icon="filmOutline" size="small"></ion-icon>
             <ion-label>Download video</ion-label>
           </ion-item>
-          <ion-item-divider color="medium"> </ion-item-divider>
+          <ion-item-divider color="tertiary"> </ion-item-divider>
         </ion-list>
 
         <ion-list v-else>
           <ion-list-header color="dark">
             {{ exercise.id }}
           </ion-list-header>
-          <ion-item lines="none" color="danger">
-            <ion-label>SKIPPED</ion-label>
+          <ion-item lines="none" color="dark">
+            <ion-icon style="color: var(--ion-color-danger)" :icon="close"></ion-icon><ion-label color="danger">SKIPPED</ion-label>
           </ion-item>
-          <ion-item-divider color="medium"> </ion-item-divider>
+          <ion-item-divider color="tertiary"> </ion-item-divider>
         </ion-list>
       </div>
     </ion-content>
@@ -123,6 +123,7 @@ import {
   arrowBackOutline,
   documentTextOutline,
   filmOutline,
+  close,
 } from "ionicons/icons";
 
 export default defineComponent({
@@ -148,7 +149,7 @@ export default defineComponent({
     IonPopover,
   },
   methods: {
-    close() {
+    exit() {
       this.$emit("exitPast");
     },
   },
@@ -168,7 +169,8 @@ export default defineComponent({
       eventRef,
       note,
       setOpen,
-      isOpenRef
+      isOpenRef,
+      close,
     };
   },
 });

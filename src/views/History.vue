@@ -18,9 +18,9 @@
     <ion-content color="light">
       <div style="justify-content: flex-start; height: 100vh">
         <ion-item v-if="pastWorkouts.length == 0" lines="none" color="light">
-          <ion-text color="dark">
+          <ion-text color="medium">
             <h4
-              style="font-weight: 400; font-size: 1.5em; margin-top: 0.4em; line-height: 1.3em"
+              style="font-weight: 300; font-size: 1.4em; margin-top: 0.4em; line-height: 1.3em"
             >
               Completed workouts will be shown here
             </h4>
@@ -33,11 +33,11 @@
             button="true"
             @click="goToWorkout(pastWorkout)"
             style="border-radius: 28px; width: 46vw; margin: 0.5em"
-            :style="{ '--background': pastWorkout.color }"
+            v-bind:style="{ '--background': pastWorkout.color }"
           >
             <ion-item
               lines="none"
-              :style="{ '--background': pastWorkout.color }"
+              v-bind:style="{ '--background': pastWorkout.color }"
             >
               <div class="info-box">
                 <h1

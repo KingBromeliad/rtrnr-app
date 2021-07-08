@@ -1,10 +1,10 @@
 <template>
   <ion-page v-if="completeSignUp">
     <sign-up
-      @done="completeSignUp = false"
+     :signUpname="name" @done="completeSignUp = false"
     ></sign-up>
   </ion-page>
-  <ion-page v-else style="background-color: #303136">
+  <ion-page v-else style="background-color: var(--ion-color-light)">
     <ion-toast
       color="danger"
       position="top"
@@ -19,7 +19,7 @@
         <img src="./logo.svg" />
         <ion-item lines="none" color="light">
           <h1
-            style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px; color: #718187"
+            style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px; color: var(--ion-color-light)"
           >
             {{ existingUser ? "Sign In" : "Sign Up" }}
           </h1>
@@ -63,11 +63,11 @@
         <div v-if="emailSignIn" style="width: 75vw">
           <ion-item color="light" lines="inset" v-if="!existingUser">
             <ion-label position="floating">Name</ion-label>
-            <ion-input v-model="name"></ion-input>
+            <ion-input v-model="name" type="text"></ion-input>
           </ion-item>
           <ion-item color="light" lines="inset">
             <ion-label position="floating">Email</ion-label>
-            <ion-input v-model="email"></ion-input>
+            <ion-input v-model="email" type="email"></ion-input>
           </ion-item>
           <ion-item color="light" lines="inset">
             <ion-label position="floating">Password</ion-label>
@@ -159,7 +159,7 @@ export default defineComponent({
     const existingUser = ref(true);
 
     onMounted(() => {
-      StatusBar.setBackgroundColor({ color: "#303136" });
+      StatusBar.setBackgroundColor({ color: "#0B0C0D" });
       auth.onAuthStateChanged((user) => {
         if (user && existingUser.value) {
           router.push("/tabs/home");

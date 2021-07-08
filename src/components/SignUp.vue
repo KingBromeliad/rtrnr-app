@@ -12,28 +12,24 @@
     </ion-toast>
     <ion-content color="light" style="--padding-top: 4em">
       <ion-item v-if="trainerSignUp" lines="none" color="light">
-        <ion-text color="dark">
+        <ion-text color="primary">
           <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
             Welcome to RTRNR!
           </h1>
           <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">
-            {{
-              name +
-                " create your profile and personal code, users can use your code to became clients"
-            }}
+            Create your profile and personal code, users can use your code to
+            became clients"
           </h4>
         </ion-text>
       </ion-item>
       <ion-item v-else lines="none" color="light">
-        <ion-text color="dark">
+        <ion-text color="primary">
           <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
             Welcome to RTRNR!
           </h1>
           <h4 style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em">
-            {{
-              name +
-                " add information to help your personal trainer create an appropriate workout for you"
-            }}
+            Add information to help your personal trainer create an appropriate
+            workout for you
           </h4>
         </ion-text>
       </ion-item>
@@ -174,6 +170,7 @@
 
       <ion-card
         button="true"
+        color="primary"
         style="border-radius: 20px"
         @click="trainerSignUp ? personalTrainerSignUp() : userSignUp()"
         ><ion-card-header>
@@ -181,6 +178,19 @@
             style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em; margin-bottom: 0.2em; text-align: center"
           >
             Save and proceed
+          </h6></ion-card-header
+        ></ion-card
+      >
+      <ion-card
+        button="true"
+        style="border-radius: 20px; margin-top: 0.2em"
+        color="medium"
+        @click="cancel()"
+        ><ion-card-header>
+          <h6
+            style="font-weight: 400; font-size: 1.2em; margin-top: 0.2em; margin-bottom: 0.2em; text-align: center"
+          >
+            Cancel
           </h6></ion-card-header
         ></ion-card
       >
@@ -245,6 +255,9 @@ export default defineComponent({
   emits: {
     done: null,
   },
+  props: {
+    signUpname: { type: String, required: true },
+  },
   components: {
     IonItem,
     IonContent,
@@ -296,13 +309,14 @@ export default defineComponent({
     const contactnumber = ref<string | null>(null);
 
     onMounted(() => {
-      if (auth.currentUser?.displayName && auth.currentUser?.email) {
+      if (typeof auth.currentUser?.displayName === 'string') {
         name.value = auth.currentUser?.displayName;
-        email.value = auth.currentUser?.email;
       } else {
-        name.value = "guest";
-        email.value = "guest@email.com";
+        name.value = props.signUpname;
       }
+      if (typeof auth.currentUser?.email === 'string') {
+        email.value = auth.currentUser?.email;
+      } else email.value = "guest@email.com";
     });
 
     /* GET AVATAR */
@@ -440,6 +454,26 @@ export default defineComponent({
       }
     }
 
+    function cancel() {
+      name.value = null;
+        email.value = null;
+        picture.value ="https://firebasestorage.googleapis.com/v0/b/rtrnr-app.appspot.com/o/placeholder.png?alt=media&token=68777f82-4934-4e91-a64d-22b4b992918c";
+        age.value = null;
+        gender.value = null;
+        height.value = null;
+        weight.value = null;
+        trainingfrequence.value = null;
+        trainingtype.value = null;
+        trainer.value = null;
+        profilename.value = null;
+        instagram.value = null;
+        contactemail.value = null;
+        contactnumber.value = null;
+      context.emit("done");
+
+      auth.signOut();
+    }
+
     return {
       arrowBackOutline,
       calendarClear,
@@ -475,6 +509,7 @@ export default defineComponent({
       callOutline,
       person,
       trainer,
+      cancel,
     };
   },
 });

@@ -1,12 +1,12 @@
 <template>
   <ion-page>
     <ion-fab vertical="top" horizontal="start" slot="fixed">
-      <ion-fab-button @click="close()" color="dark">
-        <ion-icon :icon="arrowBackOutline" color="medium"></ion-icon>
+      <ion-fab-button @click="close()" color="primary">
+        <ion-icon :icon="arrowBackOutline" color="secondary"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-content color="medium" style="--padding-top: 4em">
-      <ion-item lines="none" color="medium">
+    <ion-content color="secondary" style="--padding-top: 4em">
+      <ion-item lines="none" color="secondary">
         <ion-text color="dark">
           <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
             {{ exercise.name }}
@@ -28,7 +28,7 @@
             allowfullscreen
           ></iframe>
       </div>
-      <ion-item lines="none" color="medium">
+      <ion-item lines="none" color="secondary">
         <ion-text color="dark">
           <h5 style="font-weight: 400; font-size: 1.2em;">
             {{ exercise.description }}

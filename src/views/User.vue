@@ -4,6 +4,7 @@
       :is-open="isOpenRef"
       message="Copied to clipboard!"
       :duration="1000"
+      color="primary"
       @didDismiss="setOpen(false)"
     >
     </ion-toast>
@@ -131,7 +132,7 @@
             v-model="userData.age"
             placeholder="Age"
             type="number"
-            color="medium"
+            color="secondary"
           ></ion-input>
           <ion-text v-else>
             <h6
@@ -154,7 +155,7 @@
             v-model="userData.gender"
             placeholder="Gender"
             type="text"
-            color="medium"
+            color="secondary"
           ></ion-input>
           <ion-text v-else>
             <h6
@@ -177,7 +178,7 @@
             v-model="userData.height"
             placeholder="Height (Meters)"
             type="number"
-            color="medium"
+            color="secondary"
           ></ion-input>
           <ion-text v-else>
             <h6
@@ -200,7 +201,7 @@
             v-model="userData.weight"
             placeholder="Weight (Kilograms)"
             type="number"
-            color="medium"
+            color="secondary"
           ></ion-input>
           <ion-text v-else>
             <h6
@@ -223,7 +224,7 @@
             v-model="userData.trainingfrequence"
             placeholder="Number of weekly workouts"
             type="number"
-            color="medium"
+            color="secondary"
           ></ion-input>
           <ion-text v-else>
             <h6
@@ -246,7 +247,7 @@
             v-model="userData.trainingtype"
             placeholder="Sport/Exercise type"
             type="text"
-            color="medium"
+            color="secondary"
           ></ion-input>
           <ion-text v-else>
             <h6

@@ -12,9 +12,9 @@
     },
     "SplashScreen": {
       "launchAutoHide": false,
-      "backgroundColor": "#ffffff",
+      "backgroundColor": "#0B0C0D",
       "splashFullScreen": false,
-      "splashImmersive": true
+      "splashImmersive": false
     },
     "CapacitorFirebaseAuth": {
       "providers": ["google.com"],

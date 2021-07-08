@@ -157,6 +157,25 @@ export class ExerciseData {
   }
 }
 
+export const shades = [
+  "#BB227C",
+  "#7A1651",
+  "#3B0B27",
+  "#C72483",
+  "#A11D6A",
+  "#751754",
+  "#360B27",
+  "#C2278C",
+  "#B52483",
+  "#9C1F70",
+  "#CF2995",
+  "#82416B",
+  "#821A5E",
+  "#4F2841",
+  "#CF67AA",
+  "#CFA5C0",
+];
+
 export class NewWorkout {
   name: string;
   description: string;
@@ -170,17 +189,7 @@ export class NewWorkout {
     this.exercises = [];
     this.note = "";
 
-    const colors = [
-      "#A1FAB5",
-      "#A8A1FA",
-      "#FAB1A1",
-      "#FAD6A1",
-      "#E8A1FA",
-      "#A1C5FA",
-      "#A1FACF",
-    ];
-
-    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.color = shades[Math.floor(Math.random() * shades.length)];
   }
 }
 
@@ -229,6 +238,7 @@ export class DoneExercise {
     this.timerActive = false;
   }
 }
+
 
 export class PastWorkout {
   name: string;

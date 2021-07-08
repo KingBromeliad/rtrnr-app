@@ -13,6 +13,7 @@
       @didDismiss="showToast(false)"
       position="bottom"
       translucent="true"
+      color="primary"
     >
     </ion-toast>
     <ion-header class="ion-no-border">
