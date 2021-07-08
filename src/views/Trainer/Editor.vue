@@ -1,5 +1,5 @@
 <template>
-  <ion-page v-if="addWorkoutRef">
+  <ion-page v-if="addWorkoutRef" style="background-color: var(--ion-color-light)">
     <ion-modal :is-open="isOpenRef" @didDismiss="setOpen(false)">
       <exercise-modal
         :createMode="true"
@@ -17,10 +17,10 @@
     >
     </ion-toast>
     <ion-header class="ion-no-border">
-      <ion-toolbar>
+      <ion-toolbar color="light">
         <ion-title>{{editModeRef ? 'Edit workout' : 'Create workout'}}</ion-title>
         <ion-buttons slot="primary">
-          <ion-button color="success" @click="saveWorkout()">Save</ion-button>
+          <ion-button color="primary" @click="saveWorkout()">Save</ion-button>
         </ion-buttons>
         <ion-buttons slot="secondary">
           <ion-button color="danger" @click="presentAlertSave()"
@@ -29,11 +29,11 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content :color=" editModeRef ? 'warning' : 'dark'">
+    <ion-content :color=" editModeRef ? 'warning' : 'light'">
       <!-- WORKOUT TITLE AND DESCRIPTION -->
-      <ion-card color="light">
-        <ion-item v-if="editInfo" lines="none" color="light">
-          <ion-fab-button slot="end" @click="editInfo = false" color="success">
+      <ion-card color="secondary">
+        <ion-item v-if="editInfo" lines="none" color="secondary">
+          <ion-fab-button slot="end" @click="editInfo = false" color="primary">
             <ion-icon :icon="checkmarkOutline"></ion-icon>
           </ion-fab-button>
           <ion-card-header>
@@ -133,11 +133,11 @@
       </ion-card>
     </ion-content>
     <ion-footer>
-      <ion-toolbar>
+      <ion-toolbar color="light">
         <ion-button
           size="large"
           expand="block"
-          color="light"
+          color="dark"
           fill="solid"
           @click="setOpen(true)"
           >Add exercise to workout</ion-button
@@ -147,14 +147,14 @@
   </ion-page>
   <ion-page v-else>
     <ion-header class="ion-no-border">
-      <ion-toolbar>
+      <ion-toolbar color="light">
         <ion-title>{{ userData.name }}</ion-title>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/trainer"></ion-back-button>
+          <ion-back-button color="primary" default-href="/trainer"></ion-back-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
+    <ion-content color="light">
       <ion-card v-for="workout in workouts" :key="workout.name" color="primary">
         <ion-item lines="none" color="primary">
           <ion-card-header slot="start">
@@ -172,7 +172,7 @@
         <ion-card-content>
           <ion-button
             expand="block"
-            color="dark"
+            color="tertiary"
             shape="round"
             @click="editWorkout(workout)"
           >
@@ -183,11 +183,11 @@
       </ion-card>
     </ion-content>
     <ion-footer>
-      <ion-toolbar>
+      <ion-toolbar color="light">
         <ion-button
           size="large"
           expand="block"
-          color="success"
+          color="primary"
           fill="solid"
           @click="createWorkout()"
           >Add a new workout</ion-button

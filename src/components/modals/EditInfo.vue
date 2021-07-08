@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page style="background-color: var(--ion-color-light)">
     <ion-toast
       :color="color"
       position="bottom"
@@ -10,14 +10,14 @@
     >
     </ion-toast>
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar color="light">
         <ion-title>Edit your profile</ion-title>
         <ion-buttons slot="primary">
           <ion-button color="danger" @click="close()">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content color="light">
       <ion-card>
         <ion-item lines="none">
           <ion-icon size="small" slot="start" :icon="person"></ion-icon>

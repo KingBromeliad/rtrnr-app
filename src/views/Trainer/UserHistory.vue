@@ -5,28 +5,40 @@
     </ion-modal>
     <ion-header class="ion-no-border">
       <ion-toolbar>
-        <ion-title>{{ props.id }}</ion-title>
+        <ion-title>User past workouts</ion-title>
         <ion-buttons slot="start">
           <ion-back-button default-href="/trainer"></ion-back-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
-      <div style="justify-content: flex-start; height: 100vh">
-        <div id="history-grid">
-          <ion-card
-            color="tertiary"
-            v-for="pastWorkout in pastWorkouts"
-            :key="pastWorkout.timestamp"
-            button="true"
-            @click="goToWorkout(pastWorkout)"
+    <ion-content color="light" class="ion-padding-top">
+      <div id="history-grid">
+        <ion-card
+          v-for="pastWorkout in pastWorkouts"
+          :key="pastWorkout.timestamp"
+          button="true"
+          @click="goToWorkout(pastWorkout)"
+          style="width: 46vw; margin: 0.5em"
+          v-bind:style="{ '--background': pastWorkout.color }"
+        >
+          <ion-item
+            lines="none"
+            v-bind:style="{ '--background': pastWorkout.color }"
           >
-            <ion-card-header>
-              <ion-card-subtitle>{{ pastWorkout.timestamp }}</ion-card-subtitle>
-              <ion-card-title>{{ pastWorkout.name }}</ion-card-title>
-            </ion-card-header>
-          </ion-card>
-        </div>
+            <div class="info-box">
+              <h1
+                style="font-weight: 550; font-size: 1.8em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
+              >
+                {{ pastWorkout.name }}
+              </h1>
+              <h6
+                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.5em; color: var(--ion-color-light);"
+              >
+                {{ pastWorkout.timestamp }}
+              </h6>
+            </div>
+          </ion-item>
+        </ion-card>
       </div>
     </ion-content>
   </ion-page>
@@ -42,17 +54,15 @@ import {
   IonTitle,
   IonPage,
   IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
+  IonItem,
   IonModal,
 } from "@ionic/vue";
-import { defineComponent, onMounted, ref, reactive, onUpdated } from "vue";
+import { defineComponent, onMounted, ref, onUpdated } from "vue";
 import { db } from "@/main";
 import Past from "@/components/modals/Past.vue";
 
 export default defineComponent({
-  name: "History",
+  name: "userhistory",
   components: {
     IonContent,
     Past,
@@ -63,17 +73,15 @@ export default defineComponent({
     IonHeader,
     IonTitle,
     IonCard,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
     IonModal,
+    IonItem,
   },
   props: { id: String },
   setup(props) {
     const type: object[] = [];
     const pastWorkouts = ref(type);
     const selectWorkout = ref(true);
-    const currentWorkout = reactive({});
+    const currentWorkout = ref<object>();
 
     function getWorkouts() {
       db.collection("user/" + props.id + "/history")
@@ -119,14 +127,11 @@ export default defineComponent({
 </script>
 <style scoped>
 #history-grid {
-  padding-left: 1.5vw;
-  padding-right: 1.5vw;
-  display: grid;
-  width: 100vw;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-rows: 1fr;
-  gap: 0rem;
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: var(--ion-color-light);
 }
 .title {
   background-color: var(--ion-color-primary-contrast);

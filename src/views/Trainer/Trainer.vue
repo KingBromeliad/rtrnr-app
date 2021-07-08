@@ -1,21 +1,20 @@
 <template>
-  <ion-page style="background-color: var(--ion-color-dark)">
+  <ion-page style="background-color: var(--ion-color-light)">
     <ion-popover
       animated="false"
       :is-open="isPopOpenRef"
       :event="eventRef"
-      :translucent="true"
       @didDismiss="setPopOpen(false)"
     >
       <ion-list>
-        <ion-list-header>Actions</ion-list-header>
-        <ion-item button="true" @click="navigateToWorkout()">
+        <ion-list-header color="dark">Actions</ion-list-header>
+        <ion-item color="dark" button="true" @click="navigateToWorkout()">
           <ion-label>Manage workouts</ion-label>
         </ion-item>
-        <ion-item button="true" @click="navigateToHistory()">
+        <ion-item color="dark" button="true" @click="navigateToHistory()">
           <ion-label>Past workouts</ion-label>
         </ion-item>
-        <ion-item button="true" @click="navigateToData()">
+        <ion-item color="dark" button="true" @click="navigateToData()">
           <ion-label>User data</ion-label>
         </ion-item>
       </ion-list>
@@ -29,7 +28,7 @@
 
     <!-- PAGE -->
     <ion-header class="ion-no-border">
-      <ion-toolbar color="dark">
+      <ion-toolbar color="light">
         <ion-title>Personal Trainer mode</ion-title>
         <ion-buttons slot="start">
           <ion-button color="danger" @click="exit()">User</ion-button>
@@ -38,25 +37,26 @@
       <ion-card button="true" color="primary" @click="setOpen(true)">
         <ion-card-header>
           <ion-card-subtitle>tap to open</ion-card-subtitle>
-          <ion-card-title color="dark">Exercise library</ion-card-title>
+          <ion-card-title color="light">Exercise library</ion-card-title>
         </ion-card-header>
       </ion-card>
       <ion-card button="true" color="tertiary" @click="setEditOpen(true)">
         <ion-card-header>
           <ion-card-subtitle>tap to open</ion-card-subtitle>
-          <ion-card-title color="dark">Edit trainer info</ion-card-title>
+          <ion-card-title color="light">Edit trainer info</ion-card-title>
         </ion-card-header>
       </ion-card>
     </ion-header>
-    <ion-content>
+    <ion-content color="light">
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button color="primary" @click="share()">
-          <ion-icon color="dark" :icon="shareSocial"></ion-icon>
+          <ion-icon color="light" :icon="shareSocial"></ion-icon>
         </ion-fab-button>
       </ion-fab>
       <ion-list>
-        <ion-list-header>User list</ion-list-header>
+        <ion-list-header color="light">User list</ion-list-header>
         <ion-item
+          color="light"
           v-for="user in users"
           :key="user.uid"
           @click="setPopOpen(true, user.uid, $event)"
@@ -190,8 +190,7 @@ export default defineComponent({
     }
 
     function share() {
-
-            db.collection("trainer")
+      db.collection("trainer")
         .doc(auth.currentUser?.uid)
         .get()
         .then((doc) => {
@@ -199,12 +198,13 @@ export default defineComponent({
             // Convert
             const type = new Trainer();
             const trainer = Object.assign(type, doc.data());
-                  Share.share({
-        title: "RTRNR App",
-        text: "Join me on Remote Trainer with my code: " + trainer.code,
-        url: "https://drive.google.com/file/d/15xMWiLJpI17cxzezAYiyvxn4ow08lgcB/view?usp=sharing",
-        dialogTitle: "Share",
-      });
+            Share.share({
+              title: "RTRNR App",
+              text: "Join me on Remote Trainer with my code: " + trainer.code,
+              url:
+                "https://drive.google.com/file/d/15xMWiLJpI17cxzezAYiyvxn4ow08lgcB/view?usp=sharing",
+              dialogTitle: "Share",
+            });
           } else {
             console.log("No such document!");
           }

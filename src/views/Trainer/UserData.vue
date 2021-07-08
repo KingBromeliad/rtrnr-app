@@ -1,19 +1,19 @@
 <template>
-  <ion-page>
+  <ion-page style="background-color: var(--ion-color-light)">
     <ion-header class="ion-no-border">
-      <ion-toolbar>
+      <ion-toolbar color="light">
         <ion-title>{{ userData.name }}</ion-title>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/trainer"></ion-back-button>
+          <ion-back-button color="primary" default-href="/trainer"></ion-back-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content color="light">
       <ion-card button="true" color="secondary">
         <img id="avatar" :src="userData.picture" />
         <ion-card-header style="padding: 0px">
           <div style="padding: 1em">
-            <ion-text color="light">
+            <ion-text color="dark">
               <h1
                 style="font-weight: 550; font-size: 2.4em; margin-bottom: 0px; margin-top: 0px"
               >

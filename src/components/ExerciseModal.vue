@@ -1,18 +1,18 @@
 <template>
   <!-- Exercises list mode */ -->
-  <ion-page v-if="listMode">
+  <ion-page v-if="listMode" style="background-color: var(--ion-color-light)">
     <ion-header>
-      <ion-toolbar>
-        <ion-title>Exercise List</ion-title>
+      <ion-toolbar color="primary">
+        <ion-title color="light">Exercise List</ion-title>
         <ion-buttons slot="primary">
-          <ion-button color="danger" @click="close()">Close</ion-button>
+          <ion-button color="light" @click="close()">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content style="--padding-top: 2vh">
+    <ion-content style="--padding-top: 2vh" color="secondary">
       <!-- PRETTY BIG CARD COMPONENT -->
-      <ion-card v-for="exercise in exercises" :key="exercise.name">
-        <ion-item lines="none">
+      <ion-card v-for="exercise in exercises" :key="exercise.name" color="light">
+        <ion-item lines="none" color="light">
           <ion-card-header>
             <ion-card-subtitle>{{ exercise.subtitle }}</ion-card-subtitle>
             <ion-card-title>{{ exercise.name }}</ion-card-title>
@@ -22,7 +22,7 @@
             fill="outline"
             slot="end"
             size="large"
-            color="light"
+            color="primary"
             @click="addExerciseToWorkout(exercise)"
             >Add</ion-button
           >          <ion-button
@@ -35,7 +35,7 @@
             >Delete</ion-button
           >
         </ion-item>
-        <ion-item lines="none">
+        <ion-item lines="none" color="light">
           <ion-icon
             v-if="exercise.description != null"
             :icon="checkmarkCircleOutline"
@@ -50,7 +50,7 @@
           ></ion-icon>
           <ion-label>Description</ion-label>
         </ion-item>
-        <ion-item lines="none">
+        <ion-item lines="none" color="light">
           <ion-icon
             v-if="exercise.video != null"
             :icon="checkmarkCircleOutline"
@@ -68,7 +68,7 @@
       </ion-card>
       <ion-fab vertical="top" horizontal="start" slot="fixed">
         <ion-fab-button @click="listMode = false">
-          <ion-icon :icon="add"></ion-icon>
+          <ion-icon color="secondary" :icon="add"></ion-icon>
         </ion-fab-button>
       </ion-fab>
     </ion-content>
@@ -76,10 +76,10 @@
   <ion-page v-else>
     <!-- Add new exercise mode -->
     <ion-header class="ion-no-border">
-      <ion-toolbar>
+      <ion-toolbar color="success">
         <ion-title>New exercise</ion-title>
         <ion-buttons slot="primary">
-          <ion-button color="success" @click="addExercise()">Save</ion-button>
+          <ion-button color="primary" @click="addExercise()">Save</ion-button>
         </ion-buttons>
         <ion-buttons slot="secondary">
           <ion-button color="danger" @click="presentAlertConfirm()"
@@ -88,30 +88,31 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
-      <ion-card>
-        <ion-item>
+    <ion-content color="light">
+      <ion-card color="secondary">
+        <ion-item color="secondary">
           <ion-label position="floating">Name</ion-label>
           <ion-input v-model="newExercise.name"></ion-input>
         </ion-item>
 
-        <ion-item lines="none">
+        <ion-item lines="none" color="secondary">
           <ion-label position="floating">Subtitle</ion-label>
           <ion-input v-model="newExercise.subtitle"></ion-input>
         </ion-item>
       </ion-card>
-      <ion-card>
-        <ion-item lines="none">
+      <ion-card color="success">
+        <ion-item lines="none" color="success">
           <ion-textarea
             v-model="newExercise.description"
             rows="10"
             placeholder="Enter exercise description here..."
+            style="color: var(--ion-color-light)"
           ></ion-textarea>
         </ion-item>
       </ion-card>
 
-      <ion-card>
-          <ion-item lines="none">
+      <ion-card color="tertiary">
+          <ion-item lines="none" color="tertiary">
             <ion-label position="floating">Video url</ion-label>
             <ion-input v-model="newExercise.video"></ion-input>
           </ion-item>
