@@ -155,8 +155,8 @@
       </ion-toolbar>
     </ion-header>
     <ion-content color="light">
-      <ion-card v-for="workout in workouts" :key="workout.name" color="primary">
-        <ion-item lines="none" color="primary">
+      <ion-card v-for="workout in workouts" :key="workout.name" v-bind:style="{ '--background': workout.color }">
+        <ion-item lines="none" v-bind:style="{ '--background': workout.color }">
           <ion-card-header slot="start">
             <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
             <ion-card-title>{{ workout.name }}</ion-card-title>

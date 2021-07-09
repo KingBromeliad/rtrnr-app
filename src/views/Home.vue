@@ -107,9 +107,6 @@ export default defineComponent({
     IonFooter,
   },
   setup() {
-    useBackButton(10, () => {
-      console.log("Handler was called!");
-    });
     const router = useRouter();
     const type: NewWorkout[] = [];
     const workouts = ref(type);
@@ -153,6 +150,9 @@ export default defineComponent({
 
     onUpdated(() => {
       getWorkouts();
+      useBackButton(10, () => {
+        console.log("Handler was called!");
+      });
     });
 
     //GOT TO WORKOUT

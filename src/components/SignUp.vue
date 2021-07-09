@@ -248,7 +248,8 @@ import {
 import { auth, db, AppUser, userConverter, storage } from "@/main";
 import { useRouter } from "vue-router";
 import { useBackButton } from "@ionic/vue";
-import { Camera, CameraResultType } from "@capacitor/camera";
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+
 
 export default defineComponent({
   name: "ptform",
@@ -323,6 +324,7 @@ export default defineComponent({
 
     const takePicture = async () => {
       const image = await Camera.getPhoto({
+        source: CameraSource.Prompt,
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.Base64,

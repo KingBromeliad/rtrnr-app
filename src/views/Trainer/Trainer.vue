@@ -136,17 +136,34 @@ export default defineComponent({
     const users = ref(type);
 
     function getUsers() {
-      db.collection("user/")
+      db.collection("trainer")
+        .doc(auth.currentUser?.uid)
         .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            const temp: User = {
-              uid: doc.id,
-              data: doc.data(),
-            };
-            users.value.push(temp);
-          });
+        .then((doc) => {
+          if (doc.exists) {
+            // Convert
+            const type = new Trainer();
+            const trainer = Object.assign(type, doc.data());
+
+            db.collection("user/")
+              .where("trainer", "==", trainer.code)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                  // doc.data() is never undefined for query doc snapshots
+                  const temp: User = {
+                    uid: doc.id,
+                    data: doc.data(),
+                  };
+                  users.value.push(temp);
+                });
+              });
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
         });
     }
 

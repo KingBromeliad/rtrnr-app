@@ -4,8 +4,8 @@
       <past @exitPast="setOpen(false)" :workout="currentWorkout"></past>
     </ion-modal>
     <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>User past workouts</ion-title>
+      <ion-toolbar color="light">
+        <ion-title>{{ userData.name }}</ion-title>
         <ion-buttons slot="start">
           <ion-back-button default-href="/trainer"></ion-back-button>
         </ion-buttons>
@@ -58,7 +58,7 @@ import {
   IonModal,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, onUpdated } from "vue";
-import { db } from "@/main";
+import { db, AppUser, userConverter } from "@/main";
 import Past from "@/components/modals/Past.vue";
 
 export default defineComponent({
@@ -83,6 +83,41 @@ export default defineComponent({
     const selectWorkout = ref(true);
     const currentWorkout = ref<object>();
 
+    const user = new AppUser(
+      "",
+      "",
+      "https://firebasestorage.googleapis.com/v0/b/rtrnr-app.appspot.com/o/placeholder.png?alt=media&token=68777f82-4934-4e91-a64d-22b4b992918c",
+      false,
+      0,
+      "",
+      0,
+      0,
+      0,
+      "",
+      ""
+    );
+    const userData = ref(user);
+
+    function fetchUser() {
+      db.collection("user")
+        .doc(props.id)
+        .withConverter(userConverter)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            // Convert
+            const temp: AppUser | undefined = doc.data();
+            if (temp) userData.value = temp;
+            else console.log("Firebase support TS please");
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
+
     function getWorkouts() {
       db.collection("user/" + props.id + "/history")
         .get()
@@ -99,6 +134,7 @@ export default defineComponent({
 
     onMounted(() => {
       getWorkouts();
+      fetchUser();
     });
 
     onUpdated(() => {
@@ -115,6 +151,7 @@ export default defineComponent({
       pastWorkouts,
       selectWorkout,
       currentWorkout,
+      userData,
     };
   },
   methods: {

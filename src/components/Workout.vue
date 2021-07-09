@@ -632,7 +632,7 @@ export default defineComponent({
       return alert.present();
     };
 
-    useBackButton(10, () => {
+    useBackButton(100, () => {
       console.log("Handler was called!");
       presentAlertQuit();
     });
