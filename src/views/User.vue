@@ -8,290 +8,80 @@
       @didDismiss="setOpen(false)"
     >
     </ion-toast>
-    <ion-content color="light">
-      <ion-item lines="none" color="light">
-        <ion-text color="medium">
-          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
-            Your account
-          </h1>
-        </ion-text>
-      </ion-item>
-      <ion-card
-        v-if="userData.ispersonaltrainer"
-        color="primary"
-        button="true"
-        style="border-radius: 45px;"
-        @click="router.push('/trainer')"
-      >
-        <ion-item lines="none" color="primary">
-          <ion-card-header>
-            <ion-text color="light">
-              <h1
-                style="font-weight: 550; font-size: 1.6em; margin-bottom: 0px; margin-top: 0px"
-              >
-                Personal trainer
-              </h1>
-              <h6
-                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-              >
-                Manage your clients
-              </h6>
-            </ion-text>
-          </ion-card-header>
-          <ion-fab-button slot="end" color="light"
-            ><ion-icon :icon="chevronForward"></ion-icon
-          ></ion-fab-button>
-        </ion-item>
-      </ion-card>
-
-      <ion-card
-        button="true"
-        @click="toggle()"
-        color="secondary"
-        style="border-radius: 45px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
-      >
-        <ion-card-header style="padding: 0px">
-          <div class="wrapper">
-            <div v-if="editMode" id="camera">
-              <ion-fab-button color="medium" @click="takePicture()">
-                <ion-icon
-                  :icon="camera"
-                  style="color: var(--ion-color-light); font-size: 3em;"
-                ></ion-icon>
-              </ion-fab-button>
-            </div>
-            <img v-else id="avatar" :src="userData.picture" />
-
-            <ion-text color="light">
-              <h1
-                style="font-weight: 550; font-size: 2.4em; margin-bottom: 0px; margin-top: 0px"
-              >
-                {{ userData.name }}
-              </h1>
-              <h6
-                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-              >
-                {{ showData ? userData.email : "Tap to view your data" }}
-              </h6>
-            </ion-text>
-          </div>
-        </ion-card-header>
-      </ion-card>
-
-      <ion-card
-        v-if="showData"
-        color="medium"
-        style="
-            border-radius: 0px 0px 45px 45px;
-            transform: translateY(-55px);
-            margin-top: 0px;
-            padding-top: 40px;
-            padding-bottom: 0.3em;
-          "
-      >
-        <ion-item lines="none" color="medium">
-          <ion-card-header>
-            <ion-text :color="editMode ? 'secondary' : 'light'">
-              <h1
-                style="font-weight: 600; font-size: 1.6em; margin-bottom: 0px; margin-top: 0px"
-              >
-                Your data
-              </h1>
-              <h6
-                style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-              >
-                {{ editMode ? "Tap to save" : "Tap to modify" }}
-              </h6>
-            </ion-text>
-          </ion-card-header>
-          <ion-fab-button
-            v-if="editMode"
-            slot="end"
-            color="dark"
-            @click="saveData()"
-            ><ion-icon :icon="checkmark"></ion-icon
-          ></ion-fab-button>
-          <ion-fab-button
-            v-else
-            slot="end"
-            color="light"
-            @click="editMode = true"
-            ><ion-icon :icon="pencil"></ion-icon
-          ></ion-fab-button>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-icon
-            style="color: var(--ion-color-light);"
-            size="small"
-            slot="start"
-            :icon="calendarClear"
-          ></ion-icon>
-          <ion-input
-            v-if="editMode"
-            required="true"
-            v-model="userData.age"
-            placeholder="Age"
-            type="number"
-            color="secondary"
-          ></ion-input>
-          <ion-text v-else>
-            <h6
-              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-            >
-              {{ userData.age }}
-            </h6>
+    <div class="rounded-container-bottom">
+      <ion-content style="--background: transparent">
+        <ion-item lines="none" color="light">
+          <ion-text color="medium">
+            <h1 style="font-weight: 550; font-size: 1.8em; margin-bottom: 0px">
+              Your account
+            </h1>
           </ion-text>
         </ion-item>
-        <ion-item size="small" lines="none">
-          <ion-icon
-            style="color: var(--ion-color-light);"
-            size="small"
-            slot="start"
-            :icon="maleFemale"
-          ></ion-icon>
-          <ion-input
-            v-if="editMode"
-            required="true"
-            v-model="userData.gender"
-            placeholder="Gender"
-            type="text"
-            color="secondary"
-          ></ion-input>
-          <ion-text v-else>
-            <h6
-              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-            >
-              {{ userData.gender }}
-            </h6>
-          </ion-text>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-icon
-            style="color: var(--ion-color-light);"
-            size="small"
-            slot="start"
-            :icon="arrowUp"
-          ></ion-icon>
-          <ion-input
-            v-if="editMode"
-            required="true"
-            v-model="userData.height"
-            placeholder="Height (Meters)"
-            type="number"
-            color="secondary"
-          ></ion-input>
-          <ion-text v-else>
-            <h6
-              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-            >
-              {{ userData.height }}
-            </h6>
-          </ion-text>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-icon
-            style="color: var(--ion-color-light);"
-            size="small"
-            slot="start"
-            :icon="scale"
-          ></ion-icon>
-          <ion-input
-            v-if="editMode"
-            required="true"
-            v-model="userData.weight"
-            placeholder="Weight (Kilograms)"
-            type="number"
-            color="secondary"
-          ></ion-input>
-          <ion-text v-else>
-            <h6
-              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-            >
-              {{ userData.weight }}
-            </h6>
-          </ion-text>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-icon
-            style="color: var(--ion-color-light);"
-            size="small"
-            slot="start"
-            :icon="barbell"
-          ></ion-icon>
-          <ion-input
-            v-if="editMode"
-            required="true"
-            v-model="userData.trainingfrequence"
-            placeholder="Number of weekly workouts"
-            type="number"
-            color="secondary"
-          ></ion-input>
-          <ion-text v-else>
-            <h6
-              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-            >
-              {{ userData.trainingfrequence }}
-            </h6>
-          </ion-text>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-icon
-            style="color: var(--ion-color-light);"
-            size="small"
-            slot="start"
-            :icon="football"
-          ></ion-icon>
-          <ion-input
-            v-if="editMode"
-            required="true"
-            v-model="userData.trainingtype"
-            placeholder="Sport/Exercise type"
-            type="text"
-            color="secondary"
-          ></ion-input>
-          <ion-text v-else>
-            <h6
-              style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
-            >
-              {{ userData.trainingtype }}
-            </h6>
-          </ion-text>
-        </ion-item>
-      </ion-card>
-
-      <div class="wrapper end">
-        <ion-button color="tertiary" shape="round" @click="logout()"
-          ><ion-icon slot="start" :icon="logOut"></ion-icon>Logout</ion-button
-        >
-      </div>
-      <!-- PERSONAL TRAINER CARD -->
-      <ion-item lines="none" color="light">
-        <ion-text color="medium">
-          <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0.3em">
-            Personal trainer
-          </h1>
-        </ion-text>
-      </ion-item>
-      <div>
         <ion-card
+          v-if="userData.ispersonaltrainer"
           color="primary"
-          style="border-radius: 45px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+          button="true"
+          style="border-radius: 40px;"
+          @click="router.push('/trainer')"
+        >
+          <ion-item lines="none" color="primary">
+            <ion-card-header>
+              <ion-text color="light">
+                <h1
+                  style="font-weight: 550; font-size: 1.4em; margin-bottom: 0px; margin-top: 0px"
+                >
+                  Personal trainer
+                </h1>
+                <h6
+                  style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                >
+                  Manage your clients
+                </h6>
+              </ion-text>
+            </ion-card-header>
+            <ion-fab-button slot="end" color="light"
+              ><ion-icon :icon="chevronForward"></ion-icon
+            ></ion-fab-button>
+          </ion-item>
+        </ion-card>
+
+        <ion-card
+          button="true"
+          @click="toggle()"
+          color="secondary"
+          style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
         >
           <ion-card-header style="padding: 0px">
             <div class="wrapper">
-              <img id="avatar" :src="trainerData.profilepicture" />
+              <div v-if="editMode" id="camera">
+                <ion-fab-button color="medium" @click="takePicture()">
+                  <ion-icon
+                    :icon="camera"
+                    style="color: var(--ion-color-light); font-size: 3em;"
+                  ></ion-icon>
+                </ion-fab-button>
+              </div>
+              <img v-else id="avatar" :src="userData.picture" />
+
               <ion-text color="light">
                 <h1
-                  style="font-weight: 550; font-size: 2.4em; margin-bottom: 0px; margin-top: 0px"
+                  style="font-weight: 550; font-size: 1.8em; margin-bottom: 0px; margin-top: 0px"
                 >
-                  {{ trainerData.name }}
+                  {{ userData.name }}
                 </h1>
+                <h6
+                  style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+                >
+                  {{ showData ? userData.email : "Tap to view your data" }}
+                </h6>
               </ion-text>
             </div>
           </ion-card-header>
         </ion-card>
+
         <ion-card
-          color="secondary"
+          v-if="showData"
+          color="medium"
           style="
             border-radius: 0px 0px 45px 45px;
             transform: translateY(-55px);
@@ -300,45 +90,255 @@
             padding-bottom: 0.3em;
           "
         >
-          <ion-card-content>
-            <ion-item
-              button="true"
-              lines="none"
+          <ion-item lines="none" color="medium">
+            <ion-card-header>
+              <ion-text :color="editMode ? 'secondary' : 'light'">
+                <h1
+                  style="font-weight: 600; font-size: 1.4em; margin-bottom: 0px; margin-top: 0px"
+                >
+                  Your data
+                </h1>
+                <h6
+                  style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                >
+                  {{ editMode ? "Tap to save" : "Tap to modify" }}
+                </h6>
+              </ion-text>
+            </ion-card-header>
+            <ion-fab-button
+              v-if="editMode"
+              slot="end"
+              color="dark"
+              @click="saveData()"
+              ><ion-icon :icon="checkmark"></ion-icon
+            ></ion-fab-button>
+            <ion-fab-button
+              v-else
+              slot="end"
               color="light"
-              style="--border-radius: 20px; margin-bottom: 0.5em"
-              :href="trainerData.instagram"
-            >
-              <ion-icon slot="start" :icon="logoInstagram"></ion-icon>
-              <ion-label>{{ trainerData.name }}</ion-label>
-            </ion-item>
-            <ion-item
-              button="true"
-              lines="none"
-              color="light"
-              style="--border-radius: 20px; margin-bottom: 0.5em"
-              @click="writeToClipboard(trainerData.contactemail)"
-            >
-              <ion-icon slot="start" :icon="mailOutline"></ion-icon>
-              <ion-label>{{ trainerData.contactemail }}</ion-label>
-            </ion-item>
-            <ion-item
-              button="true"
-              lines="none"
-              color="light"
-              style="--border-radius: 20px; margin-bottom: 0.5em"
-              @click="writeToClipboard(trainerData.contactnumber)"
-            >
-              <ion-icon slot="start" :icon="callOutline"></ion-icon>
-              <ion-label>{{ trainerData.contactnumber }}</ion-label>
-            </ion-item>
-          </ion-card-content>
+              @click="editMode = true"
+              ><ion-icon :icon="pencil"></ion-icon
+            ></ion-fab-button>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon
+              style="color: var(--ion-color-light);"
+              size="small"
+              slot="start"
+              :icon="calendarClear"
+            ></ion-icon>
+            <ion-input
+              v-if="editMode"
+              required="true"
+              v-model="userData.age"
+              placeholder="Age"
+              type="number"
+              color="secondary"
+            ></ion-input>
+            <ion-text v-else>
+              <h6
+                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+              >
+                {{ userData.age }}
+              </h6>
+            </ion-text>
+          </ion-item>
+          <ion-item size="small" lines="none">
+            <ion-icon
+              style="color: var(--ion-color-light);"
+              size="small"
+              slot="start"
+              :icon="maleFemale"
+            ></ion-icon>
+            <ion-input
+              v-if="editMode"
+              required="true"
+              v-model="userData.gender"
+              placeholder="Gender"
+              type="text"
+              color="secondary"
+            ></ion-input>
+            <ion-text v-else>
+              <h6
+                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+              >
+                {{ userData.gender }}
+              </h6>
+            </ion-text>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon
+              style="color: var(--ion-color-light);"
+              size="small"
+              slot="start"
+              :icon="arrowUp"
+            ></ion-icon>
+            <ion-input
+              v-if="editMode"
+              required="true"
+              v-model="userData.height"
+              placeholder="Height (Meters)"
+              type="number"
+              color="secondary"
+            ></ion-input>
+            <ion-text v-else>
+              <h6
+                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+              >
+                {{ userData.height }}
+              </h6>
+            </ion-text>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon
+              style="color: var(--ion-color-light);"
+              size="small"
+              slot="start"
+              :icon="scale"
+            ></ion-icon>
+            <ion-input
+              v-if="editMode"
+              required="true"
+              v-model="userData.weight"
+              placeholder="Weight (Kilograms)"
+              type="number"
+              color="secondary"
+            ></ion-input>
+            <ion-text v-else>
+              <h6
+                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+              >
+                {{ userData.weight }}
+              </h6>
+            </ion-text>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon
+              style="color: var(--ion-color-light);"
+              size="small"
+              slot="start"
+              :icon="barbell"
+            ></ion-icon>
+            <ion-input
+              v-if="editMode"
+              required="true"
+              v-model="userData.trainingfrequence"
+              placeholder="Number of weekly workouts"
+              type="number"
+              color="secondary"
+            ></ion-input>
+            <ion-text v-else>
+              <h6
+                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+              >
+                {{ userData.trainingfrequence }}
+              </h6>
+            </ion-text>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon
+              style="color: var(--ion-color-light);"
+              size="small"
+              slot="start"
+              :icon="football"
+            ></ion-icon>
+            <ion-input
+              v-if="editMode"
+              required="true"
+              v-model="userData.trainingtype"
+              placeholder="Sport/Exercise type"
+              type="text"
+              color="secondary"
+            ></ion-input>
+            <ion-text v-else>
+              <h6
+                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+              >
+                {{ userData.trainingtype }}
+              </h6>
+            </ion-text>
+          </ion-item>
         </ion-card>
-      </div>
-    </ion-content>
 
-    <ion-footer>
-      <div class="rounded-container-bottom"></div>
-    </ion-footer>
+        <div class="wrapper end">
+          <ion-button color="tertiary" shape="round" @click="logout()"
+            ><ion-icon slot="start" :icon="logOut"></ion-icon>Logout</ion-button
+          >
+        </div>
+        <!-- PERSONAL TRAINER CARD -->
+        <ion-item lines="none" color="light">
+          <ion-text color="medium">
+            <h1
+              style="font-weight: 550; font-size: 1.8em; margin-bottom: 0.3em"
+            >
+              Personal trainer
+            </h1>
+          </ion-text>
+        </ion-item>
+        <div>
+          <ion-card
+            color="primary"
+            style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+          >
+            <ion-card-header style="padding: 0px">
+              <div class="wrapper">
+                <img id="avatar" :src="trainerData.profilepicture" />
+                <ion-text color="light">
+                  <h1
+                    style="font-weight: 550; font-size: 1.8em; margin-bottom: 0px; margin-top: 0px"
+                  >
+                    {{ trainerData.name }}
+                  </h1>
+                </ion-text>
+              </div>
+            </ion-card-header>
+          </ion-card>
+          <ion-card
+            color="secondary"
+            style="
+            border-radius: 0px 0px 45px 45px;
+            transform: translateY(-55px);
+            margin-top: 0px;
+            padding-top: 40px;
+            padding-bottom: 0.1em;
+          "
+          >
+            <ion-card-content>
+              <ion-item
+                button="true"
+                lines="none"
+                color="light"
+                style="--border-radius: 20px; margin-bottom: 0.3em"
+                :href="trainerData.instagram"
+              >
+                <ion-icon slot="start" :icon="logoInstagram"></ion-icon>
+                <ion-label>{{ trainerData.name }}</ion-label>
+              </ion-item>
+              <ion-item
+                button="true"
+                lines="none"
+                color="light"
+                style="--border-radius: 20px; margin-bottom: 0.3em"
+                @click="writeToClipboard(trainerData.contactemail)"
+              >
+                <ion-icon slot="start" :icon="mailOutline"></ion-icon>
+                <ion-label>{{ trainerData.contactemail }}</ion-label>
+              </ion-item>
+              <ion-item
+                button="true"
+                lines="none"
+                color="light"
+                style="--border-radius: 20px; margin-bottom: 0.3em"
+                @click="writeToClipboard(trainerData.contactnumber)"
+              >
+                <ion-icon slot="start" :icon="callOutline"></ion-icon>
+                <ion-label>{{ trainerData.contactnumber }}</ion-label>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </ion-content>
+    </div>
   </ion-page>
 </template>
 
@@ -354,7 +354,6 @@ import {
   IonCard,
   IonCardHeader,
   IonInput,
-  IonFooter,
   IonLabel,
   IonCardContent,
   IonToast,
@@ -382,7 +381,7 @@ import { db, auth, userConverter, AppUser, Trainer, storage } from "../main";
 import { useRouter } from "vue-router";
 import { Clipboard } from "@capacitor/clipboard";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import {cfaSignOut} from 'capacitor-firebase-auth';
+import { cfaSignOut } from "capacitor-firebase-auth";
 
 export default defineComponent({
   name: "User",
@@ -397,7 +396,6 @@ export default defineComponent({
     IonCard,
     IonCardHeader,
     IonInput,
-    IonFooter,
     IonLabel,
     IonCardContent,
     IonToast,
@@ -510,7 +508,7 @@ export default defineComponent({
     /* LOGOUT */
 
     function logout() {
-      cfaSignOut().subscribe()
+      cfaSignOut().subscribe();
       auth
         .signOut()
         .then(() => {
@@ -576,14 +574,14 @@ export default defineComponent({
 <style scoped>
 #avatar {
   border-radius: 50%;
-  height: 7em;
-  width: 7em;
+  height: 4.6em;
+  width: 4.6em;
   margin: 1em;
 }
 #camera {
   border-radius: 50%;
-  height: 7em;
-  width: 7em;
+  height: 4.6em;
+  width: 4.6em;
   margin: 1em;
   display: grid;
   place-content: center;
@@ -604,7 +602,7 @@ export default defineComponent({
 .rounded-container-bottom {
   display: block;
   background-color: var(--ion-color-light);
-  height: 21px;
+  height: 100vh;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }

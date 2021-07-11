@@ -1,8 +1,6 @@
 <template>
   <ion-page v-if="completeSignUp">
-    <sign-up
-     :signUpname="name" @done="completeSignUp = false"
-    ></sign-up>
+    <sign-up :signUpname="name" @done="completeSignUp = false"></sign-up>
   </ion-page>
   <ion-page v-else style="background-color: var(--ion-color-light)">
     <ion-toast
@@ -17,19 +15,12 @@
     <ion-content color="light">
       <div class="box">
         <img src="./logo.svg" />
-        <ion-item lines="none" color="light">
-          <h1
-            style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px; color: var(--ion-color-light)"
-          >
-            {{ existingUser ? "Sign In" : "Sign Up" }}
-          </h1>
-        </ion-item>
         <div v-if="chooseMode" style="width: 90vw">
-          <div style="margin-bottom: 2em; margin-top: 2em;">
+          <div style="margin-bottom: 1.4em; margin-top: 6em;">
             <ion-button
               expand="block"
               color="medium"
-              style="--border-radius: 30px; --padding-top: 1.8em;  --padding-bottom: 1.8em; font-size: 1.2em"
+              style="--border-radius: 30px; --padding-top: 1.6em;  --padding-bottom: 1.6em; font-size: 1.2em"
               @click="googleSignIn()"
               ><ion-icon
                 style="color: #303136;"
@@ -44,7 +35,7 @@
             <ion-button
               expand="block"
               color="medium"
-              style="--border-radius: 30px; --padding-top: 1.8em;  --padding-bottom: 1.8em; font-size: 1.2em"
+              style="--border-radius: 30px; --padding-top: 1.6em;  --padding-bottom: 1.6em; font-size: 1.2em"
               @click="
                 chooseMode = false;
                 emailSignIn = true;
@@ -132,7 +123,6 @@ import { logoGoogle, mail, arrowBack } from "ionicons/icons";
 import SignUp from "@/components/SignUp.vue";
 import { useBackButton } from "@ionic/vue";
 import { SplashScreen } from "@capacitor/splash-screen";
-import { StatusBar } from "@capacitor/status-bar";
 
 import { cfaSignIn } from "capacitor-firebase-auth";
 
@@ -159,7 +149,6 @@ export default defineComponent({
     const existingUser = ref(true);
 
     onMounted(() => {
-      StatusBar.setBackgroundColor({ color: "#0B0C0D" });
       auth.onAuthStateChanged((user) => {
         if (user && existingUser.value) {
           router.push("/tabs/home");
@@ -259,7 +248,7 @@ export default defineComponent({
 <style scoped>
 .box {
   display: flex;
-  padding-top: 6em;
+  padding-top: 4em;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;

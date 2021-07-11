@@ -11,7 +11,8 @@
       <record @exitVideo="addVideo" :id="videoId"></record>
     </ion-modal>
     <!-- HEADER -->
-    <ion-content color="light" style="--padding-top: 4em;">
+    <div class="rounded-container-bottom">
+    <ion-content style="--padding-top: 4em; --background: transparent">
       <ion-fab vertical="top" horizontal="start" slot="fixed">
         <ion-fab-button color="dark" size="small" @click="presentAlertQuit()">
           <ion-icon :icon="close"></ion-icon>
@@ -22,7 +23,7 @@
         color="tertiary"
         button="true"
         @click="showWorkoutNote = !showWorkoutNote"
-        style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;; z-index: 10"
+        style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;; z-index: 10"
       >
         <ion-item color="tertiary" lines="none">
           <ion-icon
@@ -50,21 +51,21 @@
       <div v-for="(exercise, index) in exercises" :key="exercise.id">
         <ion-card
           :color="exercise.state == 'done' ? 'primary' : 'success'"
-          style="border-radius: 45px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+          style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
         >
           <ion-item
             :color="exercise.state == 'done' ? 'primary' : 'dark'"
             lines="none"
           >
-            <ion-card-header>
-              <ion-card-title>{{ exercise.data.name }}</ion-card-title>
-              <ion-card-subtitle>{{
+            <div style="padding: 0.9em; display: flex; flex-direction: column">
+              <ion-text style="font-size: 1.4em; font-weight: 600; margin-bottom: 0.2em">{{ exercise.data.name }}</ion-text>
+              <ion-text style="font-weight: 500">{{
                 exercise.repsDone + " Reps"
-              }}</ion-card-subtitle>
-              <ion-card-subtitle>{{
+              }}</ion-text>
+              <ion-text style="font-weight: 500">{{
                 exercise.weightDone + " Kg"
-              }}</ion-card-subtitle>
-            </ion-card-header>
+              }}</ion-text>
+            </div>
             <ion-fab-button
               style="--box-shadow: 0px"
               v-if="exercise.state == 'edit'"
@@ -313,7 +314,7 @@
           v-if="exercise.state == 'active' && exercise.timerActive == false"
           button="true"
           color="secondary"
-          style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
+          style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;"
           @click="setTimer(index, exercise.rest)"
         >
           <ion-item lines="none" color="secondary"
@@ -332,7 +333,7 @@
               ? 'primary'
               : 'tertiary'
           "
-          style="border-radius: 45px; margin-top: 0em; margin-bottom: 1em;"
+          style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;"
         >
           <ion-item
             lines="none"
@@ -347,9 +348,7 @@
         </ion-card>
       </div>
     </ion-content>
-    <ion-footer>
-      <div class="rounded-container-bottom"></div>
-    </ion-footer>
+    </div>
   </ion-page>
 </template>
 
@@ -357,9 +356,6 @@
 import {
   IonPage,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
   IonItem,
   IonIcon,
   IonFabButton,
@@ -371,9 +367,9 @@ import {
   IonRow,
   alertController,
   IonModal,
-  IonFooter,
   IonFab,
   IonLabel,
+  IonText
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, unref } from "@vue/runtime-core";
 import {
@@ -405,7 +401,7 @@ import {
 } from "@capacitor/local-notifications";
 import { App } from "@capacitor/app";
 import { useBackButton } from "@ionic/vue";
-import { StatusBar } from "@capacitor/status-bar";
+
 
 export default defineComponent({
   name: "workout",
@@ -415,9 +411,7 @@ export default defineComponent({
     Info,
     IonPage,
     IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
+    IonText,
     IonItem,
     IonIcon,
     IonFabButton,
@@ -428,7 +422,6 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonModal,
-    IonFooter,
     IonFab,
     IonLabel,
   },
@@ -498,7 +491,6 @@ export default defineComponent({
         .catch((error) => {
           console.error("Error writing document: ", error);
         });
-      StatusBar.show();
       context.emit("exitWorkout");
     }
     /* NOTE */
@@ -682,7 +674,7 @@ export default defineComponent({
 .rounded-container-bottom {
   display: block;
   background-color: var(--ion-color-light);
-  height: 21px;
+  height: 100vh;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }

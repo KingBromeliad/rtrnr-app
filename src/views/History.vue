@@ -6,21 +6,22 @@
     <ion-header>
       <ion-item lines="none" color="light">
         <ion-text color="primary">
-          <h1 style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px">
+          <h1 style="font-weight: 500; font-size: 1.8em; margin-bottom: 0px">
             Workout history
           </h1>
-          <h4 style="font-weight: 400; font-size: 1.5em; margin-top: 0.2em">
+          <h4 style="font-weight: 400; font-size: 1em; margin-top: 0.2em">
             Tap to view report
           </h4>
         </ion-text>
       </ion-item>
     </ion-header>
-    <ion-content color="light">
-      <div style="justify-content: flex-start; height: 100vh">
+    <div class="rounded-container-bottom">
+    <ion-content style="--background: transparent">
+      <div style="justify-content: flex-start;">
         <ion-item v-if="pastWorkouts.length == 0" lines="none" color="light">
           <ion-text color="medium">
             <h4
-              style="font-weight: 300; font-size: 1.4em; margin-top: 0.4em; line-height: 1.3em"
+              style="font-weight: 300; font-size: 1em; margin-top: 0.4em; line-height: 1.3em"
             >
               Completed workouts will be shown here
             </h4>
@@ -32,7 +33,7 @@
             :key="pastWorkout.timestamp"
             button="true"
             @click="goToWorkout(pastWorkout)"
-            style="border-radius: 28px; width: 46vw; margin: 0.5em"
+            style="border-radius: 28px; width: 44vw; margin: 0.5em"
             v-bind:style="{ '--background': pastWorkout.color }"
           >
             <ion-item
@@ -41,12 +42,12 @@
             >
               <div class="info-box">
                 <h1
-                  style="font-weight: 550; font-size: 1.8em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
+                  style="font-weight: 550; font-size: 1.6em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
                 >
                   {{ pastWorkout.name }}
                 </h1>
                 <h6
-                  style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.5em; color: var(--ion-color-light);"
+                  style="font-weight: 300; font-size: 0.8em; margin-top: 0.1em; margin-bottom: 0.5em; color: var(--ion-color-light);"
                 >
                   {{ pastWorkout.timestamp }}
                 </h6>
@@ -60,9 +61,7 @@
         </div>
       </div>
     </ion-content>
-    <ion-footer>
-      <div class="rounded-container-bottom"></div>
-    </ion-footer>
+    </div>
   </ion-page>
 </template>
 
@@ -76,7 +75,6 @@ import {
   IonModal,
   IonIcon,
   IonContent,
-  IonFooter,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, reactive, onUpdated } from "vue";
 import { auth, db } from "../main";
@@ -95,7 +93,6 @@ export default defineComponent({
     IonModal,
     IonIcon,
     IonContent,
-    IonFooter,
   },
   setup() {
     const type: object[] = [];
@@ -153,6 +150,8 @@ export default defineComponent({
   flex-direction: row;
   justify-content: space-between;
   background-color: var(--ion-color-light);
+  margin-left: 0.2em;
+  margin-right: 0.2em;
 }
 .title {
   background-color: var(--ion-color-primary-contrast);
@@ -162,7 +161,7 @@ export default defineComponent({
 .rounded-container-bottom {
   display: block;
   background-color: var(--ion-color-light);
-  height: 21px;
+  height: 100vh;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
