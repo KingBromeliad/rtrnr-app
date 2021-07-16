@@ -11,6 +11,7 @@
       <ion-toolbar color="primary">
         <ion-searchbar
           v-model="search"
+          type="search"
           show-cancel-button="focus"
         ></ion-searchbar>
       </ion-toolbar>
@@ -23,8 +24,8 @@
         color="light"
       >
         <ion-item lines="none" color="light">
-          <ion-card-header>
-            <ion-card-subtitle>{{ exercise.subtitle }}</ion-card-subtitle>
+          <ion-card-header style="padding-inline: 0px">
+            <ion-card-subtitle style="font-weight: 400">{{ exercise.subtitle }}</ion-card-subtitle>
             <ion-card-title>{{ exercise.name }}</ion-card-title>
           </ion-card-header>
           <ion-button
@@ -226,7 +227,7 @@ export default defineComponent({
     search(word) {
       this.exercises = [];
       this.exercisesData.forEach((exercise) => {
-        if (exercise.name.toLowerCase().indexOf(word) > -1) this.exercises.push(exercise);
+        if (exercise.name.toLowerCase().indexOf(word.toLowerCase()) > -1) this.exercises.push(exercise);
       });
     },
   },

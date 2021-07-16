@@ -10,9 +10,9 @@
     </ion-toast>
     <div class="rounded-container-bottom">
       <ion-content style="--background: transparent">
-        <ion-item lines="none" color="light">
+        <ion-item lines="none" color="light" style="margin-left: 0.6em">
           <ion-text color="medium">
-            <h1 style="font-weight: 550; font-size: 1.8em; margin-bottom: 0px">
+            <h1 style="font-weight: 500; font-size: 1.8em; margin-bottom: 0px">
               Your account
             </h1>
           </ion-text>
@@ -21,24 +21,26 @@
           v-if="userData.ispersonaltrainer"
           color="primary"
           button="true"
-          style="border-radius: 40px;"
+          style="border-radius: 40px; margin-right: 2em; margin-left: 2em;"
           @click="router.push('/trainer')"
         >
           <ion-item lines="none" color="primary">
-            <ion-card-header>
+            <div
+              style="display: flex; flex-direction: column; justify-content: center; height: 5.6em; padding-left: 1em"
+            >
               <ion-text color="light">
                 <h1
-                  style="font-weight: 550; font-size: 1.4em; margin-bottom: 0px; margin-top: 0px"
+                  style="font-weight: 500; font-size: 1.4em; margin-bottom: 0px; margin-top: 0px"
                 >
                   Personal trainer
                 </h1>
                 <h6
-                  style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                  style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
                 >
                   Manage your clients
                 </h6>
               </ion-text>
-            </ion-card-header>
+            </div>
             <ion-fab-button slot="end" color="light"
               ><ion-icon :icon="chevronForward"></ion-icon
             ></ion-fab-button>
@@ -49,7 +51,7 @@
           button="true"
           @click="toggle()"
           color="secondary"
-          style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+          style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10; margin-right: 2em; margin-left: 2em;"
         >
           <ion-card-header style="padding: 0px">
             <div class="wrapper">
@@ -65,12 +67,12 @@
 
               <ion-text color="light">
                 <h1
-                  style="font-weight: 550; font-size: 1.8em; margin-bottom: 0px; margin-top: 0px"
+                  style="font-weight: 500; font-size: 1.8em; margin-bottom: 0px; margin-top: 0px"
                 >
                   {{ userData.name }}
                 </h1>
                 <h6
-                  style="font-weight: 300; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
+                  style="font-weight: 400; font-size: 1.2em; margin-top: 0.1em; margin-bottom: 0.1em"
                 >
                   {{ showData ? userData.email : "Tap to view your data" }}
                 </h6>
@@ -88,18 +90,19 @@
             margin-top: 0px;
             padding-top: 40px;
             padding-bottom: 0.3em;
+            margin-right: 2em; margin-left: 2em;
           "
         >
           <ion-item lines="none" color="medium">
             <ion-card-header>
               <ion-text :color="editMode ? 'secondary' : 'light'">
                 <h1
-                  style="font-weight: 600; font-size: 1.4em; margin-bottom: 0px; margin-top: 0px"
+                  style="font-weight: 500; font-size: 1.4em; margin-bottom: 0px; margin-top: 0px"
                 >
                   Your data
                 </h1>
                 <h6
-                  style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                  style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
                 >
                   {{ editMode ? "Tap to save" : "Tap to modify" }}
                 </h6>
@@ -137,7 +140,7 @@
             ></ion-input>
             <ion-text v-else>
               <h6
-                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
                 {{ userData.age }}
               </h6>
@@ -160,7 +163,7 @@
             ></ion-input>
             <ion-text v-else>
               <h6
-                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
                 {{ userData.gender }}
               </h6>
@@ -183,7 +186,7 @@
             ></ion-input>
             <ion-text v-else>
               <h6
-                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
                 {{ userData.height }}
               </h6>
@@ -206,7 +209,7 @@
             ></ion-input>
             <ion-text v-else>
               <h6
-                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
                 {{ userData.weight }}
               </h6>
@@ -229,7 +232,7 @@
             ></ion-input>
             <ion-text v-else>
               <h6
-                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
                 {{ userData.trainingfrequence }}
               </h6>
@@ -252,7 +255,7 @@
             ></ion-input>
             <ion-text v-else>
               <h6
-                style="font-weight: 300; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
+                style="font-weight: 400; font-size: 1em; margin-top: 0.1em; margin-bottom: 0.1em"
               >
                 {{ userData.trainingtype }}
               </h6>
@@ -266,10 +269,10 @@
           >
         </div>
         <!-- PERSONAL TRAINER CARD -->
-        <ion-item lines="none" color="light">
+        <ion-item lines="none" color="light" style="margin-left: 0.6em">
           <ion-text color="medium">
             <h1
-              style="font-weight: 550; font-size: 1.8em; margin-bottom: 0.3em"
+              style="font-weight: 500; font-size: 1.8em; margin-bottom: 0.8em"
             >
               Personal trainer
             </h1>
@@ -278,14 +281,14 @@
         <div>
           <ion-card
             color="primary"
-            style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+            style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10; margin-right: 2em; margin-left: 2em;"
           >
             <ion-card-header style="padding: 0px">
               <div class="wrapper">
                 <img id="avatar" :src="trainerData.profilepicture" />
                 <ion-text color="light">
                   <h1
-                    style="font-weight: 550; font-size: 1.8em; margin-bottom: 0px; margin-top: 0px"
+                    style="font-weight: 500; font-size: 1.8em; margin-bottom: 0px; margin-top: 0px"
                   >
                     {{ trainerData.name }}
                   </h1>
@@ -301,6 +304,7 @@
             margin-top: 0px;
             padding-top: 40px;
             padding-bottom: 0.1em;
+            margin-right: 2em; margin-left: 2em;
           "
           >
             <ion-card-content>
@@ -597,7 +601,7 @@ export default defineComponent({
 
 .end {
   justify-content: flex-end;
-  margin-inline: 16px;
+  margin-right: 2em;
 }
 .rounded-container-bottom {
   display: block;

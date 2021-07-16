@@ -12,31 +12,31 @@
     </ion-modal>
     <!-- HEADER -->
     <div class="rounded-container-bottom">
-    <ion-content style="--padding-top: 4em; --background: transparent">
-      <ion-fab vertical="top" horizontal="start" slot="fixed">
-        <ion-fab-button color="dark" size="small" @click="presentAlertQuit()">
-          <ion-icon :icon="close"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
+      <ion-content style="--padding-top: 4em; --background: transparent">
+        <ion-fab vertical="top" horizontal="start" slot="fixed">
+          <ion-fab-button color="dark" size="small" @click="presentAlertQuit()">
+            <ion-icon :icon="close"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
 
-      <ion-card
-        color="tertiary"
-        button="true"
-        @click="showWorkoutNote = !showWorkoutNote"
-        style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;; z-index: 10"
-      >
-        <ion-item color="tertiary" lines="none">
-          <ion-icon
-            style="color: var(--ion-color-primary)"
-            slot="start"
-            :icon="document"
-          ></ion-icon>
-          <ion-label color="primary">Workout note</ion-label>
-        </ion-item>
-      </ion-card>
-      <ion-card
-        v-if="showWorkoutNote"
-        style="
+        <ion-card
+          color="tertiary"
+          button="true"
+          @click="showWorkoutNote = !showWorkoutNote"
+          style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;; z-index: 10"
+        >
+          <ion-item color="tertiary" lines="none">
+            <ion-icon
+              style="color: var(--ion-color-primary)"
+              slot="start"
+              :icon="document"
+            ></ion-icon>
+            <ion-label color="primary">Workout note</ion-label>
+          </ion-item>
+        </ion-card>
+        <ion-card
+          v-if="showWorkoutNote"
+          style="
             border-radius: 0px 0px 20px 20px;
             transform: translateY(-30px);
             margin-top: 0px;
@@ -44,310 +44,325 @@
             padding-top: 0.4em;
           "
           color="secondary"
-        ><ion-card-content>{{ workout.note }}</ion-card-content></ion-card
-      >
-      <!-- CARD ELEMENT -->
-
-      <div v-for="(exercise, index) in exercises" :key="exercise.id">
-        <ion-card
-          :color="exercise.state == 'done' ? 'primary' : 'success'"
-          style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
+          ><ion-card-content>{{ workout.note }}</ion-card-content></ion-card
         >
-          <ion-item
-            :color="exercise.state == 'done' ? 'primary' : 'dark'"
-            lines="none"
+        <!-- CARD ELEMENT -->
+
+        <div v-for="(exercise, index) in exercises" :key="exercise.id">
+          <ion-card
+            :color="exercise.state == 'done' ? 'primary' : 'success'"
+            style="border-radius: 40px; margin-bottom: 1em; margin-top: 0px; z-index: 10"
           >
-            <div style="padding: 0.9em; display: flex; flex-direction: column">
-              <ion-text style="font-size: 1.4em; font-weight: 600; margin-bottom: 0.2em">{{ exercise.data.name }}</ion-text>
-              <ion-text style="font-weight: 500">{{
-                exercise.repsDone + " Reps"
-              }}</ion-text>
-              <ion-text style="font-weight: 500">{{
-                exercise.weightDone + " Kg"
-              }}</ion-text>
-            </div>
-            <ion-fab-button
-              style="--box-shadow: 0px"
-              v-if="exercise.state == 'edit'"
-              slot="end"
-              color="light"
-              @click="exercise.state = 'active'"
+            <ion-item
+              :color="exercise.state == 'done' ? 'primary' : 'dark'"
+              lines="none"
             >
-              <ion-icon
-                style="color: var(--ion-color-dark)"
-                :icon="remove"
-              ></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button
-              style="--box-shadow: 0px"
-              v-if="exercise.state == 'active'"
-              slot="end"
-              color="light"
-              @click="exercise.state = 'edit'"
-            >
-              <ion-icon
-                style="color: var(--ion-color-dark)"
-                :icon="add"
-              ></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button
-              style="--box-shadow: 0px"
-              v-if="exercise.state == 'done'"
-              slot="end"
-              color="light"
-            >
-              <ion-icon :icon="checkmarkOutline"></ion-icon>
-            </ion-fab-button>
-          </ion-item>
-        </ion-card>
-        <ion-card
-          v-if="exercise.state == 'edit'"
-          color="secondary"
-          style="
+              <div
+                style="padding: 0.9em; display: flex; flex-direction: column"
+              >
+                <ion-text
+                  style="font-size: 1.5em; font-weight: 500; margin-bottom: 0.1em"
+                  >{{ exercise.data.name }}</ion-text
+                >
+                <ion-text style="font-weight: 400">{{
+                  exercise.repsDone + " Reps"
+                }}</ion-text>
+                <ion-text style="font-weight: 400">{{
+                  exercise.weightDone + " Kg"
+                }}</ion-text>
+              </div>
+              <ion-fab-button
+                style="--box-shadow: 0px"
+                v-if="exercise.state == 'edit'"
+                slot="end"
+                color="light"
+                @click="exercise.state = 'active'"
+              >
+                <ion-icon
+                  style="color: var(--ion-color-dark)"
+                  :icon="remove"
+                ></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button
+                style="--box-shadow: 0px"
+                v-if="exercise.state == 'active'"
+                slot="end"
+                color="light"
+                @click="exercise.state = 'edit'"
+              >
+                <ion-icon
+                  style="color: var(--ion-color-dark)"
+                  :icon="add"
+                ></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button
+                style="--box-shadow: 0px"
+                v-if="exercise.state == 'done'"
+                slot="end"
+                color="light"
+              >
+                <ion-icon :icon="checkmarkOutline"></ion-icon>
+              </ion-fab-button>
+            </ion-item>
+          </ion-card>
+          <ion-card
+            v-if="exercise.state == 'edit'"
+            color="secondary"
+            style="
             border-radius: 0px 0px 45px 45px;
             transform: translateY(-55px);
             margin-top: 0px;
             padding-top: 40px;
           "
-        >
-          <ion-card-content style="padding:  0.4em 0.8em 0.8em 0.8em">
-            <ion-grid style="--ion-grid-padding: 0px">
-              <ion-row>
-                <ion-col size="4">
-                  <ion-row class="ion-justify-content-start">
-                    <ion-button
-                      style="height: 5em; widht: 4.5em"
-                      color="light"
-                      @click="openInfo(exercise.data)"
-                    >
-                      <ion-grid style=" width: 3em">
-                        <ion-row
-                          class="
+          >
+            <ion-card-content style="padding:  0.4em 0.8em 0.8em 0.8em">
+              <ion-grid style="--ion-grid-padding: 0px">
+                <ion-row>
+                  <ion-col size="4">
+                    <ion-row class="ion-justify-content-start">
+                      <ion-button
+                        style="height: 5em; widht: 4.5em"
+                        color="light"
+                        @click="openInfo(exercise.data)"
+                      >
+                        <ion-grid style=" width: 3em">
+                          <ion-row
+                            class="
                             ion-align-items-center ion-justify-content-center
                           "
-                        >
-                          <ion-icon
-                            :icon="body"
-                            style="font-size: 1.2em"
-                          ></ion-icon>
-                        </ion-row>
-                        <ion-row
-                          class="ion-align-items-center ion-justify-content-center"
-                          ><h6 style="font-size: 0.8em; font-w">
-                            Learn the <br />
-                            exercise
-                          </h6></ion-row
-                        >
-                      </ion-grid>
-                    </ion-button>
-                  </ion-row>
-                </ion-col>
+                          >
+                            <ion-icon
+                              :icon="body"
+                              style="font-size: 1.2em"
+                            ></ion-icon>
+                          </ion-row>
+                          <ion-row
+                            class="ion-align-items-center ion-justify-content-center"
+                            ><h6 style="font-size: 0.8em; font-w">
+                              Learn the <br />
+                              exercise
+                            </h6></ion-row
+                          >
+                        </ion-grid>
+                      </ion-button>
+                    </ion-row>
+                  </ion-col>
 
-                <ion-col size="4" class="ion-justify-content-center">
-                  <ion-row class="ion-justify-content-center">
-                    <ion-button
-                      style="height: 5em; widht: 4.5em"
-                      color="light"
-                      @click="openNote(exercise.id, exercise.note, index)"
-                    >
-                      <ion-grid style=" width: 3em">
-                        <ion-row
-                          class="
+                  <ion-col size="4" class="ion-justify-content-center">
+                    <ion-row class="ion-justify-content-center">
+                      <ion-button
+                        style="height: 5em; widht: 4.5em"
+                        color="light"
+                        @click="openNote(exercise.id, exercise.note, index)"
+                      >
+                        <ion-grid style=" width: 3em">
+                          <ion-row
+                            class="
                           ion-align-items-center ion-justify-content-center
                         "
-                        >
-                          <ion-icon
-                            :icon="document"
-                            style="font-size: 1.2em"
-                          ></ion-icon>
-                        </ion-row>
-                        <ion-row
-                          class="ion-align-items-center ion-justify-content-center"
-                          ><h6 style="font-size: 0.8em">
-                            Leave <br />
-                            a note
-                          </h6></ion-row
-                        >
-                      </ion-grid>
-                    </ion-button>
-                  </ion-row>
-                </ion-col>
-                <ion-col size="4">
-                  <ion-row class="ion-justify-content-end">
-                    <ion-button
-                      style="height: 5em;"
-                      color="light"
-                      @click="openVideo(exercise.id, index)"
-                    >
-                      <ion-grid style=" width: 3em">
-                        <ion-row
-                          class="
+                          >
+                            <ion-icon
+                              :icon="document"
+                              style="font-size: 1.2em"
+                            ></ion-icon>
+                          </ion-row>
+                          <ion-row
+                            class="ion-align-items-center ion-justify-content-center"
+                            ><h6 style="font-size: 0.8em">
+                              Leave <br />
+                              a note
+                            </h6></ion-row
+                          >
+                        </ion-grid>
+                      </ion-button>
+                    </ion-row>
+                  </ion-col>
+                  <ion-col size="4">
+                    <ion-row class="ion-justify-content-end">
+                      <ion-button
+                        style="height: 5em;"
+                        color="light"
+                        @click="openVideo(exercise.id, index)"
+                      >
+                        <ion-grid style=" width: 3em">
+                          <ion-row
+                            class="
                           ion-align-items-center ion-justify-content-center
                         "
-                        >
-                          <ion-icon
-                            :icon="camera"
-                            style="font-size: 1.2em"
-                          ></ion-icon>
-                        </ion-row>
-                        <ion-row
-                          class="ion-align-items-center ion-justify-content-center"
-                          ><h6 style="font-size: 0.8em">
-                            Record <br />
-                            execution
-                          </h6></ion-row
-                        >
-                      </ion-grid>
-                    </ion-button>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-            <div
-              style="
+                          >
+                            <ion-icon
+                              :icon="camera"
+                              style="font-size: 1.2em"
+                            ></ion-icon>
+                          </ion-row>
+                          <ion-row
+                            class="ion-align-items-center ion-justify-content-center"
+                            ><h6 style="font-size: 0.8em">
+                              Record <br />
+                              execution
+                            </h6></ion-row
+                          >
+                        </ion-grid>
+                      </ion-button>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+              <div
+                style="
                 background-color: var(--ion-color-light);
                 color: white;
                 border-radius: 16px;
                 margin-bottom: 0.5em;
               "
-            >
-              <ion-grid
-                style="--ion-grid-padding: 0px; --ion-grid-column-padding: 0px;"
               >
-                <ion-row class="ion-align-items-center">
-                  <ion-col class="ion-justify-content-center" size="4">
-                    <h2 style="text-align: center">Modify reps</h2>
-                  </ion-col>
+                <ion-grid
+                  style="--ion-grid-padding: 0px; --ion-grid-column-padding: 0px;"
+                >
+                  <ion-row class="ion-align-items-center">
+                    <ion-col class="ion-justify-content-left" size="4">
+                      <h2 style="text-align: left; padding-left: 0.2em;">
+                        Modify reps
+                      </h2>
+                    </ion-col>
 
-                  <ion-col size="3"
-                    ><ion-button
-                      shape="round"
-                      color="dark"
-                      @click="
-                        exercise.repsDone--;
-                        exercise.repsDifference--;
-                      "
-                      ><ion-icon
-                        :icon="remove"
-                        size="small"
-                        slot="icon-only"
-                      ></ion-icon></ion-button
-                  ></ion-col>
-                  <ion-col size="2"
-                    ><h2 style="text-align: center">
-                      {{ exercise.repsDone }}
-                    </h2></ion-col
-                  >
-                  <ion-col size="3"
-                    ><ion-button
-                      shape="round"
-                      color="dark"
-                      @click="
-                        exercise.repsDone++;
-                        exercise.repsDifference++;
-                      "
-                      ><ion-icon
-                        :icon="add"
-                        size="small"
-                        slot="icon-only"
-                      ></ion-icon></ion-button
-                  ></ion-col>
-                </ion-row>
-              </ion-grid>
-            </div>
+                    <ion-col size="3"
+                      ><ion-button
+                        shape="round"
+                        color="dark"
+                        @click="
+                          exercise.repsDone--;
+                          exercise.repsDifference--;
+                        "
+                        ><ion-icon
+                          :icon="remove"
+                          size="small"
+                          slot="icon-only"
+                        ></ion-icon></ion-button
+                    ></ion-col>
+                    <ion-col size="2"
+                      ><h2 style="text-align: center">
+                        {{ exercise.repsDone }}
+                      </h2></ion-col
+                    >
+                    <ion-col size="3"
+                      ><ion-button
+                        shape="round"
+                        color="dark"
+                        @click="
+                          exercise.repsDone++;
+                          exercise.repsDifference++;
+                        "
+                        ><ion-icon
+                          :icon="add"
+                          size="small"
+                          slot="icon-only"
+                        ></ion-icon></ion-button
+                    ></ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
 
-            <div
-              style="
+              <div
+                style="
                 background-color: var(--ion-color-light);
                 color: white;
                 border-radius: 16px;
               "
-            >
-              <ion-grid
-                style="--ion-grid-padding: 0px; --ion-grid-column-padding: 0px;"
               >
-                <ion-row class="ion-align-items-center">
-                  <ion-col class="ion-justify-content-center" size="4">
-                    <h2 style="text-align: center">Modify weight</h2>
-                  </ion-col>
+                <ion-grid
+                  style="--ion-grid-padding: 0px; --ion-grid-column-padding: 0px;"
+                >
+                  <ion-row class="ion-align-items-center">
+                    <ion-col class="ion-justify-content-left" size="4">
+                      <h2 style="text-align: left; padding-left: 0.2em;">
+                        Modify weight
+                      </h2>
+                    </ion-col>
 
-                  <ion-col size="3"
-                    ><ion-button
-                      shape="round"
-                      color="dark"
-                      @click="
-                        exercise.weightDone -= 2;
-                        exercise.weightDifference -= 2;
-                      "
-                      ><ion-icon
-                        :icon="remove"
-                        size="small"
-                        slot="icon-only"
-                      ></ion-icon></ion-button
-                  ></ion-col>
-                  <ion-col size="2"
-                    ><h2 style="text-align: center">
-                      {{ exercise.weightDone }}
-                    </h2></ion-col
-                  >
-                  <ion-col size="3"
-                    ><ion-button
-                      shape="round"
-                      color="dark"
-                      @click="
-                        exercise.weightDone += 2;
-                        exercise.weightDifference += 2;
-                      "
-                      ><ion-icon
-                        :icon="add"
-                        size="small"
-                        slot="icon-only"
-                      ></ion-icon></ion-button
-                  ></ion-col>
-                </ion-row>
-              </ion-grid>
-            </div>
-          </ion-card-content>
-        </ion-card>
-        <!-- TIMER -->
-        <ion-card
-          v-if="exercise.state == 'active' && exercise.timerActive == false"
-          button="true"
-          color="secondary"
-          style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;"
-          @click="setTimer(index, exercise.rest)"
-        >
-          <ion-item lines="none" color="secondary"
-            ><ion-icon size="small" slot="start" :icon="flame"></ion-icon
-            ><ion-label>Done</ion-label>
-            <ion-label slot="end" style="text-align: right" color="medium">{{
-              "rest: " + exercise.rest + "s"
-            }}</ion-label></ion-item
+                    <ion-col size="3"
+                      ><ion-button
+                        shape="round"
+                        color="dark"
+                        @click="
+                          exercise.weightDone -= 2;
+                          exercise.weightDifference -= 2;
+                        "
+                        ><ion-icon
+                          :icon="remove"
+                          size="small"
+                          slot="icon-only"
+                        ></ion-icon></ion-button
+                    ></ion-col>
+                    <ion-col size="2"
+                      ><h2 style="text-align: center">
+                        {{ exercise.weightDone }}
+                      </h2></ion-col
+                    >
+                    <ion-col size="3"
+                      ><ion-button
+                        shape="round"
+                        color="dark"
+                        @click="
+                          exercise.weightDone += 2;
+                          exercise.weightDifference += 2;
+                        "
+                        ><ion-icon
+                          :icon="add"
+                          size="small"
+                          slot="icon-only"
+                        ></ion-icon></ion-button
+                    ></ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+            </ion-card-content>
+          </ion-card>
+          <!-- TIMER -->
+          <ion-card
+            v-if="exercise.state == 'active' && exercise.timerActive == false"
+            button="true"
+            color="secondary"
+            style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;"
+            @click="setTimer(index, exercise.rest)"
           >
-        </ion-card>
-        <ion-card
-          v-else-if="exercise.state == 'active' && exercise.timerActive == true"
-          button="false"
-          :color="
-            exercise.rest % 2 == 0 && exercise.rest < 10
-              ? 'primary'
-              : 'tertiary'
-          "
-          style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;"
-        >
-          <ion-item
-            lines="none"
+            <ion-item lines="none" color="secondary"
+              ><ion-icon size="small" slot="start" :icon="flame"></ion-icon
+              ><ion-label>Done</ion-label>
+              <ion-label slot="end" style="text-align: right" color="medium">{{
+                "rest: " + exercise.rest + "s"
+              }}</ion-label></ion-item
+            >
+          </ion-card>
+          <ion-card
+            v-else-if="
+              exercise.state == 'active' && exercise.timerActive == true
+            "
+            button="false"
             :color="
               exercise.rest % 2 == 0 && exercise.rest < 10
                 ? 'primary'
-                : 'secondary'
+                : 'tertiary'
             "
-            ><ion-icon size="small" slot="start" :icon="timerOutline"></ion-icon
-            ><ion-label>{{ exercise.rest + " Seconds" }}</ion-label></ion-item
+            style="border-radius: 40px; margin-top: 0em; margin-bottom: 1em;"
           >
-        </ion-card>
-      </div>
-    </ion-content>
+            <ion-item
+              lines="none"
+              :color="
+                exercise.rest % 2 == 0 && exercise.rest < 10
+                  ? 'primary'
+                  : 'secondary'
+              "
+              ><ion-icon
+                size="small"
+                slot="start"
+                :icon="timerOutline"
+              ></ion-icon
+              ><ion-label>{{ exercise.rest + " Seconds" }}</ion-label></ion-item
+            >
+          </ion-card>
+        </div>
+      </ion-content>
     </div>
   </ion-page>
 </template>
@@ -369,7 +384,7 @@ import {
   IonModal,
   IonFab,
   IonLabel,
-  IonText
+  IonText,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, unref } from "@vue/runtime-core";
 import {
@@ -401,7 +416,6 @@ import {
 } from "@capacitor/local-notifications";
 import { App } from "@capacitor/app";
 import { useBackButton } from "@ionic/vue";
-
 
 export default defineComponent({
   name: "workout",

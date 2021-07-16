@@ -40,12 +40,12 @@
           >
             <ion-card-header>
               <h1
-                style="font-weight: 550; font-size: 1.6em; margin-bottom: 0.1em; margin-top: 0.1em; color: var(--ion-color-light);"
+                style="font-weight: 500; font-size: 1.6em; margin-bottom: 0.3em; margin-top: 0em; color: var(--ion-color-light);"
               >
                 {{ workout.name }}
               </h1>
               <h6
-                style="font-weight: 300; font-size: 0.8em; margin-top: 0.1em; margin-bottom: 0.5em; color: var(--ion-color-light);"
+                style="font-weight: 400; font-size: 0.8em; margin-top: 0em; margin-bottom: 0.5em; color: var(--ion-color-light);"
               >
                 {{ workout.description }}
               </h6>
