@@ -11,7 +11,8 @@
       <record @exitVideo="addVideo" :id="videoId"></record>
     </ion-modal>
     <!-- HEADER -->
-    <ion-content color="light" style="--padding-top: 4em;">
+        <div class="rounded-container-bottom">
+    <ion-content  style="--padding-top: 4em; --background: transparent">
       <ion-fab vertical="top" horizontal="start" slot="fixed">
         <ion-fab-button color="dark" size="small" @click="presentAlertQuit()">
           <ion-icon :icon="close"></ion-icon>
@@ -100,7 +101,7 @@
           </ion-item>
         </ion-card>
         <ion-card
-          v-if="exercise.state == 'edit'"
+          v-show="exercise.state == 'edit'"
           color="secondary"
           style="
             border-radius: 0px 0px 45px 45px;
@@ -347,9 +348,7 @@
         </ion-card>
       </div>
     </ion-content>
-    <ion-footer>
-      <div class="rounded-container-bottom"></div>
-    </ion-footer>
+        </div>
   </ion-page>
 </template>
 
@@ -371,7 +370,6 @@ import {
   IonRow,
   alertController,
   IonModal,
-  IonFooter,
   IonFab,
   IonLabel,
 } from "@ionic/vue";
@@ -428,7 +426,6 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonModal,
-    IonFooter,
     IonFab,
     IonLabel,
   },
@@ -682,7 +679,7 @@ export default defineComponent({
 .rounded-container-bottom {
   display: block;
   background-color: var(--ion-color-light);
-  height: 21px;
+  height: 100vh;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
