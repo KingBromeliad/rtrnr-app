@@ -153,7 +153,7 @@ export class ExerciseData {
     this.name = data.name;
     this.subtitle = data.subtitle;
     this.description = data.description;
-    this.video = data.description;
+    this.video = data.video;
   }
 }
 
@@ -200,7 +200,7 @@ export class WorkoutExercise {
   weight: number;
   rest: number;
 
-  constructor(exercise: ExerciseData) {
+  constructor(exercise: any) {
     this.data = exercise;
     this.sets = NaN;
     this.reps = NaN;

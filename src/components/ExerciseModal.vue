@@ -1,17 +1,28 @@
 <template>
   <!-- Exercises list mode */ -->
   <ion-page v-if="listMode" style="background-color: var(--ion-color-light)">
-    <ion-header>
+    <ion-header style="background-color: var(--ion-color-primary)">
       <ion-toolbar color="primary">
         <ion-title color="light">Exercise List</ion-title>
         <ion-buttons slot="primary">
           <ion-button color="light" @click="close()">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
+      <ion-toolbar color="primary">
+        <ion-searchbar
+          v-model="search"
+          type="search"
+          show-cancel-button="focus"
+        ></ion-searchbar>
+      </ion-toolbar>
     </ion-header>
     <ion-content style="--padding-top: 2vh" color="secondary">
       <!-- PRETTY BIG CARD COMPONENT -->
-      <ion-card v-for="exercise in exercises" :key="exercise.name" color="light">
+      <ion-card
+        v-for="exercise in exercises"
+        :key="exercise.name"
+        color="light"
+      >
         <ion-item lines="none" color="light">
           <ion-card-header>
             <ion-card-subtitle>{{ exercise.subtitle }}</ion-card-subtitle>
@@ -25,7 +36,8 @@
             color="primary"
             @click="addExerciseToWorkout(exercise)"
             >Add</ion-button
-          >          <ion-button
+          >
+          <ion-button
             v-else
             fill="outline"
             slot="end"
@@ -112,10 +124,10 @@
       </ion-card>
 
       <ion-card color="tertiary">
-          <ion-item lines="none" color="tertiary">
-            <ion-label position="floating">Video url</ion-label>
-            <ion-input v-model="newExercise.video"></ion-input>
-          </ion-item>
+        <ion-item lines="none" color="tertiary">
+          <ion-label position="floating">Video url</ion-label>
+          <ion-input v-model="newExercise.video"></ion-input>
+        </ion-item>
       </ion-card>
     </ion-content>
   </ion-page>
@@ -143,6 +155,7 @@ import {
   alertController,
   IonFab,
   IonFabButton,
+  IonSearchbar,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import {
@@ -150,7 +163,7 @@ import {
   closeCircleOutline,
   add,
 } from "ionicons/icons";
-import { db } from "@/main";
+import { db, ExerciseData } from "@/main";
 
 export default defineComponent({
   name: "exercise-modal",
@@ -167,13 +180,15 @@ export default defineComponent({
     return {
       content: "Content",
       listMode: true,
-      exercises: [] as object[],
+      exercises: [] as ExerciseData[],
+      exercisesData: [] as ExerciseData[],
       newExercise: {
         name: "",
         subtitle: "",
         description: "",
         video: null,
       },
+      search: "",
     };
   },
   components: {
@@ -195,15 +210,27 @@ export default defineComponent({
     IonButton,
     IonFab,
     IonFabButton,
+    IonSearchbar,
   },
   mounted() {
     db.collection("exercise").onSnapshot((querySnapshot) => {
-      const temp: object[] = [];
+      const data: ExerciseData[] = [];
       querySnapshot.forEach((doc) => {
-        temp.push(doc.data());
+        const item = new ExerciseData(doc.data());
+        data.push(item);
       });
-      this.exercises = temp;
+      this.exercises = data;
+      this.exercisesData = data;
     });
+  },
+  watch: {
+    search(word) {
+      this.exercises = [];
+      this.exercisesData.forEach((exercise) => {
+        if (exercise.name.toLowerCase().indexOf(word.toLowerCase()) > -1)
+          this.exercises.push(exercise);
+      });
+    },
   },
   methods: {
     async close() {
@@ -239,29 +266,28 @@ export default defineComponent({
       return alert.present();
     },
 
-        async presentAlertDelete(name: string) {
-      const alert = await alertController
-        .create({
-          cssClass: 'my-custom-class',
-          header: 'Delete?',
-          message: 'This action is permanent',
-          buttons: [
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              cssClass: 'secondary',
-              handler: blah => {
-                console.log('Confirm Cancel:', blah)
-              },
+    async presentAlertDelete(name: string) {
+      const alert = await alertController.create({
+        cssClass: "my-custom-class",
+        header: "Delete?",
+        message: "This action is permanent",
+        buttons: [
+          {
+            text: "Cancel",
+            role: "cancel",
+            cssClass: "secondary",
+            handler: (blah) => {
+              console.log("Confirm Cancel:", blah);
             },
-            {
-              text: 'Delete',
-              handler: () => {
-                this.deleteExercise(name)
-              },
+          },
+          {
+            text: "Delete",
+            handler: () => {
+              this.deleteExercise(name);
             },
-          ],
-        });
+          },
+        ],
+      });
       return alert.present();
     },
 
@@ -269,9 +295,6 @@ export default defineComponent({
       db.collection("exercise")
         .doc(this.newExercise.name)
         .set(this.newExercise)
-        .then(() => {
-          console.log("Document successfully written!");
-        })
         .catch((error) => {
           console.error("Error writing document: ", error);
         });
@@ -279,23 +302,19 @@ export default defineComponent({
       this.listMode = true;
     },
 
-    addExerciseToWorkout(exercise: object) {
-      this.$emit("addToWorkout", exercise);
+    addExerciseToWorkout(exercise: ExerciseData) {
+      const data = Object.assign({}, exercise);
+      this.$emit("addToWorkout", data);
     },
 
     deleteExercise(exercise: string) {
-            db.collection("exercise")
+      db.collection("exercise")
         .doc(exercise)
         .delete()
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
         .catch((error) => {
           console.error("Error removing document: ", error);
         });
-    }
+    },
   },
 });
-
-
 </script>

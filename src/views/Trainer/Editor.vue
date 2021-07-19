@@ -1,5 +1,8 @@
 <template>
-  <ion-page v-if="addWorkoutRef" style="background-color: var(--ion-color-light)">
+  <ion-page
+    v-if="addWorkoutRef"
+    style="background-color: var(--ion-color-light)"
+  >
     <ion-modal :is-open="isOpenRef" @didDismiss="setOpen(false)">
       <exercise-modal
         :createMode="true"
@@ -18,7 +21,9 @@
     </ion-toast>
     <ion-header class="ion-no-border">
       <ion-toolbar color="light">
-        <ion-title>{{editModeRef ? 'Edit workout' : 'Create workout'}}</ion-title>
+        <ion-title>{{
+          editModeRef ? "Edit workout" : "Create workout"
+        }}</ion-title>
         <ion-buttons slot="primary">
           <ion-button color="primary" @click="saveWorkout()">Save</ion-button>
         </ion-buttons>
@@ -29,7 +34,7 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content :color=" editModeRef ? 'warning' : 'light'">
+    <ion-content :color="editModeRef ? 'warning' : 'light'">
       <!-- WORKOUT TITLE AND DESCRIPTION -->
       <ion-card color="secondary">
         <ion-item v-if="editInfo" lines="none" color="secondary">
@@ -150,12 +155,19 @@
       <ion-toolbar color="light">
         <ion-title>{{ userData.name }}</ion-title>
         <ion-buttons slot="start">
-          <ion-back-button color="primary" default-href="/trainer"></ion-back-button>
+          <ion-back-button
+            color="primary"
+            default-href="/trainer"
+          ></ion-back-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content color="light">
-      <ion-card v-for="workout in workouts" :key="workout.name" v-bind:style="{ '--background': workout.color }">
+      <ion-card
+        v-for="workout in workouts"
+        :key="workout.name"
+        v-bind:style="{ '--background': workout.color }"
+      >
         <ion-item lines="none" v-bind:style="{ '--background': workout.color }">
           <ion-card-header slot="start">
             <ion-card-subtitle>{{ workout.description }}</ion-card-subtitle>
@@ -275,12 +287,10 @@ export default defineComponent({
 
     //create workout
 
-
     const workout = new NewWorkout();
     const newWorkout = ref(workout);
 
     //create workout exercise
-
 
     function getWorkouts() {
       db.collection("user/" + props.id + "/workout").onSnapshot(
@@ -318,7 +328,7 @@ export default defineComponent({
       getWorkouts();
       getUserData();
     });
-    function createWorkout(){
+    function createWorkout() {
       editMode(false);
       addWorkout(true);
       newWorkout.value = new NewWorkout();
@@ -328,7 +338,7 @@ export default defineComponent({
     const toastRef = ref(false);
     const showToast = (state: boolean) => (toastRef.value = state);
 
-    function addToWorkout(exercise: ExerciseData) {
+    function addToWorkout(exercise: object) {
       const tempExercise = new WorkoutExercise(exercise);
       newWorkout.value.exercises.push(tempExercise);
       showToast(true);
@@ -355,9 +365,6 @@ export default defineComponent({
           exercises: arrayData,
           note: data.note,
           color: data.color,
-        })
-        .then(() => {
-          console.log("Document successfully written!");
         })
         .catch((error) => {
           console.error("Error writing document: ", error);
@@ -392,7 +399,7 @@ export default defineComponent({
       editWorkout,
       editModeRef,
       editMode,
-      createWorkout
+      createWorkout,
     };
   },
   methods: {
