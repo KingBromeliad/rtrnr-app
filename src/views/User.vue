@@ -79,7 +79,7 @@
       </ion-card>
 
       <ion-card
-        v-if="showData"
+        v-show="showData"
         color="medium"
         style="
             border-radius: 0px 0px 45px 45px;
