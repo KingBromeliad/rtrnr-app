@@ -1,9 +1,9 @@
 <template>
   <ion-page
     v-if="selectWorkoutRef"
-    style="background-color: var(--ion-color-medium)"
+    style="background-color: var(--ion-color-light)"
   >
-    <ion-header>
+    <ion-header style="z-index: 30">
       <ion-item lines="none" color="medium">
         <ion-text color="light">
           <h1 style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px">
@@ -14,9 +14,14 @@
           </h4>
         </ion-text>
       </ion-item>
-      <div class="rounded-container-top"></div>
+      <div style="background-color: var(--ion-color-medium)">
+        <div class="rounded-container-top"></div>
+      </div>
     </ion-header>
-    <ion-content color="light">
+    <ion-content
+      fullscreen="true"
+      style="z-index: 20; --background: transparent;"
+    >
       <ion-item v-if="workouts.length == 0" lines="none" color="light">
         <ion-text color="medium">
           <h4
@@ -57,7 +62,9 @@
       </ion-card>
     </ion-content>
     <ion-footer>
-      <div class="rounded-container-bottom"></div>
+      <div style="background-color: var(--ion-color-medium)">
+        <div class="rounded-container-bottom"></div>
+      </div>
     </ion-footer>
   </ion-page>
   <ion-page v-else>

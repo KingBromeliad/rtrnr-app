@@ -1,9 +1,9 @@
 <template>
-  <ion-page style="background-color: var(--ion-color-medium)">
+  <ion-page style="background-color: var(--ion-color-light)">
     <ion-modal :is-open="isOpenRef">
       <past @exitPast="setOpen(false)" :workout="currentWorkout"></past>
     </ion-modal>
-    <ion-header>
+    <ion-header style="z-index: 30" color="light">
       <ion-item lines="none" color="light">
         <ion-text color="primary">
           <h1 style="font-weight: 500; font-size: 2.8em; margin-bottom: 0px">
@@ -15,8 +15,11 @@
         </ion-text>
       </ion-item>
     </ion-header>
-    <ion-content color="light">
-      <div style="justify-content: flex-start; height: 100vh">
+    <ion-content
+      fullscreen="true"
+      style="z-index: 20; --background: transparent;"
+    >
+      <div style="justify-content: flex-start">
         <ion-item v-if="pastWorkouts.length == 0" lines="none" color="light">
           <ion-text color="medium">
             <h4
@@ -61,7 +64,9 @@
       </div>
     </ion-content>
     <ion-footer>
-      <div class="rounded-container-bottom"></div>
+      <div style="background-color: var(--ion-color-medium)">
+        <div class="rounded-container-bottom"></div>
+      </div>
     </ion-footer>
   </ion-page>
 </template>

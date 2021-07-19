@@ -1,5 +1,5 @@
 <template>
-  <ion-page style="background-color: var(--ion-color-medium)">
+  <ion-page style="background-color: var(--ion-color-light)">
     <!-- MODALS -->
     <ion-modal :is-open="isInfoOpenRef">
       <info @didDismiss="setInfoOpen(false)" :exercise="infoData"></info>
@@ -11,8 +11,10 @@
       <record @exitVideo="addVideo" :id="videoId"></record>
     </ion-modal>
     <!-- HEADER -->
-        <div class="rounded-container-bottom">
-    <ion-content  style="--padding-top: 4em; --background: transparent">
+    <ion-content
+      fullscreen="true"
+      style="--padding-top: 4em; z-index: 20; --background: transparent;"
+    >
       <ion-fab vertical="top" horizontal="start" slot="fixed">
         <ion-fab-button color="dark" size="small" @click="presentAlertQuit()">
           <ion-icon :icon="close"></ion-icon>
@@ -43,7 +45,7 @@
             margin-bottom: 0.4em
             padding-top: 0.4em;
           "
-          color="secondary"
+        color="secondary"
         ><ion-card-content>{{ workout.note }}</ion-card-content></ion-card
       >
       <!-- CARD ELEMENT -->
@@ -348,7 +350,11 @@
         </ion-card>
       </div>
     </ion-content>
-        </div>
+    <ion-footer>
+      <div style="background-color: var(--ion-color-medium)">
+        <div class="rounded-container-bottom"></div>
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -372,6 +378,7 @@ import {
   IonModal,
   IonFab,
   IonLabel,
+  IonFooter,
 } from "@ionic/vue";
 import { defineComponent, onMounted, ref, unref } from "@vue/runtime-core";
 import {
@@ -428,6 +435,7 @@ export default defineComponent({
     IonModal,
     IonFab,
     IonLabel,
+    IonFooter,
   },
   props: {
     workout: { type: NewWorkout, required: true },
@@ -679,7 +687,7 @@ export default defineComponent({
 .rounded-container-bottom {
   display: block;
   background-color: var(--ion-color-light);
-  height: 100vh;
+  height: 21px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }

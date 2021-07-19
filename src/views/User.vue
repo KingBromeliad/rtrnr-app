@@ -1,5 +1,5 @@
 <template>
-  <ion-page style="background-color: var(--ion-color-medium)">
+  <ion-page style="background-color: var(--ion-color-light)">
     <ion-toast
       :is-open="isOpenRef"
       message="Copied to clipboard!"
@@ -8,7 +8,10 @@
       @didDismiss="setOpen(false)"
     >
     </ion-toast>
-    <ion-content color="light">
+    <ion-content
+      fullscreen="true"
+      style="z-index: 20; --background: transparent;"
+    >
       <ion-item lines="none" color="light">
         <ion-text color="medium">
           <h1 style="font-weight: 550; font-size: 2.8em; margin-bottom: 0px">
@@ -337,7 +340,9 @@
     </ion-content>
 
     <ion-footer>
-      <div class="rounded-container-bottom"></div>
+      <div style="background-color: var(--ion-color-medium)">
+        <div class="rounded-container-bottom"></div>
+      </div>
     </ion-footer>
   </ion-page>
 </template>
@@ -382,7 +387,7 @@ import { db, auth, userConverter, AppUser, Trainer, storage } from "../main";
 import { useRouter } from "vue-router";
 import { Clipboard } from "@capacitor/clipboard";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import {cfaSignOut} from 'capacitor-firebase-auth';
+import { cfaSignOut } from "capacitor-firebase-auth";
 
 export default defineComponent({
   name: "User",
@@ -510,7 +515,7 @@ export default defineComponent({
     /* LOGOUT */
 
     function logout() {
-      cfaSignOut().subscribe()
+      cfaSignOut().subscribe();
       auth
         .signOut()
         .then(() => {
