@@ -1,7 +1,7 @@
 # Remote Trainer AKA RTRNR
 Android, iOS, Web app, hosted on firebase
 
-#The App
+# The App
 
 During this pandemic, with the reopening of the gyms, the accumulated months of sedentary lifestyle and all
 the advantages of being followed in training to get back in shape I tried to find an idea
