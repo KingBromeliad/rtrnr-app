@@ -1,5 +1,4 @@
-# Remote Trainer AKA RTRNR
-![drawable-mdpi-icon](https://user-images.githubusercontent.com/62559188/169351965-4bf1146e-86e8-4a25-96f6-1c5c3ce7502a.png)
+# ![drawable-mdpi-icon](https://user-images.githubusercontent.com/62559188/169351965-4bf1146e-86e8-4a25-96f6-1c5c3ce7502a.png) Remote Trainer AKA RTRNR
 
 
 Android, iOS, Web app, hosted on firebase!
