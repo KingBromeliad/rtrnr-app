@@ -1,7 +1,8 @@
 # Remote Trainer AKA RTRNR
+![drawable-mdpi-icon](https://user-images.githubusercontent.com/62559188/169351965-4bf1146e-86e8-4a25-96f6-1c5c3ce7502a.png)
+
 
 Android, iOS, Web app, hosted on firebase!
-![drawable-ldpi-icon](https://user-images.githubusercontent.com/62559188/169351882-1198bd2a-0b6b-41a5-92cf-aca147d4f511.png)
 
 Try it! https://rtrnr-app.web.app/
 
